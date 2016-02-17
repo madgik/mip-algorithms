@@ -1,0 +1,16 @@
+{
+  "algorithms" : [],
+  "endpoints" : [
+    { "name" : "Endpoint1", "desc" : "", "host" : "0.0.0.0", "port" : "8089", "status" : "enabled"},
+    { "name" : "Endpoint2", "desc" : "", "host" : "0.0.0.0", "port" : "8090", "status" : "enabled"}
+  ],
+  "defaultDB" : "",
+  "local_external_engine" : "rawdb",
+  "host" : "",
+  "port" : "",
+  "username" : "",
+  "password" : "",
+  "query"    : '',
+  "input_local_tbl" : ''
+}
+
