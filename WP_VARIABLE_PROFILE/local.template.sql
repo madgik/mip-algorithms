@@ -14,7 +14,7 @@ from ( select colname,
               FSUM(val) as S1,
               FSUM(FARITH('*', val, val)) as S2,
               count(val) as N
-       from (select * from inputlocaltbl where '%{categorical}'='True')
+       from (select * from inputlocaltbl where '%{categorical}'='True' and typeof(val) != 'text')
        where val <> 'NA' and val is not null and val <> ""
        group by val
 )
@@ -25,7 +25,7 @@ from ( select colname,
               FSUM(val) as S1,
               FSUM(FARITH('*', val, val)) as S2,
               count(val) as N
-       from (select * from inputlocaltbl where '%{categorical}'='False')
+       from (select * from inputlocaltbl where '%{categorical}'='False' and typeof(val) != 'text')
        where val <> 'NA' and val is not null and val <> ""
 )
 union all
@@ -36,7 +36,7 @@ from ( select colname,
                1 as S2,
               count(val) as N
        from inputlocaltbl
-       where val is 'NA' or val is null or val == ""
+       where val is 'NA' or val is null or val == "" or typeof(val) == 'text'
 );
 
 
