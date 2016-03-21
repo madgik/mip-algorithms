@@ -3,57 +3,66 @@ requirevars 'input_global_tbl';
 var 'categorical' from
 select case when (select count(distinct val) from %{input_global_tbl}) > 2 then "True" else "False" end;
 
+var 'valIsText' from
+select case when (select typeof(val) from %{input_global_tbl} limit 1) ='text' then "True" else "False" end;
+
+-----
+
+
 drop table if exists results;
 create table results as
 select "SummaryStatistics" as type, colname as code, "NA" as categories, "count" as header, Ntotal as gval
 from ( select colname, SUM(N) as Ntotal
-       from (select * from %{input_global_tbl} where val !='NA')
-       );
+       from (select * from %{input_global_tbl} where val !='NA'));
 
 insert into results
-select "SummaryStatistics" as type, colname as code, "NA" as categories, "min" as header, minval as gval
+select "SummaryStatistics" as type, colname as code, "NA" as categories, "min" as header, case when '%{valIsText}'='False' then minval else "0" end as gval
 from ( select colname, min(val) as minval
-       from (select * from %{input_global_tbl} where val !='NA')
-       );
+       from (select * from %{input_global_tbl} where val !='NA' ));
 
 insert into results
-select "SummaryStatistics" as type, colname as code, "NA" as categories, "max" as header, maxval as gval
+select "SummaryStatistics" as type, colname as code, "NA" as categories, "max" as header, case when '%{valIsText}'='False' then maxval else "0" end  as gval
 from ( select colname, max(val) as maxval
-       from (select * from %{input_global_tbl} where val != 'NA')
-       );
+       from (select * from %{input_global_tbl} where val != 'NA'));
 
 insert into results
-select "SummaryStatistics" as type, colname as code, "NA" as categories, "average" as header, FARITH('/',S1A,counts) as gval
+select "SummaryStatistics" as type, colname as code, "NA" as categories, "average" as header, case when '%{valIsText}'='False' then FARITH('/',S1A,counts) else "0" end as gval
 from ( select colname, FSUM(S2) as S2A, FSUM(S1) as S1A, SUM(N) as counts
-       from (select * from %{input_global_tbl} where val !='NA')
-       );
+       from (select * from %{input_global_tbl} where val !='NA'));
 
 insert into results
 select "SummaryStatistics" as type, colname as code, "NA" as categories, "std" as header,
-       SQROOT( FARITH('/', '-', '*', counts, S2A, '*', S1A, S1A, '*', counts, '-', counts, 1)) as gval
+       case when '%{valIsText}'='False' then SQROOT( FARITH('/', '-', '*', counts, S2A, '*', S1A, S1A, '*', counts, '-', counts, 1)) else "0" end as gval
 from ( select colname, FSUM(S2) as S2A, FSUM(S1) as S1A, SUM(N) as counts
-       from (select * from %{input_global_tbl} where val != 'NA')
-       );
+       from (select * from %{input_global_tbl} where val != 'NA'));
+
 
 insert into results
 select "DatasetStatistics2" as type, colname as code, val as categories, "0" as header, N as gval
-from (select * from %{input_global_tbl} where val !='NA' and '%{categorical}'='True');
+from (select * from %{input_global_tbl} where val !='NA' and '%{categorical}'='True' and '%{valIsText}'='False');
 
 insert into results
 select "DatasetStatistics2" as type, colname as code, "NA" as categories, "0" as header, N as gval
-from (select * from %{input_global_tbl} where val =='NA' and '%{categorical}'='True'); --NULL values
+from (select * from %{input_global_tbl} where val =='NA' and '%{categorical}'='True' and '%{valIsText}'='False'); --NULL values
+
 
 insert into results
 select "DatasetStatistics1" as type, colname as code, "NA" as categories, val as header, Ntotal as gval
 from ( select colname, val, SUM(N) as Ntotal
-       from (select * from %{input_global_tbl} where val !='NA' and '%{categorical}'='True')
+       from (select * from %{input_global_tbl} where val !='NA' and '%{categorical}'='True' and '%{valIsText}'='False')
        group by val);
 
 insert into results
 select "DatasetStatistics1" as type, colname as code, "NA" as categories, "NA" as header, Ntotal as gval
 from ( select colname, val, SUM(N) as Ntotal
-       from (select * from %{input_global_tbl} where val =='NA' and '%{categorical}'='True') --NULL values
+       from (select * from %{input_global_tbl} where val =='NA' and '%{categorical}'='True' and '%{valIsText}'='False') --NULL values
        group by val);
+
+
+
+
+
+
 
 
 select cast(type as text) as type,
@@ -62,4 +71,3 @@ select cast(type as text) as type,
        cast(header as text) as header,
        cast(gval as text) as val
 from results;
-
