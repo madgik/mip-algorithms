@@ -8,6 +8,7 @@ select case when (select typeof(val) from %{input_global_tbl} limit 1) ='text' t
 
 -----
 
+
 drop table if exists results;
 create table results as
 select "SummaryStatistics" as type, colname as code, "NA" as categories, "count" as header, Ntotal as gval
