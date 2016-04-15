@@ -1,19 +1,21 @@
 requirevars 'defaultDB' 'input_local_tbl' 'variable';
 
+
 drop table if exists inputlocaltbl;
 create table inputlocaltbl as
 select __rid as rid, __colname as colname, tonumber(__val)  as val
-from %{input_local_tbl}
+from input_local_tbl
 where colname = '%{variable}';
-
-
 
 var 'categorical' from select case when (select count(distinct val) from inputlocaltbl)< 20 then "True" else "False" end;
 var 'valIsText' from select case when (select typeof(val) from inputlocaltbl limit 1) ='text' then "True" else "False" end;
 
 
+--drop table if exists output_local_table;
+--create table output_local_table as
 
 --1. case when  val is a categorical number
+select * from (
 select *
 from ( select colname,
               val,
@@ -68,7 +70,7 @@ from ( select colname,
               count(val) as N
        from inputlocaltbl
        where val is 'NA' or val is null or val == ""
-);
+)) where val is not null;
 
 
 
