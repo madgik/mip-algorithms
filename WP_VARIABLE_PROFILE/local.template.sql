@@ -6,7 +6,7 @@ drop table if exists inputlocaltbl;
 create table inputlocaltbl as
 select __rid as rid, __colname as colname, tonumber(__val)  as val
 from %{input_local_tbl}
-where __colname = '%{variable}';
+where val <> 'NA' and val is not null and val <> "";
 
 var 'categorical' from select case when (select count(distinct val) from inputlocaltbl)< 20 then "True" else "False" end;
 var 'valIsText' from select case when (select typeof(val) from inputlocaltbl limit 1) ='text' then "True" else "False" end;

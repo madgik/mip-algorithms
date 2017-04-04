@@ -5,11 +5,8 @@
   "status" : "disabled",
   "vtype"  :  "none",
   "parameters" : [
-    {"name" : "input_local_tbl", "desc" : "", "value" : ""},
-    {"name" : "output_tbl", "desc" : "", "value" : ""},
     {"name" : "variable",  "desc" : "", "value" : "AV45_bl"},
     {"name" : "groupings",  "desc" : "", "value" : "DX_bl,APOE4_bl"},
-    {"name" : "covariables","desc" : "", "value" : "AGE,PTEDUCAT,PTGENDER"},
-    {"name" : "filters", "desc" : "", "value" : ""}
+    {"name" : "covariables","desc" : "", "value" : "AGE,PTEDUCAT,PTGENDER"}
   ]
 }
