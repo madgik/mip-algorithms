@@ -5,14 +5,18 @@ create temp table localinputtbl1 as
 select __rid as rid, __colname as colname, tonumber(__val) as val
 from %{input_local_tbl};
 
+drop table if exists datasets;
+create table datasets as
+select strsplitv('%{dataset}','delimiter:,') as d;
+
 drop table if exists inputlocaltbl;
 create table inputlocaltbl as
 select * from localinputtbl1
-where rid in (select rid from localinputtbl1 where colname = 'dataset' and val = '%{dataset}')
+where rid in (select rid from localinputtbl1 where colname = 'dataset' and val in (select d from datasets))
 	and val <> 'NA'
 	and val is not null
 	and val <> ""
-	and val <> '%{dataset}'
+	and val not in (select d from datasets)
 order by rid, colname,val;
 
 --drop table if exists inputlocaltbl;

@@ -44,7 +44,10 @@ from ( select h.colname0 as colname0,
 )group by colname0;
 
 
-select jdict(
+
+
+create table aa as
+select jgroup(
       'colname', m.colname0,
        'min', s.minvalue,
        'max', s.maxvalue,
@@ -56,5 +59,8 @@ select jdict(
        'Q2', Q3.val
        ) as result
 from medianapprox as m,Q1,Q3, defaultDB.globalstats as s
-where m.colname0 = Q1.colname0 and m.colname0 = Q3.colname0 and m.colname0 = s.colname;
+where m.colname0 = Q1.colname0 and m.colname0 = Q3.colname0 and m.colname0
+= s.colname;
 
+select jdict('results', result) as results
+from aa;

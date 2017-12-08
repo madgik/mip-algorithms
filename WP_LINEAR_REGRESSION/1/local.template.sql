@@ -15,7 +15,9 @@ attach database '%{defaultDB}' as defaultDB;
 -- from ( select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)
  --        union
 --         select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)));
-
+drop table if exists datasets;
+create table datasets as
+select strsplitv('%{dataset}','delimiter:,') as d;
 
 drop table if exists xvariables;
 create table xvariables as
@@ -25,7 +27,7 @@ drop table if exists localinputtbl1;
 create table localinputtbl1 as
 select __rid as rid,__colname as colname, tonumber(__val) as val
 from %{input_local_tbl}
-where colname in (select xname from xvariables) or colname = '%{y}' or colname = 'dataset'
+where colname in (select xname from xvariables) or colname = '%{y}' or colname ='dataset'
 order by rid, colname, val;					--	Query 8
 
 drop table if exists localinputtbl;
@@ -33,11 +35,11 @@ create table localinputtbl as
 select rid, colname, val
 from localinputtbl1
 where rid not in (select distinct rid from localinputtbl1 where val is null or val = '' or val = 'NA')
-and rid in (select distinct rid from localinputtbl1 where colname = 'dataset' and val='%{dataset}')
+and rid in (select distinct rid from localinputtbl1 where colname ='dataset' and val in (select d from datasets))
 order by rid, colname, val;
 
 delete from localinputtbl
-where colname ='dataset';
+where colname = 'dataset';
 
 --------------------------------------------------------------------------------------------
 -- Create input dataset for LR, that is input_local_tbl_LR_Final

@@ -6,7 +6,9 @@ attach database '%{defaultDB}' as defaultDB;
 --var 'variable' minimentalstate; --categorical 
 --var 'variable' 'agegroup';  --text
 --var 'dataset' 'adni';
-
+drop table if exists datasets;
+create table datasets as
+select strsplitv('%{dataset}','delimiter:,') as d;
 
 create temp table tempinputlocaltbl1 as 
 select __rid as rid, __colname as colname, tonumber(__val) as val
@@ -21,12 +23,11 @@ from %{input_local_tbl};
 --	  )
 --where colname ='dataset' or colname  = '%{variable}';
 					  
-
-					  				  
+				  				  
 drop table if exists tempinputlocaltbl; -- Krataw mono ta records poy einai sto swsto dataset. Den apothikeuw to colname = 'dataset'  giati den xreiazetai pia
 create table tempinputlocaltbl as 
 select * from tempinputlocaltbl1
-         where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val = '%{dataset}') 
+         where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val in (select d from datasets)) 
 		 and colname  = '%{variable}';
 		
 
@@ -41,7 +42,7 @@ select * from tempinputlocaltbl
 where val <> 'NA'     
  	and val is not null      
 	and val <> ""
-	and val <> '%{dataset}'
+	and val not in (select d from datasets)
 order by rid, colname,val;
 
 --drop table if exists defaultDB.a;

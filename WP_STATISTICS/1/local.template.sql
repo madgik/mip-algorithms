@@ -1,25 +1,41 @@
-requirevars 'defaultDB' 'input_local_tbl' 'variable' 'covariables' 'groupings';
+requirevars 'defaultDB' 'input_local_tbl' 'variable' 'covariables' 'groupings' 'dataset';
 attach database '%{defaultDB}' as defaultDB;
 
-create temp table localinputtbl1 as
-select __rid as rid, __colname as colname, tonumber(__val) as val
-from %{input_local_tbl};
-
-
-drop table if exists localinputtbl;
-create table localinputtbl as
-select * from localinputtbl1
-where val <> 'NA' and val is not null and val <> ""
-order by rid, colname,val;
-
-
+-------------------------
+--var 'variable' ',rightventraldc'; --
+--var 'covariables' 'subjectageyears,PTEDUCAT,gender'; --
+--var 'groupings' 'leftaccumbensarea,apoe4'; --
+--var 'dataset' 'adni';
 var 'x' from (select (regexpr '[,]' '%{groupings}' '*') || '+' || (regexpr '[,]'  '%{covariables}' '+'));
 var 'y' '%{variable}';
 
 
+drop table if exists datasets;
+create table datasets as
+select strsplitv('%{dataset}','delimiter:,') as d;
+
 drop table if exists xvariables;
 create table xvariables as
 select strsplitv(regexpr("\+|\:|\*|\-","%{x}","+") ,'delimiter:+') as xname;
+
+drop table if exists localinputtbl1;
+create temp table localinputtbl1 as
+select __rid as rid, __colname as colname, tonumber(__val) as val
+from %{input_local_tbl}
+where colname in (select xname from xvariables) or colname = "%{y}" or colname = 'dataset'
+order by rid, colname, val;
+
+drop table if exists localinputtbl;
+create table localinputtbl as
+select rid, colname, val
+from localinputtbl1
+where rid not in (select distinct rid from localinputtbl1 where val is null or val="" or val="NA")
+and rid in (select distinct rid from localinputtbl1 where colname = 'dataset' and val in (select d from datasets))
+order by rid, colname, val;
+
+delete from localinputtbl
+where colname ='dataset';
+
 
 
 --------------------------------------------------------------------------------------------
@@ -41,7 +57,7 @@ select colname from (select colname, typeof(val) as t from localinputtbl group b
 insert into T
 select R.rid,C.colname, 0
 from (select distinct rid from T) R,
-     (select distinct colname from T) C
+   (select distinct colname from T) C
 where not exists (select rid from T where R.rid = T.rid and C.colname = T.colname);
 
 insert into input_local_tbl_LR
@@ -64,14 +80,13 @@ drop table if exists input_local_tbl_LR;
 --------------------------------------------------------------------------------------------
 
 select colname,
-       min(val) as minvalue,
-       max(val) as maxvalue,
-       FSUM(val) as S1,
-       FSUM(FARITH('*', val, val)) as S2,
-       count(val) as N
+     min(val) as minvalue,
+     max(val) as maxvalue,
+     FSUM(val) as S1,
+     FSUM(FARITH('*', val, val)) as S2,
+     count(val) as N
 from ( select *
-       from defaultDB.input_local_tbl_LR_Final
-       --where (val<>'NA' and val is not null)
-     )
+     from defaultDB.input_local_tbl_LR_Final
+     --where (val<>'NA' and val is not null)
+   )
 group by colname;
-
