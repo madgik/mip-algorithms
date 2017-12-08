@@ -1,7 +1,7 @@
-requirevars 'defaultDB' 'input_global_tbl' 'variable';
+requirevars 'defaultDB' 'input_global_tbl' 'y';
 attach database '%{defaultDB}' as defaultDB;
 
-var 'y' from (select '%{variable}');
+--var 'y' from (select '%{variable}');
 
 
 

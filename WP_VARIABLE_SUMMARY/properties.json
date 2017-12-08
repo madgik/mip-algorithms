@@ -4,6 +4,7 @@
   "status"         : "enabled",
   "type"           : "local_global",
   "parameters" : [
-    {"name" : "variable",  "desc" : "", "value" : "APOE4_bl"}
+    {"name" : "variable",  "desc" : "", "value" : "apoe4"},
+    {"name" : "dataset", "desc" : "", "value" : "adni"}
   ]
 }

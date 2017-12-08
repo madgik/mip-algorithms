@@ -1,15 +1,15 @@
-requirevars 'defaultDB' 'input_local_tbl' 'variable' 'covariables' 'groupings';
+requirevars 'defaultDB' 'input_local_tbl' 'y' ;
 attach database '%{defaultDB}' as defaultDB;
 
-var 'y' from (select '%{variable}');
+--var 'y' from (select '%{variable}');
 
 
-var 'x' from
-(select group_concat(x,'+')
-from (
-select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)
-union
-select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)));
+--var 'x' from
+--(select group_concat(x,'+')
+--from (
+--select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)
+--union
+--select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)));
 
 
 --E2. Compute rows, columns and SSE<--sum((y-ypredictive)^2)  (Local Layer)

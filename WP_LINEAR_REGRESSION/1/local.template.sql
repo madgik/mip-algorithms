@@ -1,87 +1,51 @@
-requirevars 'defaultDB' 'input_local_tbl' 'variable' 'covariables' 'groupings';
+requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
 attach database '%{defaultDB}' as defaultDB;
 
---hidden var 'y' 'AV45';
---hidden var 'x' 'DX_bl*APOE4+AGE+PTEDUCAT+PTGENDER';
+--hidden var 'y' 'leftaccumbensarea';
+--hidden var 'x' 'rs3818361_t*apoe4+gender';
+--hidden var 'dataset' 'adni';
 
+--hidden var 'groupings' '';--'DX_bl,APOE4';
+--hidden var 'covariables' 'AGE,PTEDUCAT,PTGENDER';
 
--- hidden var 'groupings' '';--'DX_bl,APOE4';
--- hidden var 'covariables' 'AGE,PTEDUCAT,PTGENDER';
+--var 'y' from (select '%{variable}');
 
-var 'y' from (select '%{variable}');
-
-var 'x' from
-( select group_concat(x,'+')
-  from ( select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)
-         union
-         select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)));
+--var 'x' from
+--( select group_concat(x,'+')
+-- from ( select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)
+ --        union
+--         select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)));
 
 
 drop table if exists xvariables;
 create table xvariables as
-select strsplitv(regexpr("\+|\:|\*|\-","%{x}","+") ,'delimiter:+') as xname;
+select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
 
-
-
-create temp table locinptbl as
-select __rid as rid, __colname as colname, tonumber(__val) as val
-from %{input_local_tbl};
-
-
-create temp table localinputtbl1 as
-select * from ( select rid, colname,  val
-                from locinptbl
-                where  colname in (select xname from xvariables) or colname = "%{y}")
-where rid not in(select distinct rid from locinptbl where val is null)
-order by rid, colname, val;
-
---
---
--- select * from ( select __rid as rid, __colname as colname, tonumber(__val) as val
---                 from %{input_local_tbl}
---                 where  __colname in (select xname from xvariables) or colname = "%{y}" )
--- where rid not in (select distinct __rid as rid
---                   from %{input_local_tbl}
---                   where  __colname in (select xname from xvariables) or colname = "%{y}"
---                   and __val is null )
--- order by rid, colname, val;
---
-
-
-
---
--- select * from ( select patient_id , variable_name , value
---                 from exam_value
---                 where  variable_name='DX_bl' or variable_name='APOE4_bl'
---                 or variable_name='AGE'
---                 or variable_name='PTEDUCAT'
---                 or variable_name='PTGENDER'
---                 or variable_name='AV45_bl') as inner1
--- where patient_id not in(select distinct patient_id from ( select patient_id , variable_name , value
---                 from exam_value
---                 where  variable_name='DX_bl' or variable_name='APOE4_bl'
---                 or variable_name='AGE'
---                 or variable_name='PTEDUCAT'
---                 or variable_name='PTGENDER'
---                 or variable_name='AV45_bl') as c where value is null )
--- order by patient_id, variable_name, value;
---
---
+drop table if exists localinputtbl1;
+create table localinputtbl1 as
+select __rid as rid,__colname as colname, tonumber(__val) as val
+from %{input_local_tbl}
+where colname in (select xname from xvariables) or colname = '%{y}' or colname = 'dataset'
+order by rid, colname, val;					--	Query 8
 
 drop table if exists localinputtbl;
 create table localinputtbl as
 select rid, colname, val
 from localinputtbl1
-where rid not in (select distinct rid from localinputtbl1 where val="")
---where val != ''
+where rid not in (select distinct rid from localinputtbl1 where val is null or val = '' or val = 'NA')
+and rid in (select distinct rid from localinputtbl1 where colname = 'dataset' and val='%{dataset}')
 order by rid, colname, val;
+
+delete from localinputtbl
+where colname ='dataset';
 
 --------------------------------------------------------------------------------------------
 -- Create input dataset for LR, that is input_local_tbl_LR_Final
 
 drop table if exists input_local_tbl_LR;
 create table input_local_tbl_LR as
-select * from localinputtbl;
+select * from localinputtbl
+order by rid, colname, val;
 --where colname in (select xname from xvariables) or colname = "%{y}";
 
 -- A. Dummy code of categorical variables
@@ -90,7 +54,7 @@ create table T as
 select rid, colname||'('||val||')' as colname, 1 as val
 from input_local_tbl_LR
 where colname in (
-select colname from (select colname, typeof(val) as t from localinputtbl group by colname) where t='text');
+select colname from (select colname, typeof(val) as t from input_local_tbl_LR group by colname) where t='text');
 
 insert into T
 select R.rid,C.colname, 0
@@ -107,14 +71,14 @@ select colname from (select colname, typeof(val) as t from localinputtbl group b
 
 -- B. Model Formulae
 drop table if exists defaultDB.input_local_tbl_LR_Final;
-create table defaultDB.input_local_tbl_LR_Final as
-select modelFormulae(rid,colname,val, "%{x}") from input_local_tbl_LR group by rid;
+create table defaultDB.input_local_tbl_LR_Final as select modelFormulae(rid,colname,val, "%{x}") from input_local_tbl_LR group by rid;
+--select modelFormulae(rid,colname,val, 'rs3818361_t*apoe4+gender') from input_local_tbl_LR group by rid;
 
 insert into defaultDB.input_local_tbl_LR_Final
-select * from input_local_tbl_LR where colname = "%{y}";
-
+select rid,colname,val from input_local_tbl_LR where colname = '%{y}';  ---Query 21 ERROR
+--
 insert into defaultDB.input_local_tbl_LR_Final
-select distinct rid as rid,"(Intercept)" as colname, 1.0 as val from input_local_tbl_LR;
+select distinct rid as rid,'(Intercept)' as colname, 1.0 as val from input_local_tbl_LR;
 
 drop table if exists T;
 drop table if exists input_local_tbl_LR;

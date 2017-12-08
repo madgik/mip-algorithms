@@ -1,5 +1,8 @@
 requirevars 'input_global_tbl';
 
+--drop table if exists results2;
+--create table results2 as select * from %{input_global_tbl};
+
 var 'categorical' from select case when (select count(distinct val) from %{input_global_tbl})< 20 then "True" else "False" end;
 var 'valIsText' from select case when (select typeof(val) from %{input_global_tbl} limit 1) ='text' then "True" else "False" end;
 

@@ -1,5 +1,5 @@
 
-requirevars 'defaultDB' 'input_global_tbl' 'variable';
+requirevars 'defaultDB' 'input_global_tbl';
 attach database '%{defaultDB}' as defaultDB;
 
 -- drop table if exists defaultDB.globalstatistics;

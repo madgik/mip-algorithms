@@ -77,6 +77,7 @@ Rsquared_Table;
 
 hidden var 'myaliasedcolumns' 0;
 
+
 select
   jdict(
     'name', 'exareme_linear_regression',
@@ -104,27 +105,18 @@ from
                               ),
 
                               (  select rsquared as r_squared_value from Rsquared_Table),
+
                               (  select adjustedR as adj_r_squared_value from Rsquared_Table),
-                              (select jdict('headers', covheaders, 'values', covvalues) as covariancematrixvalues
-                               from
-                                 ( select jgroup(attr1) as covheaders
-                                   from (select distinct attr1 from defaultDB.XTXinverted order by attr1, attr2)
-                                 ),
-                                 ( select jgroup(re2) as covvalues
-                                   from ( select jgroup(re) as re2
-                                          from (select attr1, jpack(val) as re
-                                                from defaultDB.XTXinverted
-                                                order by attr1, attr2
-                                               )
-                                          group by attr1
-                                    )
-                                 )
+
+                              (  select jdict("headers", coheaders, "values", covvalues) as covariancematrixvalues
+                                 from ( select convertcovariancetabletoarray(attr1,attr2,val)
+                                        from defaultDB.XTXinverted  ),
+                                      (select jgroup(attr) as coheaders from coefficients)
                               ),
                               ( select jdict( '0',  var('mycol') - var('myaliasedcolumns'), '1', var('myrow')- var('mycol'), '2' , var('mycol')) as degreesfreedomvalues )
                       )
                )
   );
-
 
 --select * from coefficients;
 ----select * from residualsStatistics;

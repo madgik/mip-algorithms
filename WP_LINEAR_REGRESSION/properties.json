@@ -4,8 +4,9 @@
   "type" : "multiple_local_global",
   "status" : "enabled",
   "parameters" : [
-    {"name" : "groupings", "desc" : "", "value" : "DX_bl,APOE4_bl"},
-    {"name" : "covariables", "desc" : "", "value" : "AGE,PTEDUCAT,PTGENDER"},
-    {"name" : "variable", "desc" : "", "value" : "AV45_bl"}
+    {"name" : "x", "desc" : "", "value" : "rs3818361_t*apoe4+gender"},
+    {"name" : "y", "desc" : "", "value" : "leftaccumbensarea"},
+    {"name" : "dataset", "desc" : "", "value" : "adni"}
   ]
 }
+

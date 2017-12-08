@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'prv_output_global_tbl'  'input_local_tbl' 'variable' 'covariables' 'groupings';
+requirevars 'defaultDB' 'prv_output_global_tbl';
 attach database '%{defaultDB}' as defaultDB;
 
 drop table if exists defaultDB.globalstatistics;
