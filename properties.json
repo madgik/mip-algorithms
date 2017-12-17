@@ -12,7 +12,7 @@
       { "name" : "resultsPerPage", "desc":"", "value":"all"},
       { "name" : "datakey", "desc":"", "value":"all"}
     ],
-    "query" : "select * from mip_federation_features"
+    "query" : "select *  from mip_federation_features"
   }
 }
 
