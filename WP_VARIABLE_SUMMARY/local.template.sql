@@ -14,6 +14,8 @@ create temp table tempinputlocaltbl1 as
 select __rid as rid, __colname as colname, tonumber(__val) as val
 from %{input_local_tbl};
 
+var 'valExists' from select case when (select exists (select colname from tempinputlocaltbl1 where colname='%{variable}'))=0 then 0 else 1 end;
+vars '%{valExists}'; 
 
 --drop table if exists tempinputlocaltbl1;  -- Periexei mono ta records me colname = 'dataset'  or colname  = '%{variable}'
 --create table tempinputlocaltbl1 as 
@@ -30,10 +32,6 @@ select * from tempinputlocaltbl1
          where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val in (select d from datasets)) 
 		 and colname  = '%{variable}';
 		
-
-
-
-
 var 'totalcount' from select count(rid) from tempinputlocaltbl;
 
 drop table if exists inputlocaltbl; -- diagrafw tis null values

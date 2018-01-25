@@ -1,52 +1,75 @@
-requirevars 'defaultDB' 'input_local_tbl' 'variable' 'dataset';
+requirevars 'defaultDB' 'input_local_tbl' 'variable' 'dataset' ;
+attach database '%{defaultDB}' as defaultDB;
 
-
-create temp table localinputtbl1 as
-select __rid as rid, __colname as colname, tonumber(__val) as val
-from %{input_local_tbl};
-
+--var 'input_local_tbl' 'chuv_dataeav';
+--var 'variable' 'apoe4';  
+--var 'dataset' 'adni';
+ 
 drop table if exists datasets;
 create table datasets as
 select strsplitv('%{dataset}','delimiter:,') as d;
 
-drop table if exists inputlocaltbl;
+drop table if exists tempinputlocaltbl1;
+create temp table tempinputlocaltbl1 as 
+select __rid as rid, __colname as colname, tonumber(__val) as val
+--select rid as rid, colname as colname, tonumber(val) as val
+from %{input_local_tbl};
+
+var 'valExists' from select case when (select exists (select colname from tempinputlocaltbl1 where colname='%{variable}'))=0 then 0 else 1 end;
+vars '%{valExists}'; --0 false 1 true
+	  		  
+drop table if exists tempinputlocaltbl; -- Krataw mono ta records poy einai sto swsto dataset. Den apothikeuw to colname = 'dataset'  giati den xreiazetai pia
+create table tempinputlocaltbl as 
+select * from tempinputlocaltbl1
+         where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val in (select d from datasets)) 
+		 and colname  = '%{variable}';
+		
+var 'totalcount' from select count(rid) from tempinputlocaltbl;
+
+drop table if exists inputlocaltbl; -- diagrafw tis null values
 create table inputlocaltbl as
-select * from localinputtbl1
-where rid in (select rid from localinputtbl1 where colname = 'dataset' and val in (select d from datasets))
-	and val <> 'NA'
-	and val is not null
+select * from tempinputlocaltbl 
+where val <> 'NA'     
+ 	and val is not null      
 	and val <> ""
 	and val not in (select d from datasets)
 order by rid, colname,val;
 
---drop table if exists inputlocaltbl;
---create table inputlocaltbl as
---select __rid as rid, __colname as colname, tonumber(__val)  as val
---from %{input_local_tbl}
---where val <> 'NA' and val is not null and val <> "";
+var 'valIsNull' from select case when (select count(distinct val) from inputlocaltbl)= 0 then 1 else 0 end;
+var 'valIsText' from select case when (select typeof(val) from inputlocaltbl limit 1) ='text' and %{valIsNull}= 0 then 1 else 0 end;
+var 'valIsNumber' from select case when (select count(distinct val) from inputlocaltbl)>= 20 and %{valIsNull}= 0 then 1 else 0 end;
+var 'categoricalNumber' from select case when (select count(distinct val) from inputlocaltbl)< 20 and (select count(distinct val) from inputlocaltbl)> 0 and %{valIsNull}=0 and %{valIsText}=0 then 1 else 0 end;
+var 'categoricalText' from select case when (select count(distinct val) from inputlocaltbl)< 20 and (select count(distinct val) from inputlocaltbl)> 0 and %{valIsNull}=0 and %{valIsText}=1 then 1 else 0 end;
 
 
-var 'categorical' from select case when (select count(distinct val) from inputlocaltbl)< 20 then "True" else "False" end;
-var 'valIsText' from select case when (select typeof(val) from inputlocaltbl limit 1) ='text' then "True" else "False" end;
 
+var 'partner'  from select execprogram(null,'cat','/root/exareme/etc/exareme/name');
+--var 'partner' 'chuv' ;
 
---drop table if exists output_local_table;
---create table output_local_table as
 
 --1. case when  val is a categorical number
+--drop table if exists chuv_localResult;
+--create table chuv_localResult as
 select * from (
 select *
 from ( select colname,
               val,
-              val as minval,
-              val as maxval,
+              min(val) as minval,
+              max(val) as maxval,
               FSUM(val) as S1,
               FSUM(FARITH('*', val, val)) as S2,
-              count(val) as N
-       from ( select * from inputlocaltbl where '%{categorical}'='True' and '%{valIsText}'='False')
-       where val <> 'NA' and val is not null and val <> ""
+              count(val) as N,
+			  %{totalcount} as Ntotal,
+              '%{partner}' as partner,
+		      %{valIsNull} as valIsNull, 
+			  %{valIsNumber} as valIsNumber, 
+			  %{categoricalNumber} as categoricalNumber, 
+		          %{categoricalText} as categoricalText,  
+			  %{valIsText} as valIsText
+       from ( select * from inputlocaltbl where %{categoricalNumber}= 1)
+       where val <> 'NA' and val is not null and val <> "" 
        group by val
-)
+) where %{categoricalNumber}= 1
 
 union all
 --2. case when val is a number but not categorical
@@ -57,10 +80,17 @@ from ( select colname,
               max(val) as maxval,
               FSUM(val) as S1,
               FSUM(FARITH('*', val, val)) as S2,
-              count(val) as N
-       from ( select * from inputlocaltbl where '%{categorical}'='False' and '%{valIsText}'='False')
+              count(val) as N,
+			  %{totalcount} as Ntotal,
+              '%{partner}' as partner,
+		      %{valIsNull} as valIsNull, 
+			  %{valIsNumber} as valIsNumber, 
+			  %{categoricalNumber} as categoricalNumber, 
+		          %{categoricalText} as categoricalText,  
+			  %{valIsText} as valIsText
+       from ( select * from inputlocaltbl where %{valIsNumber} = 1)
        where val <> 'NA' and val is not null and val <> ""
-)
+)where %{valIsNumber} = 1
 
 union all
 --3. case when val is text
@@ -71,22 +101,81 @@ from ( select colname,
               "NA" as maxval,
               1 as S1,
               1 as S2,
-              count(val) as N
-       from ( select * from inputlocaltbl where '%{valIsText}'='True')
+              count(val) as N,
+              %{totalcount} as Ntotal,
+             '%{partner}' as partner,
+		      %{valIsNull} as valIsNull, 
+			  %{valIsNumber} as valIsNumber, 
+			  %{categoricalNumber} as categoricalNumber, 
+		      %{categoricalText} as categoricalText, 
+			  %{valIsText} as valIsText
+       from ( select * from inputlocaltbl where %{valIsText}= 1 and %{categoricalText}= 0)
        where val <> 'NA' and val is not null and val <> ""
-       group by val
-)
+) where %{valIsText}= 1 and %{categoricalText}= 0
+
+union all
+--3. case when val is categorical text
+select *
+from ( select colname,
+              val,
+              "NA" as minval,
+              "NA" as maxval,
+              1 as S1,
+              1 as S2,
+              count(val) as N,
+              %{totalcount} as Ntotal,
+             '%{partner}' as partner,
+		      %{valIsNull} as valIsNull, 
+			  %{valIsNumber} as valIsNumber, 
+			  %{categoricalNumber} as categoricalNumber, 
+		      %{categoricalText} as categoricalText, 
+			  %{valIsText} as valIsText
+       from ( select * from inputlocaltbl where %{valIsText}= 1 and %{categoricalText}= 1)
+       where val <> 'NA' and val is not null and val <> ""
+group by val
+) where %{valIsText}= 1 and %{categoricalText}= 1
 
 union all
 --4. case when val is null
 select *
-from ( select colname,
-              "NA" as val,
-              "NA" as minval,
-              "NA" as maxval,
-               1 as S1,
-               1 as S2,
-              count(val) as N
-       from inputlocaltbl
-       where val is 'NA' or val is null or val == ""
-)) where colname is not null or val is not null;
+from (  select '%{variable}' as colname,
+            "NA" as val,
+            "NA" as minval,
+            "NA" as maxval,
+             1 as S1,
+             1 as S2,
+             0 as N,
+             %{totalcount} as Ntotal,
+			 '%{partner}' as partner,
+		     %{valIsNull} as valIsNull, 
+			 %{valIsNumber} as valIsNumber, 
+			 %{categoricalNumber} as categoricalNumber, 
+		     %{categoricalText} as categoricalText, 
+			 %{valIsText} as valIsText
+		where %{valIsNull} = 1
+)where  %{valIsNull} = 1
+
+
+union all
+--5. case when val is not null
+select *
+from (  select '%{variable}' as colname,
+            "NA" as val,
+            "NA" as minval,
+            "NA" as maxval,
+             1 as S1,
+             1 as S2,
+             %{totalcount}-count(val) as N,
+             %{totalcount} as Ntotal,
+			 '%{partner}' as partner,
+		     %{valIsNull} as valIsNull, 
+			 %{valIsNumber} as valIsNumber, 
+			 %{categoricalNumber} as categoricalNumber, 
+		     %{categoricalText} as categoricalText, 
+			 %{valIsText} as valIsText
+		from  inputlocaltbl 
+		where %{valIsNull} = 0
+)where  %{valIsNull} = 0
+); 
+
+ 

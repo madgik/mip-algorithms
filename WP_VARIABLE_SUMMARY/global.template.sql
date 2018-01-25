@@ -35,8 +35,6 @@ from ( select
 (select SUM(N) as countsWithoutNull from %{input_global_tbl}),
 (select SUM(Ntotal) as countsTotal from %{input_global_tbl});
 
-
 select jdict('code','%{variable}', 'dataType', "SummaryStatistics", 'count',countsWithoutNull, 'min', minval,'max', maxval,'average', averageval,'std',stdval)
 from finalresult;
-
 
