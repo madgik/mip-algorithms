@@ -1,10 +1,8 @@
 requirevars 'defaultDB' 'input_global_tbl' 'y';
 attach database '%{defaultDB}' as defaultDB;
 
+--hidden var 'input_global_tbl' 'resultlocal2';
 --var 'y' from (select '%{variable}');
-
-
-
 
 -------------------------------------------------------------------------------------------------------
 --C2. (GLOBAL LAYER)
@@ -61,8 +59,8 @@ XTy
 on attr2 = attr
 group by attr1;
 
-
-
+--drop table if exists resultglobal2;
+--create table resultglobal2 as
 select * from defaultDB.coefficients;
 
 --select * from %{input_global_tbl};

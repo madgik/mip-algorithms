@@ -4,9 +4,9 @@
   "type" : "multiple_local_global",
   "status" : "enabled",
   "parameters" : [
-    {"name" : "x", "desc" : "", "value" : "rs3818361_t*apoe4+gender"},
-    {"name" : "y", "desc" : "", "value" : "leftaccumbensarea"},
-    {"name" : "dataset", "desc" : "", "value" : "adni,edsd,ppmi"}
+    {"name" : "x", "desc" : "", "value" : "adnicategory*apoe4+subjectage+minimentalstate+gender"},
+    {"name" : "y", "desc" : "", "value" : "av45"},
+    {"name" : "dataset", "desc" : "", "value" : "adni,epfl_adni,chuv_adni"}
   ]
 }
 

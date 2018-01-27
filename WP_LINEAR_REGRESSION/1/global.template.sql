@@ -1,9 +1,10 @@
-
 requirevars 'defaultDB' 'input_global_tbl';
 attach database '%{defaultDB}' as defaultDB;
 
--- drop table if exists defaultDB.globalstatistics;
--- create table defaultDB.globalstatistics as
+--hidden var 'input_global_tbl' 'resultlocal1';
+--drop table if exists resultglobal1;
+--create table resultglobal1 as
+
 select  colname,
         FARITH('/',S1A,NA) as avgvalue
 from ( select colname,
@@ -12,4 +13,4 @@ from ( select colname,
         from %{input_global_tbl}
         group by colname );
 
--- select "ok";
+
