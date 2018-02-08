@@ -1,0 +1,12 @@
+{
+  "name" : "K_MEANS",
+  "desc" : "K_MEANS",
+  "type" : "local_global",
+  "status" : "enabled",
+  "vtype" : "clusterplot",
+  "parameters" : [
+    {"name" : "columns", "desc" : "columns value", "value" : "apoe4,subjectageyears"},
+    {"name" : "k", "desc" : "#centers", "value" : "4"},
+    {"name" : "dataset", "desc" : "", "value" : "adni,chuv_adni,epfl_adni"}
+  ]
+}
