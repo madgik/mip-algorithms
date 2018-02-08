@@ -85,38 +85,9 @@ Rsquared_Table;
 
 --select * from defaultDB.test;
 
-hidden var 'myaliasedcolumns' 0;
+--hidden var 'myaliasedcolumns' 0;
 
-select
-  jdict(
-    'name', 'exareme_linear_regression',
-    'doc', 'Distributed Linear Regression',
-    'metadata', 'null',
-    'input', 'null',
-    'output', 'null',
-    'action','null',
-    'cells', cells
-  ) as pfa
-from
-  ( select jdict( 'query', 'null', 'model', 'null', 'anova', 'null','summary', summary) as cells
-    from  ( select  jdict( 'type', 'null', 'init', summary_init ) as summary
-                 from (  select jdict( 'coefficients', coefficients_values,'residuals', residuals_values,'aliased', '{}', 'sigma', sqroot(var('dSigmaSq')) ,
-                                       'degrees_freedom', degreesfreedomvalues, 'r_squared', r_squared_value, 'adj_r_squared', adj_r_squared_value) as summary_init
-                         from (  select jdictgroup(attr, attr_values) as coefficients_values
-                                 from ( select attr, jdict('estimate', estimate, 'std_error', stderror, 't_value', tvalue, 'p_value', prvalue ) as attr_values
-                                        from coefficients )
-                              ),
-                              (  select jdict( 'min', e_min, 'q1', Q1,'median', e_median,'q3', Q3, 'max', e_max ) as residuals_values
-                                 from residualsStatistics
-                              ),
-                              (  select rsquared as r_squared_value from Rsquared_Table),
-                              (  select adjustedR as adj_r_squared_value from Rsquared_Table),
-                              ( select jdict( '0',  var('mycol') - var('myaliasedcolumns'), '1', var('myrow')- var('mycol'), '2' , var('mycol')) as degreesfreedomvalues )
-                      )
-               )
-  );
-
-  
+select jdict('result', mytable ) from (select linearregressionresultsviewer(attr,estimate,stderror,tvalue,prvalue) as mytable from coefficients);
 --select * from coefficients order by attr;
 --select * from residualsStatistics;
 --select * from Rsquared_Table;
