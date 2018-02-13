@@ -8,6 +8,13 @@ create temp table localinputtbl_1 as
 select __rid as rid,__colname as colname, __val as val
 from %{input_local_tbl};
 
+--Check If variableS exist
+var 'counts' from select count(xname) from columnstable where xname in (select distinct(colname) from localinputtbl_1);		-->>By Sof
+var 'result' from select count(xname) from columnstable;						
+var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
+vars '%{valExists}'; 	
+--
+
 var 'select_vars' from
 ( select group_concat('"'||xname||'"',', ') as select_vars from columnstable);
 
