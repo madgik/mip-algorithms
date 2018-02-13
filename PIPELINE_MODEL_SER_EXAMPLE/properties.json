@@ -4,5 +4,5 @@
   "type" : "pipeline",
   "status" : "disabled",
   "vtype" : "none",
-  "parameters" : [ {"name" : "variables", "desc" : "", "value" : "apoe4,av45,3rdventricle"}]
+  "parameters" : [ {"name" : "columns", "desc" : "", "value" : "apoe4,av45,3rdventricle"}]
 }

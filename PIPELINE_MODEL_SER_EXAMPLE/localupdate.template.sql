@@ -1,13 +1,19 @@
-requirevars 'prv_output_local_tbl' 'variables' 'input_local_tbl';
+requirevars 'prv_output_local_tbl' 'columns' 'input_local_tbl';
 
-create temp table variables_tbl as select strsplitv('%{variables}','delimiter:,') as variable;
+drop table if exists columnstable;
+create table columnstable as
+select strsplitv('%{columns}' ,'delimiter:,') as xname;
+
+create temp table localinputtbl_1 as
+select __rid as rid,__colname as colname, __val as val
+from %{input_local_tbl};
 
 var 'select_vars' from
-( select group_concat('"'||variable||'"',', ') as select_vars from variables_tbl);
+( select group_concat('"'||xname||'"',', ') as select_vars from columnstable);
 
-var 'var_count' from select count(*) from variables_tbl;
+var 'var_count' from select count(*) from columnstable;
 
-create temp table data as select %{select_vars}, 0 as C1, 0 as C2, 0 as C3  from (fromeav select * from %{input_local_tbl});
+create temp table data as select %{select_vars}, 0 as C1, 0 as C2, 0 as C3  from (fromeav select * from localinputtbl_1);
 
 select * from (output 'input.arff'
                select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
