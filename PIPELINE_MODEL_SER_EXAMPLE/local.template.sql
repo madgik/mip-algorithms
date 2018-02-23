@@ -29,9 +29,11 @@ coltypes select * from data) union all
                              select "" union all select "@data" union all select * from (csvout select * from data));
 
 
-select execprogram(null, 'java', '-jar', 'Serialization.jar', 'input.arff', '1-%{var_count}');
+select execprogram(null, 'java', '-jar', 'ISOUPModelTreeSerializer.jar', 'input.arff', '1-%{var_count}');
 
 select execprogram(null, 'rm', 'input.arff');
+select execprogram(null,'rm',c2) from dirfiles(.) where c2 like "mtree%pfa.action.json";
+select execprogram(null,'rm',c2) from dirfiles(.) where c2 like "mtree%vis.js";
 
 select bin from (unindexed select bin, execprogram(null,'rm',c2) from
- (unindexed select c2, execprogram(null,'cat',c2) as bin from dirfiles(.) where c2 like "tree%ser"));
+ (unindexed select c2, execprogram(null,'cat',c2) as bin from dirfiles(.) where c2 like "mtree%ser"));
