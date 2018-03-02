@@ -23,12 +23,12 @@ select writebinary('model.ser.prev', bin) from  %{prv_output_local_tbl};
 select execprogram(null, 'java', '-jar', 'ISOUPModelTreeSerializer.jar', 'input.arff', '1-%{var_count}', 'model.ser.prev');
 select execprogram(null, 'rm', 'input.arff');
 select execprogram(null, 'rm', c2) from dirfiles(.) where c2 like "model%prev";
-select execprogram(null,'rm',c2) from dirfiles(.) where c2 like "mtree%pfa.action.json";
+select execprogram(null,'rm',c2) from dirfiles(.) where c2 like "mtree%vis.js";
 select execprogram(null,'rm',c2) from dirfiles(.) where c2 like "mtree%ser";
 
-var 'js_filename' from select c2 from dirfiles(.) where c2 like "mtree%vis.js";
+var 'js_filename' from select c2 from dirfiles(.) where c2 like "mtree%pfa.action.json";
 
 create temp table res_js as select group_concat(C1, " ") as res from (file '%{js_filename}');
 select execprogram(null, 'rm', '%{js_filename}');
 
-select jdict("vis_js", res) from res_js;
+select res from res_js;
