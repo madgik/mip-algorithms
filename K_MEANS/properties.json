@@ -1,7 +1,7 @@
 {
   "name" : "K_MEANS",
   "desc" : "K_MEANS",
-  "type" : "local_global",
+  "type" : "multiple_local_global",
   "status" : "enabled",
   "vtype" : "clusterplot",
   "parameters" : [

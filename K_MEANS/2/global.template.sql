@@ -37,7 +37,7 @@ create table assignnearestcluster(rid integer primary key, clid, mindist);
 
 -- Run Loop
 execnselect 'path:/root/mip-algorithms/K_MEANS' 'columns' 'k'
-select filetext('/root/mip-algorithms/K_MEANS/kmeansloopglobal.sql')
+select filetext('/root/mip-algorithms/K_MEANS/2/kmeansloopglobal.sql')
  from (whilevt select case when mydiff is null then 0 else mydiff end
       from (   select min(diff)=0 as mydiff
       from (  select clold.clval = clnew.clval as diff
