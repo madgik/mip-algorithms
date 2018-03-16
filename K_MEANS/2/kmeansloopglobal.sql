@@ -19,8 +19,6 @@ from ( select rid, clid, weight * sum( (val-clval) * (val-clval) ) as dist
        group by rid,clid )
 group by rid;
 
-
-
 -- Compute new cluster centers
 create table clustercentersnew as
 select clid,

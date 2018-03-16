@@ -1,9 +1,5 @@
 requirevars 'input_global_tbl' 'variable';
 attach database '%{defaultDB}' as defaultDB;
---var 'categorical' from select categorical from defaultDB.variables;
---var 'valIsNumber' from select valIsNumber from defaultDB.variables; 
---var 'valIsText' from select case when (select typeof(val) from %{input_global_tbl} limit 1) ='text' then "True" else "False" end;
------
 
 var 'HospNo' from select count(N) as HospNo from %{input_global_tbl}; --  How many hospitals we have
 var 'HospNull' from select sum(valIsNull) from %{input_global_tbl}; -- How many hospitals have null values  (empty / null all their records) (count?)
@@ -36,5 +32,5 @@ from ( select
 (select SUM(Ntotal) as countsTotal from %{input_global_tbl});
 
 select jdict('code','%{variable}', 'dataType', "SummaryStatistics", 'count',countsWithoutNull, 'min', minval,'max', maxval,'average', averageval,'std',stdval)
-from finalresult;
+from finalresult; 
 

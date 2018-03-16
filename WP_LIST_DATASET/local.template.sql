@@ -1,8 +1,12 @@
 requirevars 'input_local_tbl';
 
---%{input_local_tbl})
-select * from(
-(select count(distinct(__rid)) as sum1 from %{input_local_tbl}), 
-(select distinct(__val) as val from %{input_local_tbl} where __colname = 'dataset'),
-(select execprogram(null,'cat','/root/exareme/etc/exareme/name') as who)  
-) group by val;
+var 'a' from select count(distinct(__rid)) as sum1 from (select distinct rid as __rid from(postgresraw dataset));
+var 'b' from select execprogram(null,'cat','/root/exareme/etc/exareme/name');
+select var('a') as sum1, __val as val, var('b') as who from (select distinct val as __val from(postgresraw dataset)) group by __val;
+
+
+
+
+
+
+

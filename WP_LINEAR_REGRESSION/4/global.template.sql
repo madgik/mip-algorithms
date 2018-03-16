@@ -1,16 +1,9 @@
 requirevars 'defaultDB' 'input_global_tbl';
 attach database '%{defaultDB}' as defaultDB;
 
---hidden var 'input_global_tbl' 'resultlocal4';
-
-
 --E3. Compute rows, columns and SSE (Global Layer) dhladh kanw sum twn sse,myrow apotelesmatwn twn local layer (Global Layer)
 
---create table defaultDB.input as select
---* from %{input_global_tbl};
-
 hidden var 'myrow' from select sum(varvalue) from %{input_global_tbl} where varname="partial_myrow" group by varname ;
---hidden var 'mycol' from select varvalue from %{input_global_tbl} where varname="mycol" ;
 hidden var 'mycol' from select max(varvalue) from %{input_global_tbl} where varname="mycol" ;
 hidden var 'sst' from select sum(varvalue) from %{input_global_tbl} where varname="partial_sst" group by varname;
 
@@ -35,7 +28,6 @@ from (  select attr, estimate, stderror, estimate/stderror as tvalue
 		from defaultDB.coefficients, defaultDB.XTXinverted
 		where coefficients.attr1 = XTXinverted.attr1 and XTXinverted.attr1 = XTXinverted.attr2));
 
--- drop table if exists defaultDB.coefficients;
 alter table coefficients2 rename to coefficients;
 
 
@@ -68,27 +60,10 @@ select rsquared * (var('myrow')-var('mycol')) / ((1-rsquared)*(var('mycol')-1)) 
 from
 Rsquared_Table;
 
-
-
-
 --------------------------------------------------------------------------------------------------------
 -- Visualization 
+drop table if exists defaultDB.finalresult;
+create table defaultDB.finalresult as
+select linearregressionresultsviewer(attr,estimate,stderror,tvalue,prvalue) as mytable from coefficients;
+select jdict('result', mytable ) from defaultDB.finalresult;
 
--- drop table if exists TotalResults;
--- create table TotalResults as
--- select jdict('coefficients',t1,'residualsStatistics',t2,'Rsquared_Table',t3,'F_Table',t4)
--- from (select jgroup(attr,estimate,stderror,tvalue,prvalue) as t1 from coefficients),
---      (select jgroup(e_min,Q1,e_median,Q3,e_max,residualstandarderror, degreesoffreedom) as t2 from residualsStatistics),
---      (select jgroup(rsquared,adjustedR) as t3 from Rsquared_Table),
---      (select jgroup(fstatistic,degreesoffreedom,noofvariables) as t4 from F_Table);
---
-
---select * from defaultDB.test;
-
---hidden var 'myaliasedcolumns' 0;
-
-select jdict('result', mytable ) from (select linearregressionresultsviewer(attr,estimate,stderror,tvalue,prvalue) as mytable from coefficients);
---select * from coefficients order by attr;
---select * from residualsStatistics;
---select * from Rsquared_Table;
---select * from F_Table;

@@ -14,12 +14,6 @@ var 'categoricalText' from select case when (select %{HospCategoricalText} + %{H
 var 'numberV'from select case when (select %{HospNumber} + %{HospNull} = %{HospNo} ) and (select  %{HospNull} <> %{HospNo}) then 1 else 0 end;
 var 'NullValues' from select case when (select %{HospNull} = %{HospNo} ) then 1 else 0 end;
 
------------------
---var 'input_global_tbl' input_global_tbl;
---drop table input_global_tbl;
---create table input_global_tbl as select * from chuv_localresult;
---insert into input_global_tbl select * from epfl_localresult;
---insert into input_global_tbl select * from uoa_localresult;
 
 drop table if exists results;
 create table results as
@@ -61,14 +55,6 @@ from ( select colname, val, SUM(Ntotal) as Ntotal
        from (select * from %{input_global_tbl} where  %{NullValues}=1)
        group by val);	   
 	   
----------------------------
-	   
---insert into results 
---select "DatasetStatistics2" as type, '%{variable}' as code, val as categories, partner as header, N as gval 
---from (select * from  %{input_global_tbl}
-     -- where %{categoricalNumber}= 1 or %{categoricalText}= 1
---      group by partner,val);
-	
 	
 insert into results --WHEN ALL HOSPITALS HAVE NULL VALUES
 select "DatasetStatistics2" as type, '%{variable}' as code, val as categories, partner as header, Ntotal as gval 
@@ -83,16 +69,15 @@ S.colname,T.val,S.minval,S.maxval,S.S1,S.S2,S.N,S.partner,S.Ntotal,S.valIsNull,S
 	  where val||N||partner in (select val||N||partner from  %{input_global_tbl}) or 
 	        (val||partner not in (select val||partner from %{input_global_tbl}) and N=0))
 where  %{categoricalNumber}= 1 or %{categoricalText}= 1 ;
-  
+ 
 
-select jdict('statistics', stats) as result
-from ( select jgroup(
-         cast(type as text),
-         cast(code as text),
-         cast(categories as text),
-         cast(header as text),
-         cast(gval as text)
-       ) as stats
-      from results
-);
+drop table if exists defaultDB.resultsall;
+create table defaultDB.resultsall as
+select * from results;
+
+drop table if exists defaultDB.finalresult;
+create table defaultDB.finalresult as
+select variableprofileresultsviewer(type, code, categories, header, gval) as mytable from results;
+select jdict('result', mytable ) from defaultDB.finalresult;
+
 

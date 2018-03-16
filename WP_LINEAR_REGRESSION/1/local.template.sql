@@ -1,20 +1,5 @@
 requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
-
---hidden var 'input_local_tbl' 'total_dataeav';
---hidden var 'defaultDB' defaultDB; 
---hidden var 'y' 'av45';
---hidden var 'x' 'adnicategory*apoe4+subjectage+minimentalstate+gender';
---hidden var 'dataset' 'adni';
-
 attach database '%{defaultDB}' as defaultDB;
-
---create table input_local_tbl as select * from rawdb() where colname='apoe4' or colname='adnicategory' or colname='apoe4' or colname ='subjectage' or colname='minimentalstate' or colname='gender' or colname='av45';
---var 'y' from (select '%{variable}');
---var 'x' from
---( select group_concat(x,'+')
--- from ( select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)
- --        union
---         select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)));
 
 drop table if exists datasets;
 create table datasets as
@@ -29,10 +14,16 @@ select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
 drop table if exists localinputtbl_1; 
 create table localinputtbl_1 as
 select __rid as rid,__colname as colname, tonumber(__val) as val
---select rid as rid,colname as colname, tonumber(val) as val
-from %{input_local_tbl}
-where colname in (select xname from xvariables) or colname = '%{y}' or colname= 'dataset' 
-order by rid, colname, val;				
+from %{input_local_tbl};
+--where colname in (select xname from xvariables) or colname = '%{y}' or colname= 'dataset' 
+--order by rid, colname, val;				
+
+--Check if variableS exist
+var 'counts' from select count(xname) from xvariables where xname in (select colname from localinputtbl_1);		-->>By Sof
+var 'result' from select count(xname) from xvariables;						
+var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
+vars '%{valExists}'; 
+--
 
 --2. Keep only patients of the correct dataset
 drop table if exists localinputtbl_2; 
@@ -43,16 +34,29 @@ where rid in (select distinct rid
               from localinputtbl_1 
               where colname ='dataset' and val in (select d from datasets));
 
+delete from localinputtbl_2
+where colname = 'dataset';
+
 --3.  Delete patients with null values 
 drop table if exists localinputtbl; 
 create table localinputtbl as
 select rid, colname, val
 from localinputtbl_2
 where rid not in (select distinct rid from localinputtbl_2 
-                  where val is null or val = '' or val = 'NA');
+                  where val is null or val = '' or val = 'NA')
+order by rid, colname, val;
 
-delete from localinputtbl
-where colname = 'dataset';
+----Check if number of patients are more than minimum records----
+var 'minimumrecords' 10;
+create table emptytable(rid  text primary key, colname, val);
+var 'privacycheck' from select case when (select count(distinct(rid)) from localinputtbl) < %{minimumrecords} then 0 else 1 end;
+create table localinputtbl2 as setschema 'rid , colname, val' 
+select * from localinputtbl where %{privacycheck}=1
+union 
+select * from emptytable where %{privacycheck}=0;
+drop table if exists localinputtbl;
+alter table localinputtbl2 rename to localinputtbl;
+-----------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------
 -- Create input dataset for LR, that is input_local_tbl_LR_Final
@@ -95,12 +99,6 @@ select rid,colname,val from input_local_tbl_LR where colname = '%{y}';
 insert into defaultDB.input_local_tbl_LR_Final
 select distinct rid as rid,'(Intercept)' as colname, 1.0 as val from input_local_tbl_LR;
 
---drop table if exists T;
---drop table if exists input_local_tbl_LR;
---------------------------------------------------------------------------------------------
-
---drop table if exists resultlocal1;
---create table resultlocal1 as
 select colname, FSUM(val) as S1, count(val) as N from defaultDB.input_local_tbl_LR_Final
 group by colname;
   

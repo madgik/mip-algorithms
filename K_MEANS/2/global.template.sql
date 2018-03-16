@@ -45,11 +45,7 @@ select filetext('/root/mip-algorithms/K_MEANS/2/kmeansloopglobal.sql')
           clustercentersnew as clnew
         where clold.clid = clnew.clid and clold.clcolname = clnew.clcolname))
 );
---whilevt select min(diff)=0
-  --              from (  select clold.clval = clnew.clval as diff
-    --                    from clustercenters as clold, clustercentersnew as clnew
-      --                  where clold.clid = clnew.clid and clold.clcolname = clnew.clcolname
-        --              )
+
 drop table if exists defaultDB.globalresult;
 create table defaultDB.globalresult as 
 select clid as clid,
@@ -67,22 +63,11 @@ from clustercenters,
     )
 where clid1 = clid;
 
---drop table if exists defaultDB.globalresultviewer;
---create table defaultDB.globalresultviewer as 
---select kmeansresultsviewer(clid,colname,val,noofpoints,2,%{k}) 
---from (select * from defaultDB.globalresult order by clid),
---     (select case when count(*) is null then 0 else count(*) end as noofvariables from columnstable);
 
-
-select jdict("res",highchartresult) from (select kmeansresultsviewer(clid,colname,val,noofpoints,noofvariables,k) 
+--BE AWARE that there are two udf's for K_MEANS output kmeansresultsviewervis is for visual output and kmeansresultsviewerjson is for json (only the data part)
+select jdict("result",highchartresult) from (select kmeansresultsviewerjson(clid,colname,val,noofpoints,noofvariables,k) 
 from (select * from defaultDB.globalresult order by clid),
      (select case when count(*) is null then 0 else count(*) end as noofvariables from columnstable),
      (select count(distinct clid) as k from defaultDB.globalresult));
-
---drop table if exists defaultDB.globalresultviewer;
---create table defaultDB.globalresultviewer as 
---select kmeansresultsviewer(clid,colname,val,noofpoints,2,%{k}) 
---from (select * from globalresult order by clid);
-    -- (select count(*) as noofvariables from columnstable);
 
 

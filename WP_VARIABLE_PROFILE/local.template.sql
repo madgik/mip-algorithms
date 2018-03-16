@@ -18,11 +18,10 @@ from %{input_local_tbl};
 var 'valExists' from select case when (select exists (select colname from tempinputlocaltbl1 where colname='%{variable}'))=0 then 0 else 1 end;
 vars '%{valExists}'; --0 false 1 true
 	  		  
-drop table if exists tempinputlocaltbl; -- Krataw mono ta records poy einai sto swsto dataset. Den apothikeuw to colname = 'dataset'  giati den xreiazetai pia
+drop table if exists tempinputlocaltbl;
 create table tempinputlocaltbl as 
 select * from tempinputlocaltbl1
-         where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val in (select d from datasets)) 
-		 and colname  = '%{variable}';
+         where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val in (select d from datasets));
 		
 var 'totalcount' from select count(rid) from tempinputlocaltbl;
 
@@ -35,6 +34,18 @@ where val <> 'NA'
 	and val not in (select d from datasets)
 order by rid, colname,val;
 
+----Check if number of patients are more than minimum records----
+var 'minimumrecords' 10;
+create table emptytable(rid  text primary key, colname, val);
+var 'privacycheck' from select case when (select count(distinct(rid)) from inputlocaltbl) < %{minimumrecords} then 0 else 1 end;
+create table inputlocaltbl2 as setschema 'rid , colname, val' 
+select * from inputlocaltbl where %{privacycheck}=1
+union 
+select * from emptytable where %{privacycheck}=0;
+drop table if exists inputlocaltbl;
+alter table inputlocaltbl2 rename to inputlocaltbl;
+-----------------------------------------------------------------
+
 var 'valIsNull' from select case when (select count(distinct val) from inputlocaltbl)= 0 then 1 else 0 end;
 var 'valIsText' from select case when (select typeof(val) from inputlocaltbl limit 1) ='text' and %{valIsNull}= 0 then 1 else 0 end;
 var 'valIsNumber' from select case when (select count(distinct val) from inputlocaltbl)>= 20 and %{valIsNull}= 0 then 1 else 0 end;
@@ -44,12 +55,8 @@ var 'categoricalText' from select case when (select count(distinct val) from inp
 
 
 var 'partner'  from select execprogram(null,'cat','/root/exareme/etc/exareme/name');
---var 'partner' 'chuv' ;
-
 
 --1. case when  val is a categorical number
---drop table if exists chuv_localResult;
---create table chuv_localResult as
 select * from (
 select *
 from ( select colname,

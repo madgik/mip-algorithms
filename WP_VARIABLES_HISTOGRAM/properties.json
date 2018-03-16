@@ -1,0 +1,12 @@
+{
+  "name"   : "WP_VARIABLES_HISTOGRAM",
+  "desc"   : "",
+  "type"   : "multiple_local_global",
+  "status" : "enabled",
+  "parameters" : [
+    {"name" : "column1", "desc" : "", "value" : "3rdventricle"},
+    {"name" : "column2", "desc" : "", "value" : "parkinsonbroadcategory"},
+    {"name" : "nobuckets", "desc" : "", "value" : "4"},
+	{"name" : "dataset", "desc" : "", "value" : "ppmi"}
+  ]
+}

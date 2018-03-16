@@ -5,6 +5,6 @@
   "type"           : "local_global",
   "parameters" : [
     {"name" : "variable",  "desc" : "", "value" : "apoe4"},
-    {"name" : "dataset", "desc" : "", "value" : "adni,edsd,ppmi"}
+    {"name" : "dataset", "desc" : "", "value" : "adni,epfl_adni,chuv_adni"}
   ]
 }
