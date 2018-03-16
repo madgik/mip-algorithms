@@ -22,11 +22,21 @@ var 'var_count' from select count(*) from columnstable;
 
 create temp table data as select %{select_vars}, 0 as C1, 0 as C2, 0 as C3  from (fromeav select * from localinputtbl_1);
 
+----Check if number of patients are more than minimum records----
+var 'minimumrecords' 10;
+create temp table emptytable as select * from data limit 0;
+var 'privacycheck' from select case when (select count(*) from data) < %{minimumrecords} then 0 else 1 end;
+create temp table safeData as 
+select * from data where %{privacycheck}=1
+union all
+select * from emptytable where %{privacycheck}=0;
+------
+
 select * from (output 'input.arff'
                select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
                       select "" union all select "@attribute "||column||" numeric" from (
-coltypes select * from data) union all
-                             select "" union all select "@data" union all select * from (csvout select * from data));
+coltypes select * from safeData) union all
+                             select "" union all select "@data" union all select * from (csvout select * from safeData));
 
 select writebinary('model.ser.prev', bin) from  %{prv_output_local_tbl};
 
