@@ -4,8 +4,8 @@
   "type"   : "multiple_local_global",
   "status" : "enabled",
   "parameters" : [
-    {"name" : "column1", "desc" : "", "value" : "3rdventricle"},
-    {"name" : "column2", "desc" : "", "value" : "parkinsonbroadcategory"},
+    {"name" : "column1", "desc" : "Column1 must be Real, Float or Integer.", "value" : "3rdventricle"},
+    {"name" : "column2", "desc" : "", "value" : ""},
     {"name" : "nobuckets", "desc" : "", "value" : "4"},
 	{"name" : "dataset", "desc" : "", "value" : "ppmi"}
   ]
