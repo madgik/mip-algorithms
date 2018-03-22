@@ -62,8 +62,8 @@ Rsquared_Table;
 
 --------------------------------------------------------------------------------------------------------
 -- Visualization 
-drop table if exists defaultDB.finalresult;
-create table defaultDB.finalresult as
+--drop table if exists defaultDB.finalresult;
+--create table defaultDB.finalresult as
 select linearregressionresultsviewer(attr,estimate,stderror,tvalue,prvalue) as mytable from coefficients;
-select jdict('result', mytable ) from defaultDB.finalresult;
+--select jdict('result', mytable ) from defaultDB.finalresult;
 

@@ -75,9 +75,9 @@ drop table if exists defaultDB.resultsall;
 create table defaultDB.resultsall as
 select * from results;
 
-drop table if exists defaultDB.finalresult;
-create table defaultDB.finalresult as
+--drop table if exists defaultDB.finalresult;
+--create table defaultDB.finalresult as
 select variableprofileresultsviewer(type, code, categories, header, gval) as mytable from results;
-select jdict('result', mytable ) from defaultDB.finalresult;
+--select jdict('result', mytable ) from defaultDB.finalresult;
 
 

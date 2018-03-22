@@ -42,6 +42,13 @@ where rid not in (select distinct rid from localinputtbl_2
                   where val is null or val = '' or val = 'NA')
 order by rid, colname, val;
 
+--Real,Float,Integer only->Need to check if Inputlocaltbl is epmpty...If it is, then 'type' is 0 By Sof
+var 'type' from select case when (select distinct(typeof(tonumber(val))) as val from inputlocaltbl1 where colname in (select * from columnstable))='integer' or  (select distinct(typeof(tonumber(val))) as val from inputlocaltbl1 where colname in (select * from columnstable))='real' or (select distinct(typeof(tonumber(val))) as val from inputlocaltbl1 where colname in (select * from columnstable))='float' then 1 else 0 end;
+var 'empty' from select count(*) from inputlocaltbl1;
+var 'checkEpmpty' from select case when (select  %{empty})= 0 then 1 else 0 end;
+var 'final' from select case when  (%{type}=0 and  %{checkEpmpty}=1) or (%{type}=1 and %{checkEpmpty}=0) then 1 else 0 end;
+vartype '%{final}';
+---------------------------------------------------------------------------------------------------------
 
 ----Check if number of patients are more than minimum records----
 var 'minimumrecords' 10;
@@ -54,13 +61,6 @@ union
 select * from emptytable where %{privacycheck}=0;
 -----------------------------------------------------------------
 
---Real,Float,Integer only->Need to check if Inputlocaltbl is epmpty...If it is, then 'type' is 0 By Sof
-var 'type' from select case when (select distinct(typeof(tonumber(val))) as val from defaultDB.inputlocaltbl where colname in (select * from columnstable))='integer' or  (select distinct(typeof(tonumber(val))) as val from defaultDB.inputlocaltbl where colname in (select * from columnstable))='real' or (select distinct(typeof(tonumber(val))) as val from defaultDB.inputlocaltbl where colname in (select * from columnstable))='float' then 1 else 0 end;
-var 'empty' from select count(*) from defaultDB.inputlocaltbl;
-var 'checkEpmpty' from select case when (select  %{empty})= 0 then 1 else 0 end;
-var 'final' from select case when  (%{type}=0 and  %{checkEpmpty}=1) or (%{type}=1 and %{checkEpmpty}=0) then 1 else 0 end;
-vartype '%{final}';
----------------------------------------------------------------------------------------------------------
 
 select count(distinct rid) as patients from defaultDB.inputlocaltbl;
 

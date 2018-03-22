@@ -65,9 +65,10 @@ where clid1 = clid;
 
 
 --BE AWARE that there are two udf's for K_MEANS output kmeansresultsviewervis is for visual output and kmeansresultsviewerjson is for json (only the data part)
-select jdict("result",highchartresult) from (select kmeansresultsviewerjson(clid,colname,val,noofpoints,noofvariables,k) 
+--select jdict("result",highchartresult) from (
+select kmeansresultsviewerjson(clid,colname,val,noofpoints,noofvariables,k) 
 from (select * from defaultDB.globalresult order by clid),
      (select case when count(*) is null then 0 else count(*) end as noofvariables from columnstable),
-     (select count(distinct clid) as k from defaultDB.globalresult));
+     (select count(distinct clid) as k from defaultDB.globalresult);
 
 
