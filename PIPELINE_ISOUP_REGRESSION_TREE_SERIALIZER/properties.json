@@ -5,5 +5,5 @@
   "status" : "disabled",
   "vtype" : "none",
   "responseContentType" : "application/visjs+javascript",
-  "parameters" : [ {"name" : "columns", "desc" : "", "value" : "apoe4,av45,3rdventricle"}]
+  "parameters" : [ {"name" : "target_attributes", "desc" : "", "value" : "apoe4"}, {"name" : "descriptive_attributes", "desc" : "", "value" : "subjectageyears,av45"}]
 }
