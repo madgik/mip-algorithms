@@ -14,8 +14,6 @@ drop table if exists globaltableinput;
 create table globaltableinput as
 select * from eavdatatable;
 
-
-
 drop table if exists clustercentersnew;
 create table clustercentersnew as
 select  hashmodarchdep(rid, %{k}) as clid,
@@ -29,11 +27,8 @@ drop table if exists clustercenters;
 create table clustercenters as select * from clustercentersnew;
 update clustercenters set clval = clval-1;
 
-
-
 drop table if exists assignnearestcluster;
 create table assignnearestcluster(rid integer primary key, clid, mindist);
-
 
 -- Run Loop
 execnselect 'path:/root/mip-algorithms/K_MEANS' 'columns' 'k'
@@ -63,12 +58,9 @@ from clustercenters,
     )
 where clid1 = clid;
 
-
 --BE AWARE that there are two udf's for K_MEANS output kmeansresultsviewervis is for visual output and kmeansresultsviewerjson is for json (only the data part)
 --select jdict("result",highchartresult) from (
 select kmeansresultsviewerjson(clid,colname,val,noofpoints,noofvariables,k) 
 from (select * from defaultDB.globalresult order by clid),
      (select case when count(*) is null then 0 else count(*) end as noofvariables from columnstable),
      (select count(distinct clid) as k from defaultDB.globalresult);
-
-

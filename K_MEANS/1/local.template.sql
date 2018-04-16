@@ -16,11 +16,27 @@ select __rid as rid,__colname as colname, tonumber(__val) as val
 from %{input_local_tbl};
 
 --Check If variableS exist
-var 'counts' from select count(xname) from columnstable where xname in (select distinct(colname) from localinputtbl_1);		-->>By Sof
-var 'result' from select count(xname) from columnstable;						
+--var 'counts' from select count(xname) from columnstable where xname in (select distinct(colname) from localinputtbl_1);		-->>By Sof
+--var 'result' from select count(xname) from columnstable;						
+--var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
+--vars '%{valExists}'; 	
+
+--Check if columns is empty
+var 'empty' from select case when (select '%{columns}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+------------------
+--Check if k is empty
+var 'empty' from select case when (select '%{k}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+------------------
+create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
+--Check if columns exist
+var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from columnstable);
+var 'result' from select count(xname) from columnstable;
 var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
-vars '%{valExists}'; 	
---
+vars '%{valExists}'; 
+--------
+
 --2. Keep only patients of the correct dataset
 drop table if exists localinputtbl_2; 
 create table localinputtbl_2 as
@@ -60,8 +76,4 @@ select * from inputlocaltbl1 where %{privacycheck}=1
 union 
 select * from emptytable where %{privacycheck}=0;
 -----------------------------------------------------------------
-
-
 select count(distinct rid) as patients from defaultDB.inputlocaltbl;
-
-

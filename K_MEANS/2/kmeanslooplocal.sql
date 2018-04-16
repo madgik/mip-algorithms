@@ -1,11 +1,8 @@
 requirevars 'columns' 'k';
 
-
 drop table if exists columnstable;
 create table columnstable as
 select strsplitv('%{columns}' ,'delimiter:,') as col;
-
-
 
 drop table if exists clustercenters;
 alter table clustercentersnew rename to clustercenters;
@@ -23,8 +20,6 @@ from ( select rid, clid, sum( (val-clval) * (val-clval) ) as dist
               where colname = clcolname )
        group by rid,clid )
 group by rid;
-
-
 
 -- Compute new cluster centers
 create table clustercentersnew as

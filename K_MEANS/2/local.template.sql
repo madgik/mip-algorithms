@@ -22,10 +22,8 @@ drop table if exists clustercenters;
 create table clustercenters as select * from clustercentersnew;
 update clustercenters set clval = clval-1;
 
-
 drop table if exists assignnearestcluster;
 create table assignnearestcluster(rid  text primary key, clid, mindist);
-
 
 -- Run Loop
 execnselect 'columns' 'k' 
@@ -36,7 +34,6 @@ from ( whilevt select min(diff)=0
                             clustercentersnew as clnew
                        where clold.clid = clnew.clid and clold.clcolname = clnew.clcolname)
  );
-
 
 select clid as rid,
        clcolname as colname,
