@@ -9,21 +9,31 @@ drop table if exists xvariables;
 create table xvariables as
 select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
 
-
 --1. Keep only the correct colnames
 drop table if exists localinputtbl_1; 
 create table localinputtbl_1 as
 select __rid as rid,__colname as colname, tonumber(__val) as val
 from %{input_local_tbl};
---where colname in (select xname from xvariables) or colname = '%{y}' or colname= 'dataset' 
---order by rid, colname, val;				
 
---Check if variableS exist
-var 'counts' from select count(xname) from xvariables where xname in (select colname from localinputtbl_1);		-->>By Sof
-var 'result' from select count(xname) from xvariables;						
+--Check if x is empty
+var 'empty' from select case when (select '%{x}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+------------------
+--Check if y is epmpty
+var 'empty' from select case when (select '%{y}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+------------------
+
+create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
+--Check if x exist
+var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from xvariables);
+var 'result' from select count(xname) from xvariables;
 var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
-vars '%{valExists}'; 
---
+vars '%{valExists}';
+--Check if y exist
+var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{y}'))=0 then 0 else 1 end;
+vars '%{valExists}';
+----------
 
 --2. Keep only patients of the correct dataset
 drop table if exists localinputtbl_2; 
@@ -58,7 +68,6 @@ drop table if exists localinputtbl;
 alter table localinputtbl2 rename to localinputtbl;
 -----------------------------------------------------------------
 
---------------------------------------------------------------------------------------------
 -- Create input dataset for LR, that is input_local_tbl_LR_Final
 
 drop table if exists input_local_tbl_LR;
@@ -87,7 +96,6 @@ delete from input_local_tbl_LR
 where colname in (
 select colname from (select colname, typeof(val) as t from localinputtbl group by colname) where t='text');
 
-
 -- B. Model Formulae
 drop table if exists defaultDB.input_local_tbl_LR_Final;
 create table defaultDB.input_local_tbl_LR_Final as setschema 'rid , colname, val'
@@ -101,10 +109,3 @@ select distinct rid as rid,'(Intercept)' as colname, 1.0 as val from input_local
 
 select colname, FSUM(val) as S1, count(val) as N from defaultDB.input_local_tbl_LR_Final
 group by colname;
-  
-
-
-
-
-
-

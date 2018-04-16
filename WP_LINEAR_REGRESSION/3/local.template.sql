@@ -15,7 +15,4 @@ from ( select rid as rid1, sum(val*estimate) as predicted_value
        where colname = "%{y}" )
 where rid1=rid2;
 
-
 select rowid as rid1,e from defaultDB.residuals;
-
-

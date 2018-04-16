@@ -8,5 +8,3 @@ from ( select colname,
               SUM(N) as NA
         from %{input_global_tbl}
         group by colname );
-
-

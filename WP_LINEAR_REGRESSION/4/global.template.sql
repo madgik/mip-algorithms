@@ -6,10 +6,7 @@ attach database '%{defaultDB}' as defaultDB;
 hidden var 'myrow' from select sum(varvalue) from %{input_global_tbl} where varname="partial_myrow" group by varname ;
 hidden var 'mycol' from select max(varvalue) from %{input_global_tbl} where varname="mycol" ;
 hidden var 'sst' from select sum(varvalue) from %{input_global_tbl} where varname="partial_sst" group by varname;
-
 hidden var 'sse' from select sum(e*e) from defaultDB.residuals ;
-
-
 
 --E4. dSigmaSq <-- sum((Y-X*bcoefficients)^2)/(rows(X)-(columns(X)-1)) (Global Layer)
 --hidden var 'dSigmaSq' from select var('sse')/ (var('myrow')-var('mycol')) ;
@@ -29,7 +26,6 @@ from (  select attr, estimate, stderror, estimate/stderror as tvalue
 		where coefficients.attr1 = XTXinverted.attr1 and XTXinverted.attr1 = XTXinverted.attr2));
 
 alter table coefficients2 rename to coefficients;
-
 
 -----------------------------------------------------------------------------------------------------------------
 --F. Residuals min.Q1,median,Q3,max,stderror degreesoffreedom (GLOBAL LAYER)
