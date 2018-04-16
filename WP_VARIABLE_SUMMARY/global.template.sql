@@ -6,7 +6,6 @@ var 'HospNull' from select sum(valIsNull) from %{input_global_tbl}; -- How many 
 var 'HospText' from select sum(valIsText) from %{input_global_tbl}; -- 
 var 'HospNumber' from select sum(valIsNumber) from %{input_global_tbl};
 var 'HospCategorical'from select sum(categorical) from %{input_global_tbl};
-
 var 'categorical' from select case when (select %{HospCategorical} + %{HospNull} = %{HospNo}) and (select  %{HospNull} <> %{HospNo}) then "True" else "False" end;
 var 'number' from select case when (select %{HospNumber} + %{HospNull} = %{HospNo} ) and (select  %{HospNull} <> %{HospNo}) then "True" else "False" end;
 
@@ -33,4 +32,3 @@ from ( select
 
 select jdict('code','%{variable}', 'dataType', "SummaryStatistics", 'count',countsWithoutNull, 'min', minval,'max', maxval,'average', averageval,'std',stdval)
 from finalresult; 
-

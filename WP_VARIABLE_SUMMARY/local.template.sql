@@ -9,9 +9,15 @@ create temp table tempinputlocaltbl1 as
 select __rid as rid, __colname as colname, tonumber(__val) as val
 from %{input_local_tbl};
 
-var 'valExists' from select case when (select exists (select colname from tempinputlocaltbl1 where colname='%{variable}'))=0 then 0 else 1 end;
-vars '%{valExists}'; 
-	  				  
+--Check if colname is epmpty
+var 'empty' from select case when (select '%{variable}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+------------------------------------
+create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
+var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
+vars '%{valExists}';
+-----------------------------------------------------		  
+
 drop table if exists tempinputlocaltbl;
 create table tempinputlocaltbl as 
 select * from tempinputlocaltbl1
@@ -120,6 +126,3 @@ from (  select '%{variable}' as colname,
 		where  %{valIsNull} = 1
 )where  %{valIsNull} = 1
 ); 
-
-
-
