@@ -1,0 +1,13 @@
+{
+  "name"   : "WP_VARIABLES_HISTOGRAM",
+  "desc"   : "",
+  "type"   : "multiple_local_global",
+  "status" : "enabled",
+  "parameters" : [
+    {"name" : "column1", "desc" : "Column1 must be Real, Float or Integer", "value" : "subjectageyears"},
+    {"name" : "column2", "desc" : "Column2 must be Text or Null", "value" : ""},
+    {"name" : "nobuckets", "desc" : "", "value" : "4"},
+    {"name" : "dataset", "desc" : "", "value" : "ppmi"},
+    {"name" : "filter", "desc" : "", "value" : ""}
+  ]
+}
