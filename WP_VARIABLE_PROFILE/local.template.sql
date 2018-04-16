@@ -1,9 +1,5 @@
 requirevars 'defaultDB' 'input_local_tbl' 'variable' 'dataset' ;
 attach database '%{defaultDB}' as defaultDB;
-
---var 'input_local_tbl' 'chuv_dataeav';
---var 'variable' 'apoe4';  
---var 'dataset' 'adni';
  
 drop table if exists datasets;
 create table datasets as
@@ -15,8 +11,14 @@ select __rid as rid, __colname as colname, tonumber(__val) as val
 --select rid as rid, colname as colname, tonumber(val) as val
 from %{input_local_tbl};
 
-var 'valExists' from select case when (select exists (select colname from tempinputlocaltbl1 where colname='%{variable}'))=0 then 0 else 1 end;
-vars '%{valExists}'; --0 false 1 true
+--Check if colname is epmpty
+var 'empty' from select case when (select '%{variable}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+--------
+create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
+var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
+vars '%{valExists}';
+-----------------------------------------------------		  
 	  		  
 drop table if exists tempinputlocaltbl;
 create table tempinputlocaltbl as 
@@ -25,7 +27,7 @@ select * from tempinputlocaltbl1
 		
 var 'totalcount' from select count(rid) from tempinputlocaltbl;
 
-drop table if exists inputlocaltbl; -- diagrafw tis null values
+drop table if exists inputlocaltbl;
 create table inputlocaltbl as
 select * from tempinputlocaltbl 
 where val <> 'NA'     
@@ -51,9 +53,6 @@ var 'valIsText' from select case when (select typeof(val) from inputlocaltbl lim
 var 'valIsNumber' from select case when (select count(distinct val) from inputlocaltbl)>= 20 and %{valIsNull}= 0 then 1 else 0 end;
 var 'categoricalNumber' from select case when (select count(distinct val) from inputlocaltbl)< 20 and (select count(distinct val) from inputlocaltbl)> 0 and %{valIsNull}=0 and %{valIsText}=0 then 1 else 0 end;
 var 'categoricalText' from select case when (select count(distinct val) from inputlocaltbl)< 20 and (select count(distinct val) from inputlocaltbl)> 0 and %{valIsNull}=0 and %{valIsText}=1 then 1 else 0 end;
-
-
-
 var 'partner'  from select execprogram(null,'cat','/root/exareme/etc/exareme/name');
 
 --1. case when  val is a categorical number
@@ -184,5 +183,3 @@ from (  select '%{variable}' as colname,
 		where %{valIsNull} = 0
 )where  %{valIsNull} = 0
 ); 
-
- 

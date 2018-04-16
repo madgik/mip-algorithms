@@ -1,6 +1,5 @@
 requirevars 'input_global_tbl' 'variable';
 attach database '%{defaultDB}' as defaultDB;
-
 -----------------
 var 'HospNo'  from select count(N) as HospNo from %{input_global_tbl}; --  How many hospitals we have
 var 'HospNull' from select sum(valIsNull) from %{input_global_tbl}; -- How many hospitals have null values  (empty / null all their records) (count?)
@@ -54,13 +53,11 @@ select "DatasetStatistics1" as type, '%{variable}' as code, "NA" as categories, 
 from ( select colname, val, SUM(Ntotal) as Ntotal
        from (select * from %{input_global_tbl} where  %{NullValues}=1)
        group by val);	   
-	   
-	
+	   	
 insert into results --WHEN ALL HOSPITALS HAVE NULL VALUES
 select "DatasetStatistics2" as type, '%{variable}' as code, val as categories, partner as header, Ntotal as gval 
 from (select * from  %{input_global_tbl} where %{NullValues}=1 group by partner,val);	  
-	  
-	  
+	  	  
 insert into results 
 select "DatasetStatistics2" as type, '%{variable}' as code, val as categories, partner as header, N as gval
 from (select * from (select distinct S.__local_id,S.`__local_id:1`,
@@ -70,7 +67,6 @@ S.colname,T.val,S.minval,S.maxval,S.S1,S.S2,S.N,S.partner,S.Ntotal,S.valIsNull,S
 	        (val||partner not in (select val||partner from %{input_global_tbl}) and N=0))
 where  %{categoricalNumber}= 1 or %{categoricalText}= 1 ;
  
-
 drop table if exists defaultDB.resultsall;
 create table defaultDB.resultsall as
 select * from results;
