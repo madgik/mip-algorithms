@@ -1,10 +1,6 @@
 requirevars 'input_global_tbl' 'column1' 'column2' 'nobuckets';
 attach database '%{defaultDB}' as defaultDB;
 ---------------------------------------------------------------------------
-drop table if exists defaultDB.eleni;
-create table defaultDB.eleni as 
-select * from %{input_global_tbl};
-
 ----Check privacy due to minimum records or large bucket ----
 var 'minimumrecords' 10;
 var 'containsmorethantheminimumrecords' from 
