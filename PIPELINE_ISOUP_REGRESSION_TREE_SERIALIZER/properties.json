@@ -5,5 +5,5 @@
   "status" : "disabled",
   "vtype" : "none",
   "responseContentType" : "application/visjs+javascript",
-  "parameters" : [ {"name" : "target_attributes", "desc" : "", "value" : "apoe4"}, {"name" : "descriptive_attributes", "desc" : "", "value" : "subjectageyears,av45"}]
+  "parameters" : [ {"name" : "target_attributes", "desc" : "", "value" : "apoe4"}, {"name" : "descriptive_attributes", "desc" : "", "value" : "subjectageyears,av45"},{"name" : "dataset", "desc" : "", "value" : "adni,chuv_adni,epfl_adni"}]
 }
