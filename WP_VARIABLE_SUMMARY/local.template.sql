@@ -13,6 +13,10 @@ from %{input_local_tbl};
 var 'empty' from select case when (select '%{variable}')='' then 0 else 1 end;
 emptyfield '%{empty}';
 ------------------------------------
+--Check if dataset is epmpty
+var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
+emptyset '%{empty}';
+------------------
 create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
 vars '%{valExists}';

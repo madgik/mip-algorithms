@@ -4,8 +4,8 @@
   "status"         : "enabled",
   "type"           : "local_global",
   "parameters" : [
-    {"name" : "variable",  "desc" : "", "value" : "apoe4"},
-    {"name" : "dataset", "desc" : "", "value" : "adni,epfl_adni,chuv_adni"},
-    {"name" : "filter", "desc" : "", "value" : ""}
+    {"name" : "variable",  "desc" : "Ιt is a variable of the input dataset. The variable should be Real, Float, Integer, Text or null. It cannot be empty", "value" : "apoe4"},
+    {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,epfl_adni,chuv_adni"},
+    {"name" : "filter", "desc" : "It contains a filtering operation. It can be empty", "value" : ""}
   ]
 }

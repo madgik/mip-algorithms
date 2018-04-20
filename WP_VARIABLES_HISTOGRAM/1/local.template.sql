@@ -23,16 +23,27 @@ from %{input_local_tbl}	;
 --(select case when (select exists (select colname from localinputtbl_1 where colname='%{column2}'))=0 then 0 else 1 end as check2);
 --vars '%{valExists2}'; --0 false 1 true
 
---Check if colname is epmpty
+--Check if column1 is empty
 var 'empty' from select case when (select '%{column1}')='' then 0 else 1 end;
 emptyfield '%{empty}';
 ------------------
+--Check if nobuckets is empty
+var 'empty' from select case when (select '%{nobuckets}')='' then 0 else 1 end;
+emptyfield '%{empty}';
+------------------
+--Check if dataset is empty
+var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
+emptyset '%{empty}';
+------------------
+--Check if nobuckets is integer
+var 'checktype' from select case when (select typeof(tonumber('%{nobuckets}'))) = 'integer' then 1 else 0 end;
+vartypebucket '%{checktype}';
+-----------------
 create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
---Check if column1 exist
+--Check if column1 exist in the dataset
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{column1}'))=0 then 0 else 1 end;
 vars '%{valExists}';
-
---Check if column2 exist
+--Check if column2 exist in the dataset
 var 'valExists2' from select max(check1,check2) from
 (select case when (select '%{column2}')='' then 1 else 0 end as check1),
 (select case when (select exists (select colname from columnexist where colname='%{column2}'))=0 then 0 else 1 end as check2);
@@ -82,7 +93,7 @@ union
 select 1 as booltypeval where %{column2isempty} =1 or %{datasestisempty}= 1;
 
 var 'checkcolumnstypes' from select case when( %{iscorrecttypecolumn1}=0 or %{iscorrecttypecolumn2}=0 ) = 1 then 0 else 1 end;
-vartype '%{checkcolumnstypes}';
+vartypeshistogram '%{checkcolumnstypes}';
 
 -----------------------------------------------------------------
 drop table if exists defaultDB.localResult;

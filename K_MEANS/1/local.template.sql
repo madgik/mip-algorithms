@@ -29,10 +29,18 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{k}')='' then 0 else 1 end;
 emptyfield '%{empty}';
 ------------------
+--Check if dataset is epmpty
+var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
+emptyset '%{empty}';
+------------------
+--Check if k is integer
+var 'checktype' from select case when (select typeof(tonumber('%{k}'))) = 'integer' then 1 else 0 end;
+vartypek '%{checktype}';
+-----------------
 create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
 --Check if columns exist
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from columnstable);
-var 'result' from select count(xname) from columnstable;
+var 'result' from select count(distinct(xname)) from columnstable;
 var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
 vars '%{valExists}'; 
 --------
@@ -59,11 +67,13 @@ where rid not in (select distinct rid from localinputtbl_2
 order by rid, colname, val;
 
 --Real,Float,Integer only->Need to check if Inputlocaltbl is epmpty...If it is, then 'type' is 0 By Sof
+--Some values could be null (type:Text). We want to make sure that if "rid-colname('%{y}')-val" exist in a node, colname type is not "Text". That is why
+--we previously Delete patients with null values.
 var 'type' from select case when (select distinct(typeof(tonumber(val))) as val from inputlocaltbl1 where colname in (select * from columnstable))='integer' or  (select distinct(typeof(tonumber(val))) as val from inputlocaltbl1 where colname in (select * from columnstable))='real' or (select distinct(typeof(tonumber(val))) as val from inputlocaltbl1 where colname in (select * from columnstable))='float' then 1 else 0 end;
 var 'empty' from select count(*) from inputlocaltbl1;
 var 'checkEpmpty' from select case when (select  %{empty})= 0 then 1 else 0 end;
 var 'final' from select case when  (%{type}=0 and  %{checkEpmpty}=1) or (%{type}=1 and %{checkEpmpty}=0) then 1 else 0 end;
-vartype '%{final}';
+vartypecolumns '%{final}';
 ---------------------------------------------------------------------------------------------------------
 
 ----Check if number of patients are more than minimum records----
