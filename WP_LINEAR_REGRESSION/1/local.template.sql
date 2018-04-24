@@ -19,18 +19,21 @@ from %{input_local_tbl};
 var 'empty' from select case when (select '%{x}')='' then 0 else 1 end;
 emptyfield '%{empty}';
 ------------------
---Check if y is epmpty
+--Check if y is empty
 var 'empty' from select case when (select '%{y}')='' then 0 else 1 end;
 emptyfield '%{empty}';
 ------------------
-
+--Check if dataset is empty
+var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
+emptyset '%{empty}';
+------------------
 create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
---Check if x exist
+--Check if x exist in dataset
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from xvariables);
 var 'result' from select count(xname) from xvariables;
 var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
 vars '%{valExists}';
---Check if y exist
+--Check if y exist in dataset
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{y}'))=0 then 0 else 1 end;
 vars '%{valExists}';
 ----------
@@ -55,6 +58,15 @@ from localinputtbl_2
 where rid not in (select distinct rid from localinputtbl_2 
                   where val is null or val = '' or val = 'NA')
 order by rid, colname, val;
+
+--y value:Real,Float or Integer.   
+--Some values could be null (type:Text). We want to make sure that if "rid-colname('%{y}')-val" exist in a node, colname type is not "Text". That is why
+--we previously Delete patients with null values.
+var 'type' from select case when (select distinct(typeof(tonumber(val))) as val from localinputtbl where colname='%{y}')='integer' or  (select distinct(typeof(tonumber(val))) as val from localinputtbl where colname = '%{y}')='real' or (select distinct(typeof(tonumber(val))) as val from localinputtbl where colname='%{y}')='float' then 1 else 0 end;
+var 'empty' from select count(colname) from localinputtbl where colname='%{y}';          --is epmpty?...If it is, then 'type' is 0
+var 'checkEpmpty' from select case when (select  %{empty})= 0 then 1 else 0 end;
+var 'final' from select case when  (%{type}=0 and %{checkEpmpty}=1) or (%{type}=1 and %{checkEpmpty}=0) then 1 else 0 end;
+vartypey '%{final}';
 
 ----Check if number of patients are more than minimum records----
 var 'minimumrecords' 10;
@@ -100,6 +112,14 @@ select colname from (select colname, typeof(val) as t from localinputtbl group b
 drop table if exists defaultDB.input_local_tbl_LR_Final;
 create table defaultDB.input_local_tbl_LR_Final as setschema 'rid , colname, val'
 select modelFormulae(rid,colname,val, "%{x}") from input_local_tbl_LR group by rid;
+
+var 'colnames' from select jmergeregexp(jgroup(colname)) from (select colname from localinputtbl group by colname having count(distinct val)=1); --NEW
+drop table if exists defaultDB.deletedcolumns; --NEW
+create table defaultDB.deletedcolumns as setschema 'colname' 
+select distinct colname from defaultDB.input_local_tbl_LR_Final where regexprmatches('%{colnames}' ,colname); --NEW
+
+delete from  defaultDB.input_local_tbl_LR_Final --NEW
+where colname in (select * from defaultDB.deletedcolumns); --NEW
 
 insert into defaultDB.input_local_tbl_LR_Final
 select rid,colname,val from input_local_tbl_LR where colname = '%{y}';  

@@ -27,6 +27,8 @@ from (  select attr, estimate, stderror, estimate/stderror as tvalue
 
 alter table coefficients2 rename to coefficients;
 
+insert into coefficients
+select colname, 'NA','NA','NA','NA' from defaultDB.deletedcolumns;
 -----------------------------------------------------------------------------------------------------------------
 --F. Residuals min.Q1,median,Q3,max,stderror degreesoffreedom (GLOBAL LAYER)
 drop table if exists residualsStatistics;

@@ -14,7 +14,7 @@ where colname = '%{y}';
 
 drop table if exists myvariables;
 create table myvariables as select 'partial_myrow' as varname, %{partial_myrow} as varvalue;
-insert into myvariables select 'mycol' as varname, case when %{mycol} is null then 0 else %{mycol}  end as varvalue;			--query 8
+insert into myvariables select 'mycol' as varname, case when %{mycol} is null then 0 else %{mycol}  end as varvalue;	
 insert into myvariables select 'partial_sst' as varname, case when var('partial_sst') is null then 0 else var('partial_sst') end as varvalue;
 
 select * from myvariables;
