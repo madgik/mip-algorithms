@@ -4,7 +4,6 @@ drop table if exists columnstable;
 create table columnstable as
 select strsplitv('%{target_attributes},%{descriptive_attributes}' ,'delimiter:,') as xname;
 
-
 var 'select_vars' from
 ( select group_concat('"'||xname||'"',', ') as select_vars from columnstable);
 

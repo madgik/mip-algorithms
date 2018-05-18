@@ -5,6 +5,10 @@ drop table if exists datasets;
 create table datasets as
 select strsplitv('%{dataset}','delimiter:,') as d;
 
+drop table if exists targetstable;
+create table targetstable as
+select strsplitv('%{target_attributes}' ,'delimiter:,') as targetname;
+
 drop table if exists columnstable;
 create table columnstable as
 select strsplitv('%{target_attributes},%{descriptive_attributes}' ,'delimiter:,') as xname;
@@ -12,6 +16,11 @@ select strsplitv('%{target_attributes},%{descriptive_attributes}' ,'delimiter:,'
 create temp table localinputtbl_1 as
 select __rid as rid,__colname as colname, __val as val
 from %{input_local_tbl};
+
+var 'target_vars' from
+( select group_concat('"'||targetname||'"',', ') from targetstable);
+
+delete from localinputtbl_1 where rid in (select distinct rid from localinputtbl_1 where colname in (%{target_vars}) and val is null);
 
 --Check if descriptive_attributes is empty
 var 'empty' from select case when (select '%{descriptive_attributes}')='' then 0 else 1 end;
@@ -28,7 +37,7 @@ emptyset '%{empty}';
 create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
 --Check if columns exist
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from columnstable);
-var 'result' from select count(xname) from columnstable;
+var 'result' from select count(distinct(xname)) from columnstable;
 var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
 vars '%{valExists}'; 
 -------------
