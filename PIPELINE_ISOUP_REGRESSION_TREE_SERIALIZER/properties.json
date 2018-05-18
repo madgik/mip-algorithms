@@ -5,6 +5,6 @@
   "status" : "disabled",
   "vtype" : "none",
   "responseContentType" : "application/visjs+javascript",
-  "parameters" : [ {"name" : "target_attributes", "desc" : "Dependent parameters. One or more can be selected.", "value" : "apoe4"}, {"name" : "descriptive_attributes", "desc" : "Independent parameters. One or more can be selected.", "value" : "subjectageyears,av45"},{"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni,epfl_adni"},
-    {"name" : "filter", "desc" : "It contains a filtering operation. It can be empty.", "value" : ""}]
+  "parameters" : [ {"name" : "target_attributes", "desc" : "Dependent parameters. One or more can be selected.", "value" : "apoe4"}, {"name" : "descriptive_attributes", "desc" : "Independent parameters. One or more can be selected.", "value" : "subjectageyears,av45"},{"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"}
+    ]
 }

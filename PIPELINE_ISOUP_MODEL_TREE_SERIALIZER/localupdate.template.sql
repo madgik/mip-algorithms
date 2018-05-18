@@ -38,7 +38,8 @@ var 'select_vars' from
 
 var 'target_var_count' from select count(*) from (select strsplitv('%{target_attributes}' ,'delimiter:,') as xname);
 
-create temp table data as select %{select_vars}  from (fromeav select * from localinputtbl_1 where rid in (select rid from localinputtbl_1  where colname = 'dataset' and val in (select d from datasets)));
+create temp table data as select %{select_vars}  from (fromeav select * from localinputtbl_1 where rid in (select rid from localinputtbl_1 where colname = 'dataset' and val in (select d from datasets)));
+
 ----Check if number of patients are more than minimum records----
 var 'minimumrecords' 10;
 create temp table emptytable as select * from data limit 0;
@@ -49,11 +50,13 @@ union all
 select * from emptytable where %{privacycheck}=0;
 ------
 
-select * from (output 'input.arff'
-               select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
-                      select "" union all select "@attribute "||column||" numeric" from (
-coltypes select * from safeData) union all
-                             select "" union all select "@data" union all select * from (csvout select * from safeData));
+--select * from (output 'input.arff'
+--               select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
+--                      select "" union all select "@attribute "||column||" numeric" from (
+--coltypes select * from safeData) union all
+ --                            select "" union all select "@data" union all select * from (csvout select * from safeData));
+
+arff_writer select  * from safeData;
 
 select writebinary('model.ser.prev', bin) from  %{prv_output_local_tbl};
 

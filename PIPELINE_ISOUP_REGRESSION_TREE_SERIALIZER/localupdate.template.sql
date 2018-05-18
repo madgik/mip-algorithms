@@ -50,11 +50,13 @@ union all
 select * from emptytable where %{privacycheck}=0;
 ------
 
-select * from (output 'input.arff'
-               select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
-                      select "" union all select "@attribute "||column||" numeric" from (
-coltypes select * from safeData) union all
-                             select "" union all select "@data" union all select * from (csvout select * from safeData));
+--select * from (output 'input.arff'
+--               select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
+--                      select "" union all select "@attribute "||column||" numeric" from (
+--coltypes select * from safeData) union all
+ --                            select "" union all select "@data" union all select * from (csvout select * from safeData));
+
+arff_writer select  * from safeData;
 
 select writebinary('rtree.ser.prev', bin) from  %{prv_output_local_tbl};
 

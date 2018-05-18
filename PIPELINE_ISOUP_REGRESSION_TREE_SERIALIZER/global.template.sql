@@ -13,7 +13,7 @@ var 'target_var_count' from select count(*) from (select strsplitv('%{target_att
 create temp table data as select %{select_vars};
 
 select * from (output 'input.arff'
-               select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
+               select "@relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
                       select "" union all select "@attribute "||column||" numeric" from (
 coltypes select * from data) union all
                              select "" union all select "@data" );
