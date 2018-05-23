@@ -60,7 +60,7 @@ select * from emptytable where %{privacycheck}=0;
 ------
 
 --select * from (output 'input.arff'
---               select "@attribute relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
+--               select "@relation hour-weka.filters.unsupervised.attribute.Remove-R1-2" union all
 --                      select "" union all select "@attribute "||column||" numeric" from (
 --coltypes select * from safeData) union all
  --                            select "" union all select "@data" union all select * from (csvout select * from safeData));

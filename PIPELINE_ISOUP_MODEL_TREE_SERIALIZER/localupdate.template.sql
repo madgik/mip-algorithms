@@ -20,7 +20,9 @@ from %{input_local_tbl};
 var 'target_vars' from
 ( select group_concat('"'||targetname||'"',', ') from targetstable);
 
-delete from localinputtbl_1 where rid in (select distinct rid from localinputtbl_1 where colname in ("||%{target_attributes}||") and val is null);
+--delete from localinputtbl_1 where rid in (select distinct rid from localinputtbl_1 where colname in ("||%{target_attributes}||") and val is null);
+
+delete from localinputtbl_1 where rid in (select distinct rid from localinputtbl_1 where colname in (%{target_vars}) and val is null);
 
 --Check if descriptive_attributes is empty
 var 'empty' from select case when (select '%{descriptive_attributes}')='' then 0 else 1 end;
