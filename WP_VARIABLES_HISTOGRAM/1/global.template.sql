@@ -1,35 +1,37 @@
 requirevars 'input_global_tbl' 'column1' 'column2' 'nobuckets';
 attach database '%{defaultDB}' as defaultDB;
----------------------------------------------------------------------------
-----Check privacy due to minimum records or large bucket ----
-var 'minimumrecords' 10;
-var 'containsmorethantheminimumrecords' from 
-select case when totalpatients < %{minimumrecords} then 0 else 1 end as containsmorethantheminimumrecords
-from ( select sum(patients) as totalpatients
-       from %{input_global_tbl}
-       where colname = '%{column1}'
-	  );
-varminimumrec '%{containsmorethantheminimumrecords}';
-	  
-var 'largenobuckets' from 
-select case when totalpatients*0.1<=%{nobuckets} then 0 else 1 end as  largenobuckets
-from ( select sum(patients) as totalpatients
-       from %{input_global_tbl}
-       where colname = '%{column1}'
-	  );
-largebucket '%{largenobuckets}';
 
+--var 'input_global_tbl' 'defaultDB.localResult'; --DELETE
+
+-------------------------------------------------------------------------------------
+var 'column1IsText' from select min(column1IsText) from %{input_global_tbl};
+var 'column1IsCategoricalNumber' from select min(column1IsCategoricalNumber) from %{input_global_tbl};
+var 'column1IsCategorical' from select max(%{column1IsText},%{column1IsCategoricalNumber});
+
+
+drop table if exists defaultDB.globalResult; --DELETE
+create table defaultDB.globalResult as --DELETE
+-- 1. case when column1 is not text
+select * from (
 select  colname,
         minvalue,
         maxvalue,
-        FARITH('/',S1A,NA) as avgvalue,
-        SQROOT( FARITH('/', '-', '*', NA, S2A, '*', S1A, S1A, '*', NA, '-', NA, 1)) as stdvalue
+	N,
+	%{column1IsCategorical} as column1IsCategorical
 from ( select colname,
               min(minvalue) as minvalue,
               max(maxvalue) as maxvalue,
-              FSUM(S1) as S1A,
-              FSUM(S2) as S2A,
-              sum(N) as NA
+              sum(N) as N
        from %{input_global_tbl}
-       where colname = '%{column1}'
-) where colname = '%{column1}';
+       where colname = '%{column1}') 
+where colname = '%{column1}'
+)
+where %{column1IsCategorical}=0
+
+
+union all 
+ -- 2. case when column1 is text 
+select null,null, null, null, %{column1IsCategorical} as column1IsCategorical
+where %{column1IsCategorical}=1;
+
+select * from defaultDB.globalResult; --DELETE 

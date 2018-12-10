@@ -1,111 +1,92 @@
 requirevars 'defaultDB' 'input_local_tbl' 'column1' 'column2' 'nobuckets' 'dataset';
 attach database '%{defaultDB}' as defaultDB;
 
-------- Create the correct dataset 
-drop table if exists datasets;
-create table datasets as
-select strsplitv('%{dataset}','delimiter:,') as d;
+-- We assume that a categorical integer does not have more than 20 different values. Check: var 'column1IsCategoricalNumber' 
+-- We assume that all the columns of text type are categorical
 
---1. Keep only the correct colnames
-drop table if exists localinputtbl_1; 
-create table localinputtbl_1 as
-select __rid as rid,__colname as colname, tonumber(__val) as val
-from %{input_local_tbl}	;	
 
----- Check If variables exist in the dataset 
---var 'valExists1' from select max(check1,check2) from
---(select case when (select '%{column1}')='' then 0 else 1 end as check1),
---(select case when (select exists (select colname from localinputtbl_1 where colname='%{column1}'))=0 then 0 else 1 end as check2);
---vars '%{valExists1}'; --0 false 1 true
+--------------------------------------------- FOR TESTING -------------------------------------------------------------------------
+--var 'column1' 'subjectageyears'; 
+-- text columns: subjectcode, adnicategory , agegroup, alzheimerbroadcategory, dataset, gender, neurogenerativescategories, parkinsonbroadcategory, ppmicategory, edsdcategory
+-- categorical integer: apoe4 ,minimentalstate
+-- real columns:subjectageyears
+--var 'column2' 'adnicategory';
+--var 'dataset' 'adni,ppmi'; 
+--var 'defaultDB' 'defaultDB';
+--var 'nobuckets' 3;
+--attach database '%{defaultDB}' as defaultDB;
 
---var 'valExists2' from select max(check1,check2) from
---(select case when (select '%{column2}')='' then 1 else 0 end as check1),
---(select case when (select exists (select colname from localinputtbl_1 where colname='%{column2}'))=0 then 0 else 1 end as check2);
---vars '%{valExists2}'; --0 false 1 true
+--drop table if exists inputtablefromraw;
+--create table inputtablefromraw as 
+--select rid, colname, val 
+--from (file header:t '/home/eleni/Documents/HBP-SGA2/DATASETS FOR TESTING/DATASETS FROM SGA1/chuv_f.csv');
+--insert into inputtablefromraw 
+--select rid, colname, val 
+--from  (file header:t '/home/eleni/Documents/HBP-SGA2/DATASETS FOR TESTING/DATASETS FROM SGA1/epfl_f.csv');
+--insert into inputtablefromraw 
+--select rid, colname, val 
+--from (file  header:t '/home/eleni/Documents/HBP-SGA2/DATASETS FOR TESTING/DATASETS FROM SGA1/uoa_f.csv');
+---------------------------------------------------------------------------------------------------------------------------------------------
 
---Check if column1 is empty
-var 'empty' from select case when (select '%{column1}')='' then 0 else 1 end;
-emptyfield '%{empty}';
-------------------
+drop table if exists inputtablefromraw; 
+create table inputtablefromraw as
+select __rid as rid,__colname as colname, __val as val
+from %{input_local_tbl};
+
 --Check if nobuckets is empty
-var 'empty' from select case when (select '%{nobuckets}')='' then 0 else 1 end;
-emptyfield '%{empty}';
-------------------
---Check if dataset is empty
-var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
-emptyset '%{empty}';
-------------------
+var 'nobucketsisempty' from select case when (select '%{nobuckets}')='' then 0 else 1 end;
+emptyfield '%{nobucketsisempty}';
+
 --Check if nobuckets is integer
-var 'checktype' from select case when (select typeof(tonumber('%{nobuckets}'))) = 'integer' then 1 else 0 end;
-vartypebucket '%{checktype}';
------------------
-create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
---Check if column1 exist in the dataset
-var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{column1}'))=0 then 0 else 1 end;
-vars '%{valExists}';
---Check if column2 exist in the dataset
-var 'valExists2' from select max(check1,check2) from
-(select case when (select '%{column2}')='' then 1 else 0 end as check1),
-(select case when (select exists (select colname from columnexist where colname='%{column2}'))=0 then 0 else 1 end as check2);
-vars '%{valExists2}'; 
-----------------------
+var 'nobucketstype' from select case when (select typeof(tonumber('%{nobuckets}'))) = 'integer' then 1 else 0 end;
+vartypebucket '%{nobucketstype}';
 
---2. Keep only patients of the correct dataset
-drop table if exists localinputtbl_2; 
-create table localinputtbl_2 as
-select rid, colname, val
-from localinputtbl_1
-where rid in (select distinct rid  
-              from localinputtbl_1 
-              where colname ='dataset' and val in (select d from datasets));
+var 'columns' from select case when '%{column2}'<>'' then '{"1": "'||'%{column1}'||'","2": "'||'%{column2}'||'"}' else '{"1": "'||'%{column1}'||'"}' end as  columns;
+var 'columnsshouldbeoftype' from select case when '%{column2}'<>'' then '{"1": "Real,Float,Integer,Text", "2": "Text"}' else '{"1": "Real,Float,Integer,Text"}' end as  columnstype;
 
---3.  Delete patients with null values 
-drop table if exists inputlocaltbl1; 
-create table inputlocaltbl1 as
-select rid, colname, val
-from localinputtbl_2
-where rid not in (select distinct rid from localinputtbl_2 
-                  where val is null or val = '' or val = 'NA');
+execnselect 'defaultDB' 'columns''columnsshouldbeoftype''dataset' 
+select filetext('/root/mip-algorithms/WP_VARIABLES_HISTOGRAM/1/CreateInputData.sql');
+--select filetext('/root/mip-algorithms/WP_VARIABLES_HISTOGRAM/CreateInputData_v1_EL_SO.sql');
 
-delete from inputlocaltbl1
-where colname = 'dataset';
+var 'column1IsText' from select case when (select typeof(val) from defaultDB.inputlocaltbl where colname = '%{column1}' limit 1) ='text' then 1 else 0 end;
 
-drop table if exists defaultDB.inputlocaltbl;
-create table defaultDB.inputlocaltbl as select * from inputlocaltbl1;
-
-----Check types of columns ----
-var 'datasestisempty' from select case when count(*)=0 then 1 else 0 end from defaultDB.inputlocaltbl;
-var 'iscorrecttypecolumn1' from
-select booltypeval from
-( select case when typeval = 'integer' or  typeval = 'float' or  typeval = 'real' then 1 else 0 end as booltypeval
-  from (select distinct(typeof(tonumber(val))) as typeval from defaultDB.inputlocaltbl where colname = '%{column1}')
-  where %{datasestisempty} == 0)
-union 
-select 1 as booltypeval where  %{datasestisempty} == 1;
-
-var 'column2isempty' from select (select '%{column2}')='';
-var 'iscorrecttypecolumn2' from 
-select booltypeval
-from ( select case when typeval = 'text'  then 1 else 0 end as booltypeval
-		from (select distinct(typeof(tonumber(val))) as typeval from defaultDB.inputlocaltbl where colname = '%{column2}' )
-		where  %{column2isempty} = 0 and %{datasestisempty}= 0)
-union 
-select 1 as booltypeval where %{column2isempty} =1 or %{datasestisempty}= 1;
-
-var 'checkcolumnstypes' from select case when( %{iscorrecttypecolumn1}=0 or %{iscorrecttypecolumn2}=0 ) = 1 then 0 else 1 end;
-vartypeshistogram '%{checkcolumnstypes}';
+var 'column1IsCategoricalNumber' from 
+select case when (select count(distinct val) from defaultDB.inputlocaltbl where colname = '%{column1}')< 20 and 
+                 (select count(distinct val) from defaultDB.inputlocaltbl where colname = '%{column1}')> 0 and 
+                  %{column1IsText}=0 then 1 else 0 end;
 
 -----------------------------------------------------------------
 drop table if exists defaultDB.localResult;
-create table defaultDB.localResult as
-select  '%{column1}' as colname,
+create table defaultDB.localResult as 
+-- 1. case when column1 is not text
+select * from 
+(select  '%{column1}' as colname,
+       "NA" as val,
        min(val) as minvalue,
        max(val) as maxvalue,
-       FSUM(val) as S1,
-       FSUM(FARITH('*', val, val)) as S2,
        count(val) as N,
-	   count(distinct rid) as patients --NEW 
+       count(distinct rid) as patients,
+       %{column1IsText} as column1IsText,
+       %{column1IsCategoricalNumber} as column1IsCategoricalNumber
 from defaultDB.inputlocaltbl
-where colname = '%{column1}';
+where colname = '%{column1}')
+where %{column1IsText}=0
+union all 
+ -- 2. case when column1 is text 
+select null,null,null,null,null,null, %{column1IsText} as column1IsText,%{column1IsCategoricalNumber} as column1IsCategoricalNumber
+where %{column1IsText}=1;
 
-select * from defaultDB.localResult;
+---------------------------------------------------------------------------
+--Check privacy due to minimum records in each bucket ----
+var 'minimumrecords' 10;
+var 'containsmorethantheminimumrecords' from 
+select case when patients < %{minimumrecords} then 0 else 1 end as containsmorethantheminimumrecords
+from  defaultDB.localResult
+where colname = '%{column1}' and  %{column1IsText}=0
+union all 
+select 1 as containsmorethantheminimumrecords  where %{column1IsText}=1;
+
+--varminimumrec '%{containsmorethantheminimumrecords}'; 		--prepei  = 1
+select * from defaultDB.localResult; 
+
+
