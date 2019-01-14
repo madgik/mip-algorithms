@@ -1,4 +1,4 @@
-requirevars 'input_local_tbl' 'columns' 'k' 'defaultDB';
+requirevars 'input_local_tbl' 'columns' 'k' 'defaultDB' 'dataset';
 attach database '%{defaultDB}' as defaultDB; 
 
 drop table if exists datasets;
