@@ -1,7 +1,7 @@
 requirevars 'defaultDB' 'input_local_tbl' 'column1' 'column2' 'nobuckets' 'dataset';
 attach database '%{defaultDB}' as defaultDB;
 
--- We assume that a categorical integer does not have more than 20 different values. Check: var 'column1IsCategoricalNumber' 
+-- We assume that a categorical integer does not have more than 32 different values. Check: var 'column1IsCategoricalNumber' 
 -- We assume that all the columns of text type are categorical
 
 
@@ -51,7 +51,7 @@ select filetext('/root/mip-algorithms/WP_VARIABLES_HISTOGRAM/1/CreateInputData.s
 var 'column1IsText' from select case when (select typeof(val) from defaultDB.inputlocaltbl where colname = '%{column1}' limit 1) ='text' then 1 else 0 end;
 
 var 'column1IsCategoricalNumber' from 
-select case when (select count(distinct val) from defaultDB.inputlocaltbl where colname = '%{column1}')< 20 and 
+select case when (select count(distinct val) from defaultDB.inputlocaltbl where colname = '%{column1}')< 32 and 
                  (select count(distinct val) from defaultDB.inputlocaltbl where colname = '%{column1}')> 0 and 
                   %{column1IsText}=0 then 1 else 0 end;
 
