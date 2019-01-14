@@ -7,7 +7,7 @@ select strsplitv('%{dataset}','delimiter:,') as d;
 
 drop table if exists xvariables;
 create table xvariables as
-select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
+select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;		
 
 --1. Keep only the correct colnames
 drop table if exists localinputtbl_1; 
@@ -126,6 +126,10 @@ select rid,colname,val from input_local_tbl_LR where colname = '%{y}';
 --
 insert into defaultDB.input_local_tbl_LR_Final
 select distinct rid as rid,'(Intercept)' as colname, 1.0 as val from input_local_tbl_LR;
+
+drop table if exists defaultDB.lala;
+create table defaultDB.lala as select colname, FSUM(val) as S1, count(val) as N from defaultDB.input_local_tbl_LR_Final
+group by colname;
 
 select colname, FSUM(val) as S1, count(val) as N from defaultDB.input_local_tbl_LR_Final
 group by colname;
