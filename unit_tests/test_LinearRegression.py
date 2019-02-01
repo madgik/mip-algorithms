@@ -3,13 +3,11 @@ import json
 import logging
 import math
 
-#import os
-
 headers = {'Content-type': 'application/json', "Accept": "text/plain"}
 url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_LINEAR_REGRESSION'
 
-def test_LinearRegression_UOA_ADNI_NOFILTERS():
-    logging.info("---------- TEST : LinearRegression_UOA_ADNI_NOFILTERS")
+def test_LinearRegression_PARTIAL_ADNI_NOFILTERS():
+    logging.info("---------- TEST : Linear Regression Partial ADNI")
 
     data = [
           {
@@ -59,7 +57,7 @@ def test_LinearRegression_UOA_ADNI_NOFILTERS():
     check_variable(result['resources'][0]['data'][9],'subjectage', 0.003816, 0.001582, 2.412, 0.01639)
 
 def test_LinearRegression_FULL_ADNI_NOFILTERS():
-    logging.info("---------- TEST : LinearRegression_FULL_ADNI_NOFILTERS")
+    logging.info("---------- TEST : Linear Regression FULL ADNI")
 
     data = [
           {
