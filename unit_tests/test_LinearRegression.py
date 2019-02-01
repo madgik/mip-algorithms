@@ -3,8 +3,9 @@ import json
 import logging
 import math
 
-headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+
 url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_LINEAR_REGRESSION'
+
 
 def test_LinearRegression_PARTIAL_ADNI_NOFILTERS():
     logging.info("---------- TEST : Linear Regression Partial ADNI")
@@ -27,6 +28,8 @@ def test_LinearRegression_PARTIAL_ADNI_NOFILTERS():
             "value": ""
           }
         ]
+    
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
     r = requests.post(url,data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)
@@ -77,6 +80,8 @@ def test_LinearRegression_FULL_ADNI_NOFILTERS():
             "value": ""
           }
         ]
+    
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
     r = requests.post(url,data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)

@@ -3,9 +3,8 @@ import json
 import logging
 
 
-
-headers = {'Content-type': 'application/json', "Accept": "text/plain"}
 url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_VARIABLES_HISTOGRAM'
+
 
 def test_HISTOGRAM_1():
     logging.info("---------- TEST : Histogram ADNI 1")
@@ -32,6 +31,8 @@ def test_HISTOGRAM_1():
                     "value": ""
                 }
             ]
+    
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
     r = requests.post(url,data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)
@@ -128,6 +129,8 @@ def test_HISTOGRAM_2():
                     "value": ""
                 }
             ]
+    
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
     r = requests.post(url,data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)

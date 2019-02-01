@@ -3,9 +3,8 @@ import json
 import logging
 
 
-
-headers = {'Content-type': 'application/json', "Accept": "text/plain"}
 url='http://prozac.madgik.di.uoa.gr:9090/mining/query/PIPELINE_ISOUP_REGRESSION_TREE_SERIALIZER'
+
 
 def test_PIPELINE_REGRESSION_TREE_SERIALIZER_1():
     logging.info("---------- TEST : Pipeline Regression Tree Serializer ADNI")
@@ -28,6 +27,8 @@ def test_PIPELINE_REGRESSION_TREE_SERIALIZER_1():
                     "value": ""
                 }
             ]
+    
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
     result = requests.post(url,data=json.dumps(data),headers=headers)
         
     """
