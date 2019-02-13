@@ -1,0 +1,13 @@
+{
+  "name" : "K_MEANS",
+  "desc" : "JSON",
+  "type" : "multiple_local_global",
+  "status" : "enabled",
+  "vtype" : "clusterplot",
+  "parameters" : [
+    {"name" : "columns", "desc" : "It contains two or more variables of the input dataset. They should be Real, Float, Integer. It cannot be empty.", "value" : "apoe4,subjectageyears"},
+    {"name" : "k", "desc" : "It is the number of the clusters. It should be integer.", "value" : "4"},
+    {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
+    {"name" : "filter", "desc" : "", "value" : ""}
+  ]
+}
