@@ -1,0 +1,13 @@
+{
+  "name"   : "WP_STATISTICS",
+  "desc"   : "",
+  "type"   : "multiple_local_global",
+  "status" : "disabled",
+  "vtype"  :  "none",
+  "parameters" : [
+    {"name" : "variable",  "desc" : "", "value" : "rightventraldc"},
+    {"name" : "groupings",  "desc" : "", "value" : "leftaccumbensarea,apoe4"},
+    {"name" : "covariables","desc" : "", "value" : "subjectageyears,gender"},
+    {"name" : "dataset", "desc" : "", "value" : "adni,edsd,ppmi"}
+  ]
+}
