@@ -8,6 +8,6 @@
     {"name" : "y", "desc" : "The left part of the linear predictor function, that contains the dependent variable.The dependent variable is a variable of the input dataset and it should be Real, Float or Integer. It cannot be empty", "value" : "av45"},
     {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
     {"name" : "filter", "desc" : "", "value" : ""}
-  ]
+  ]sdffasdfds
 }
 
