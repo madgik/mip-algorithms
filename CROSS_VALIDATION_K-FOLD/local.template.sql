@@ -79,7 +79,8 @@ select categorical = 'Yes' from defaultDB.local_variablesdatatype_Existing where
 drop table if exists defaultDB.local_inputTBL;
 create table defaultDB.local_inputTBL as 
 select h.rid as rid, h.colname as colname, h.val as val , 
-       h.rid % tonumber('%{kfold}') as idofset, --TODO ELENI. It is not working if the rid is not number
+       -- h.rid % tonumber('%{kfold}') as idofset, --TODO ELENI. It is not working if the rid is not number
+	hashmodarchdep2(h.rid, %{kfold}) as idofset,
 	   c.val as classval
 from table3  as h,
      (select rid, val from table3 where colname = var('classname')) as c
