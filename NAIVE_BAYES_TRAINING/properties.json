@@ -1,0 +1,12 @@
+{
+  "name" : "BayesNaive_v3",
+  "desc" : "BayesNaive_v3",
+  "type" : "local_global",
+  "status" : "enabled",
+  "vtype" : "",
+  "parameters" : [
+   {"name" : "classname", "desc" : "", "value" : "play"},
+   {"name" : "iterationnumber", "desc" : "", "value" : "0"},
+   {"name" : "alpha", "desc" : "", "value" : "0.1"}]
+]
+}

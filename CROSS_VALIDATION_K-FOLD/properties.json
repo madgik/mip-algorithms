@@ -1,0 +1,13 @@
+{
+  "name" : "Cross Validation",
+  "desc" : "Cross Validation",
+  "type" : "local_global",
+  "status" : "enabled",
+  "vtype" : "",
+  "parameters" : [
+   {"name" : "datasets", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
+   {"name" : "columns", "desc" : "", "value" : "outlook,temperature,humidity,windy"},
+   {"name" : "classname", "desc" : "", "value" : "play"},
+   {"name" : "kfold", "desc" : "", "value" : "3"}]
+}
+
