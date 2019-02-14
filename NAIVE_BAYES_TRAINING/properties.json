@@ -1,5 +1,5 @@
 {
-  "name" : "BayesNaive_v3",
+  "name" : "NAIVE_BAYES_TRAINING",
   "desc" : "BayesNaive_v3",
   "type" : "local_global",
   "status" : "enabled",
@@ -7,6 +7,6 @@
   "parameters" : [
    {"name" : "classname", "desc" : "", "value" : "play"},
    {"name" : "iterationnumber", "desc" : "", "value" : "0"},
-   {"name" : "alpha", "desc" : "", "value" : "0.1"}]
-]
+   {"name" : "alpha", "desc" : "", "value" : "0.1"}
+  ]
 }

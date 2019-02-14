@@ -1,6 +1,6 @@
 {
-  "name" : "Cross Validation",
-  "desc" : "Cross Validation",
+  "name" : "CROSS_VALIDATION_K_FOLD",
+  "desc" : "Cross Validation K Fold",
   "type" : "local_global",
   "status" : "enabled",
   "vtype" : "",
