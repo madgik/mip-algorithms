@@ -1,5 +1,5 @@
 {
-  "name"           : "WP_VARIABLE_SUMMARY",
+  "name"           : "VARIABLE_SUMMARY",
   "desc"           : "",
   "status"         : "enabled",
   "type"           : "local_global",

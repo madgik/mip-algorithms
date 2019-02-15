@@ -3,7 +3,7 @@ import json
 import logging
 
 
-url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_VARIABLES_HISTOGRAM'
+url='http://prozac.madgik.di.uoa.gr:9090/mining/query/VARIABLES_HISTOGRAM'
 
 
 def test_HISTOGRAM_1():

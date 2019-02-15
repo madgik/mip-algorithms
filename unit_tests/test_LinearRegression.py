@@ -4,7 +4,7 @@ import logging
 import math
 
 
-url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_LINEAR_REGRESSION'
+url='http://prozac.madgik.di.uoa.gr:9090/mining/query/LINEAR_REGRESSION'
 
 
 def test_LinearRegression_PARTIAL_ADNI_NOFILTERS():

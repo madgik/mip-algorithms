@@ -1,5 +1,5 @@
 {
-  "name" : "WP_LINEAR_REGRESSION",
+  "name" : "LINEAR_REGRESSION",
   "desc" : "",
   "type" : "multiple_local_global",
   "status" : "enabled",
