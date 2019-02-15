@@ -1,11 +1,11 @@
-requirevars  'defaultDB' 'componentresult' 'classname' 'iterationnumber' ;
+requirevars  'defaultDB' 'model' 'classname' 'iterationnumber' ;
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'iterationnumber' 0;
---var 'componentresult' from select tabletojson(colname,val,classval,average,sigma,probability, "colname,val,classval,average,sigma,probability")  as componentresult from defaultdb.global_probabilities; 
+--var 'model' from select tabletojson(colname,val,classval,average,sigma,probability, "colname,val,classval,average,sigma,probability")  as model from defaultdb.global_probabilities; 
 
 drop table if exists defaultDB.local_probabilities; 
-create table defaultDB.local_probabilities as  select jsontotable('%{componentresult}') ;
+create table defaultDB.local_probabilities as  select jsontotable('%{model}');
 
 drop table if exists defaultDB.testingset;
 create table defaultDB.testingset as 
