@@ -14,7 +14,7 @@ select * from %{input_global_tbl};
 
 drop table if exists defaultDB.global_confusionmatrix;
 create table defaultDB.global_confusionmatrix (
-iterationnumber int,
+iterationNumber int,
 typecolname text, -- confusion table, statistics,
 actualclass text,
 predictedclass text,

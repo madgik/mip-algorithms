@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'input_global_tbl' 'classname' 'alpha' 'DBIdentifier';
+requirevars 'defaultDB' 'input_global_tbl' 'classname' 'alpha' 'dbIdentifier';
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'input_global_tbl' 'defaultDB.local_counts';
@@ -88,7 +88,7 @@ and colname <> var('classname');
 
 --select * from defaultDB.global_probabilities;
 
-select jdict('results', componentresult, 'DBIdentifier', '%{DBIdentifier}') as results
+select jdict('results', componentresult, 'dbIdentifier', '%{dbIdentifier}') as results
 from
 (
 select tabletojson(colname,val,classval,average,sigma,probability, "colname,val,classval,average,sigma,probability")  as componentresult

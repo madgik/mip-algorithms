@@ -1,16 +1,16 @@
-requirevars 'defaultDB' 'iterationnumber';
--- The iterationnumber shows the id of the testing dataset.
+requirevars 'defaultDB' 'iterationNumber';
+-- The iterationNumber shows the id of the testing dataset.
 attach database '%{defaultDB}' as defaultDB;
 
---var 'iterationnumber' 0;
+--var 'iterationNumber' 0;
 
 --Training Dataset that has one more column: classval
 drop table if exists defaultDB.local_trainingsetplusclassval;
 create table defaultDB.local_trainingsetplusclassval as
 select rid,colname,val,idofset,classval from defaultDB.local_inputTBL
-where idofset <> %{iterationnumber};
+where idofset <> %{iterationNumber};
 
---var 'file' from select  'Trainingset'||%{iterationnumber}||'.csv';
+--var 'file' from select  'Trainingset'||%{iterationNumber}||'.csv';
 --output '%{file}' header:t fromeav select rid,colname,val from defaultDB.local_trainingsetplusclassval;
 
 --For each categorical column x: segment the data by the distinct values of each column, and by the class values, and then count the rows.

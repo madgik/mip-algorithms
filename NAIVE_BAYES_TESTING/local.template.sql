@@ -1,7 +1,7 @@
-requirevars  'defaultDB' 'model'  'iterationnumber' ;
+requirevars  'defaultDB' 'model'  'iterationNumber' ;
 attach database '%{defaultDB}' as defaultDB;
 
---var 'iterationnumber' 0;
+--var 'iterationNumber' 0;
 --var 'model' from select tabletojson(colname,val,classval,average,sigma,probability, "colname,val,classval,average,sigma,probability")  as model from defaultdb.global_probabilities;
 
 var 'classname' from select val from defaultDB.local_inputvariables where  variablename = 'classname';
@@ -12,9 +12,9 @@ create table defaultDB.local_probabilities as  select jsontotable('%{model}');
 drop table if exists defaultDB.testingset;
 create table defaultDB.testingset as
 select rid,colname,val,idofset from defaultDB.local_inputTBL
-where idofset in (select %{iterationnumber});
+where idofset in (select %{iterationNumber});
 
---var 'file' from select  'Testingset'||%{iterationnumber}||'.csv';
+--var 'file' from select  'Testingset'||%{iterationNumber}||'.csv';
 --output '%{file}' header:t fromeav select rid,colname,val from defaultDB.testingset;
 
 drop table if exists defaultDB.tempprobabilities;
@@ -63,7 +63,7 @@ where rid=rid1;
 
 drop table if exists defaultDB.local_predictions;
 create table defaultDB.local_predictions as
-select %{iterationnumber}, testingtable.val as actualclass, bayesnaiveresults.classval as predictedclass --, bayesnaiveresults.rid as rid
+select %{iterationNumber}, testingtable.val as actualclass, bayesnaiveresults.classval as predictedclass --, bayesnaiveresults.rid as rid
 from (select rid,classval,max(probability) from defaultDB.posteriorprobability group by rid) as bayesnaiveresults,
 	 (select * from defaultDB.testingset where colname = var('classname')) as testingtable
 where bayesnaiveresults.rid=testingtable.rid;
@@ -71,12 +71,12 @@ where bayesnaiveresults.rid=testingtable.rid;
 
 drop table if exists defaultDB.local_tempconfusionmatrix;
 create table defaultDB.local_tempconfusionmatrix as
-select %{iterationnumber} as iterationnumber , val1 as actualclass,val2 as predictedclass, 0 as val from
+select %{iterationNumber} as iterationNumber , val1 as actualclass,val2 as predictedclass, 0 as val from
 (select distinct val as val1 from defaultDB.local_probabilities where colname = var('classname')),
 (select distinct val as val2 from defaultDB.local_probabilities where colname = var('classname'));
 
 insert into defaultDB.local_tempconfusionmatrix
-select %{iterationnumber} as iterationnumber,actualclass,predictedclass,count(*) as val
+select %{iterationNumber} as iterationNumber,actualclass,predictedclass,count(*) as val
 from ( select bayesnaiveresults.rid,testingtable.val as actualclass, bayesnaiveresults.classval as predictedclass, 1 as val
        from (select rid,classval,max(probability) from defaultDB.posteriorprobability group by rid) as bayesnaiveresults,
 		    (select * from defaultDB.testingset where colname = var('classname')) as testingtable
@@ -85,8 +85,8 @@ group by actualclass,predictedclass;
 
 drop table if exists defaultDB.local_confusionmatrix;
 create table defaultDB.local_confusionmatrix as
-select iterationnumber,actualclass,predictedclass,max(val) as val
+select iterationNumber,actualclass,predictedclass,max(val) as val
 from defaultDB.local_tempconfusionmatrix
-group by iterationnumber,actualclass,predictedclass;
+group by iterationNumber,actualclass,predictedclass;
 
 select * from defaultDB.local_confusionmatrix;
