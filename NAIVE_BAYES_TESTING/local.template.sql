@@ -19,14 +19,14 @@ select rid,testing_table.colname,testing_table.val, probabilities_table.classval
 from defaultDB.testingset as testing_table ,defaultDB.local_probabilities as probabilities_table 
 where probabilities_table.colname = testing_table.colname 
 and probabilities_table.colname <> var('classname')
-and probabilities_table.colname in (select colname1 from defaultDB.global_variablesdatatype_Existing where categorical <> 'Yes')
+and probabilities_table.colname in (select colname1 from defaultDB.local_variablesdatatype_Existing where categorical <> 'Yes')
 union 
 --For the categorical values: 
 select testing_table.rid as rid ,testing_table.colname as colname ,testing_table.val as val, classval, probability
 from (select * from defaultDB.testingset 
                where colname <> var('classname') 
 			   and   colname in (select colname1 
-			                     from defaultDB.global_variablesdatatype_Existing 
+			                     from defaultDB.local_variablesdatatype_Existing 
 								 where categorical ='Yes')) as testing_table,
 	defaultDB.local_probabilities as probabilities_table
 where probabilities_table.colname = testing_table.colname and probabilities_table.val = testing_table.val
