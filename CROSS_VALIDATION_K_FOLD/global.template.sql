@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'input_global_tbl' 'classname' 'DBIdentifier';
+requirevars 'defaultDB' 'input_global_tbl' 'classname' 'dbIdentifier';
 
 --var 'input_global_tbl' 'defaultDB.local_variablesdatatype_Existing';
 
@@ -22,4 +22,4 @@ typestats text, --overall, by class , average
 statscolname text,
 val float);
 
-select jdict('DBIdentifier', '%{DBIdentifier}') as results;
+select jdict('dbIdentifier', '%{dbIdentifier}') as results;
