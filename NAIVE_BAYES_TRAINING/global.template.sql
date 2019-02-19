@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'input_global_tbl' 'classname' 'alpha' 'dbIdentifier';
+requirevars 'defaultDB' 'input_global_tbl' 'alpha' 'dbIdentifier';
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'input_global_tbl' 'defaultDB.local_counts';
