@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'input_global_tbl' 'classname' 'DBIdentifier';
+requirevars 'defaultDB' 'input_global_tbl' 'classname' 'dbIdentifier';
 
 --var 'input_global_tbl' 'defaultDB.local_variablesdatatype_Existing';
 
@@ -14,7 +14,7 @@ select * from %{input_global_tbl};
 
 drop table if exists defaultDB.global_confusionmatrix;
 create table defaultDB.global_confusionmatrix (
-iterationnumber int,
+iterationNumber int,
 typecolname text, -- confusion table, statistics,
 actualclass text,
 predictedclass text,
@@ -22,4 +22,4 @@ typestats text, --overall, by class , average
 statscolname text,
 val float);
 
-select jdict('DBIdentifier', '%{DBIdentifier}') as results;
+select jdict('dbIdentifier', '%{dbIdentifier}') as results;

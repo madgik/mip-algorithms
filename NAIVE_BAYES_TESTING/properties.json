@@ -5,9 +5,8 @@
   "status" : "enabled",
   "vtype" : "",
   "parameters" : [
-   {"name" : "classname", "desc" : "", "value" : "play"},
-   {"name" : "iterationnumber", "desc" : "", "value" : "0"},
+   {"name" : "iterationNumber", "desc" : "", "value" : "0"},
    {"name" : "model", "desc" : "", "value" : ""},
-   {"name" : "DBIdentifier", "desc" : "", "value" : ""}
+   {"name" : "dbIdentifier", "desc" : "", "value" : ""}
 ]
 }
