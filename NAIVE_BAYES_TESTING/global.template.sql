@@ -20,5 +20,5 @@ select  iterationnumber, "confusion table", actualclass, predictedclass, null,nu
 
 --select * from defaultDB.global_oneconfusionmatrix;
 
-select tabletojson(iterationnumber,actualclass,predictedclass,val, "iterationnumber,actualclass,predictedclass,val")  as componentresult
+select tabletojson(actualclass,predictedclass,val, "actualclass,predictedclass,val")  as componentresult
 from defaultdb.global_oneconfusionmatrix;
