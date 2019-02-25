@@ -1,7 +1,7 @@
 requirevars 'defaultDB' 'input_local_tbl' 'datasets' 'columns' 'classname' 'kfold';
 
 --'Dataset_BayesNaive_CategoricalValues.csv' -- 'datasetforTestingBayesNaiveNullInput.csv'
---var 'columns' 'outlook,temperature,humidity,windy';
+--var 'columns' 'outlook,temperature,humidity,windy,column1,column2';
 --var 'classname' 'play';
 --var 'kfold' 3;
 --var 'datasets' 'adni';
@@ -29,16 +29,16 @@ create table columnsTBL as
 select strsplitv('%{columns}','delimiter:,') as col;
 
 --------------------------------------------------------------------------------------------------------------------------
-drop table if exists defaultDB.local_inputvariables; --contains the names of classname
-create table defaultDB.local_inputvariables as
-select 'classname' as variablename, '%{classname}' as val;
+--drop table if exists defaultDB.local_inputvariables; --contains the names of classname
+--create table defaultDB.local_inputvariables as
+--select 'classname' as variablename, '%{classname}' as val;
 
 
 --Import dataset for testing in madis and select specific datasets and columns
 --drop table if exists table1;
 --create table table1 as
 --select rid, key as colname,  tonumber(val) as val
---from ( select rid, jdictsplitv(cjdict) from (file toj:1 header:t 'Dataset_BayesNaive_CategoricalValues.csv'))
+--from ( select rid, jdictsplitv(cjdict) from (file toj:1 header:t 'Dataset_BayesNaive_Real&CategoricalValues.csv'))
 --where colname in (select * from columnsTBL) or colname = '%{classname}' or colname = 'dataset';
 
 drop table if exists table1;
@@ -79,17 +79,15 @@ select typeof(tonumber('%{kfold}')) ='integer' as typeint;
 select categorical = 'Yes' from defaultDB.local_variablesdatatype_Existing where colname1 = '%{classname}';
 
 -----------------------------------------------------------------------------------------------------------------
--- Add two new columns: "idofset","classval" .
+-- Add two new columns: "idofset","classval"
 -- "idofset" is used in order to split dataset in training and test datasets.
 drop table if exists defaultDB.local_inputTBL;
 create table defaultDB.local_inputTBL as
-select h.rid as rid, h.colname as colname, h.val as val ,
-       -- h.rid % tonumber('%{kfold}') as idofset, --TODO ELENI. It is not working if the rid is not number
-	hashmodarchdep2(h.rid, %{kfold}) as idofset,
-	   c.val as classval
+select h.rid as rid, h.colname as colname, h.val as val , kfold.idofset as idofset,  c.val as classval
 from table3  as h,
-     (select rid, val from table3 where colname = var('classname')) as c
-where h.rid = c.rid;
+  (sklearnkfold 'splits:%{kfold}' select distinct rid from table3) as kfold,
+  (select rid, val from table3 where colname = var('classname')) as c
+where h.rid = c.rid and kfold.rid =h.rid;
 
 --Check that initial dataset conatins more than "min_k_data_aggregation" rows
 select count(distinct(rid))>= %{min_k_data_aggregation} from defaultDB.local_inputTBL;  -- TODO SOfia: Prepei na epistrefei 1 gia na sunexizei to nosokomeio

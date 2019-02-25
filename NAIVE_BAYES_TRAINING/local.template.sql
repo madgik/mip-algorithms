@@ -10,8 +10,8 @@ create table defaultDB.local_trainingsetplusclassval as
 select rid,colname,val,idofset,classval from defaultDB.local_inputTBL
 where idofset <> %{iterationNumber};
 
---var 'file' from select  'Trainingset'||%{iterationNumber}||'.csv';
---output '%{file}' header:t fromeav select rid,colname,val from defaultDB.local_trainingsetplusclassval;
+var 'file' from select  'Trainingset'||%{iterationNumber}||'.csv';
+output '%{file}' header:t fromeav select rid,colname,val from defaultDB.local_trainingsetplusclassval;
 
 --For each categorical column x: segment the data by the distinct values of each column, and by the class values, and then count the rows.
 drop table if exists defaultDB.local_counts;

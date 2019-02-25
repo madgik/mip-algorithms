@@ -14,8 +14,8 @@ create table defaultDB.testingset as
 select rid,colname,val,idofset from defaultDB.local_inputTBL
 where idofset in (select %{iterationNumber});
 
---var 'file' from select  'Testingset'||%{iterationNumber}||'.csv';
---output '%{file}' header:t fromeav select rid,colname,val from defaultDB.testingset;
+var 'file' from select  'Testingset'||%{iterationNumber}||'.csv';
+output '%{file}' header:t fromeav select rid,colname,val from defaultDB.testingset;
 
 drop table if exists defaultDB.tempprobabilities;
 create table defaultDB.tempprobabilities as

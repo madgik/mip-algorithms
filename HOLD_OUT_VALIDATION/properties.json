@@ -1,0 +1,16 @@
+{
+  "name" : "HOLD_OUT_VALIDATION",
+  "desc" : "Hold Out Validation",
+  "type" : "local_global",
+  "status" : "enabled",
+  "vtype" : "",
+  "parameters" : [
+   {"name" : "datasets", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
+   {"name" : "columns", "desc" : "", "value" : "outlook,temperature,humidity,windy"},
+   {"name" : "classname", "desc" : "", "value" : "play"},
+   {"name" : "test_size", "desc" : "", "value" : "0.25"},
+   {"name" : "train_size", "desc" : "", "value" : "None"},
+   {"name" : "random_state", "desc" : "", "value" : "None"},
+   {"name" : "shuffle", "desc" : "", "value" : "True"},
+   {"name" : "kfold", "desc" : "", "value" : "3"}]
+}
