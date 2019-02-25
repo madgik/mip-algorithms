@@ -82,7 +82,7 @@ select categorical = 'Yes' from defaultDB.local_variablesdatatype_Existing where
 -- Add two new columns: "idofset","classval"
 -- "idofset" is used in order to split dataset in training and test datasets.
 drop table if exists defaultDB.local_inputTBL;
-create table defaultDB.local_inputTBLas
+create table defaultDB.local_inputTBL as
 select h.rid as rid, h.colname as colname, h.val as val , kfold.idofset as idofset,  c.val as classval
 from table3  as h,
   (sklearnkfold splits:%{kfold} select distinct rid from table3) as kfold,
