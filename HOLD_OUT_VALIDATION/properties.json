@@ -11,6 +11,5 @@
    {"name" : "test_size", "desc" : "", "value" : "0.25"},
    {"name" : "train_size", "desc" : "", "value" : "None"},
    {"name" : "random_state", "desc" : "", "value" : "None"},
-   {"name" : "shuffle", "desc" : "", "value" : "True"},
-   {"name" : "kfold", "desc" : "", "value" : "3"}]
+   {"name" : "shuffle", "desc" : "", "value" : "True"}]
 }
