@@ -29,9 +29,9 @@ create table columnsTBL as
 select strsplitv('%{columns}','delimiter:,') as col;
 
 --------------------------------------------------------------------------------------------------------------------------
---drop table if exists defaultDB.local_inputvariables; --contains the names of classname
---create table defaultDB.local_inputvariables as
---select 'classname' as variablename, '%{classname}' as val;
+drop table if exists defaultDB.local_inputvariables; --contains the names of classname
+create table defaultDB.local_inputvariables as
+select 'classname' as variablename, '%{classname}' as val;
 
 
 --Import dataset for testing in madis and select specific datasets and columns
