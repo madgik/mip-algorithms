@@ -3,11 +3,10 @@ requirevars 'defaultDB' 'input_local_tbl' 'datasets' 'columns' 'classname' 'test
 --'Dataset_BayesNaive_CategoricalValues.csv' -- 'datasetforTestingBayesNaiveNullInput.csv'
 --var 'columns' 'outlook,temperature,humidity,windy,column1,column2';
 --var 'classname' 'play';
---var 'test_size'  0.50;
---var 'train_size' None;
+--var 'test_size'  0.90;
+--var 'train_size' 0.50;
 --var 'random_state' None;
 --var 'shuffle' True;
-
 --var 'datasets' 'adni';
 
 -- 'Iris_dataset'
@@ -33,9 +32,9 @@ create table columnsTBL as
 select strsplitv('%{columns}','delimiter:,') as col;
 
 --------------------------------------------------------------------------------------------------------------------------
---drop table if exists defaultDB.local_inputvariables; --contains the names of classname
---create table defaultDB.local_inputvariables as
---select 'classname' as variablename, '%{classname}' as val;
+drop table if exists defaultDB.local_inputvariables; --contains the names of classname
+create table defaultDB.local_inputvariables as
+select 'classname' as variablename, '%{classname}' as val;
 
 
 --Import dataset for testing in madis and select specific datasets and columns
@@ -89,7 +88,7 @@ drop table if exists defaultDB.local_inputTBL;
 create table defaultDB.local_inputTBL as
 select h.rid as rid, h.colname as colname, h.val as val , case when holdout.idofset == 'Train' then 0 else 1 end as idofset,  c.val as classval
 from table3  as h,
-  (traintestsplit 'test_size:%{test_size}, train_size:%{train_size}, random_state:%{random_state}, shuffle:%{shuffle}' select distinct rid from table3) as holdout,
+  (traintestsplit test_size:%{test_size} train_size:%{train_size} random_state:%{random_state} shuffle:%{shuffle} select distinct rid from table3) as holdout,
   (select rid, val from table3 where colname = var('classname')) as c
 where h.rid = c.rid and holdout.rid =h.rid;
 
