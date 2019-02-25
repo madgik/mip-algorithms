@@ -73,7 +73,7 @@ def test_LinearRegression_FULL_ADNI_NOFILTERS():
           },
           {
             "name": "dataset",
-            "value": "adni,epfl_adni,chuv_adni,"
+            "value": "adni,epfl_adni,chuv_adni"
           },
           {
             "name": "filter",
