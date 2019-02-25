@@ -72,12 +72,20 @@ select colname1, type,
       (select distinct colname as colname2, typeof(val) as type from table3 group by colname)
 where colname1=colname2;
 
+--Check if kfold is empty
+var 'kfoldisempty' from select case when (select '%{kfold}')='' then 0 else 1 end;
+emptyfield '%{kfold}';
+
+--Check if kfold is integer
+var 'kfoldtype' from select case when (select typeof(tonumber('%{kfold}'))) = 'integer' then 1 else 0 end;
+vartypebucket '%{kfoldtype}';
+
 --Check the type of the "kfold" -- TODO SOFIA:  If the result of the query is 0 then wrong type "kfold"
-select typeof(tonumber('%{kfold}')) ='integer' as typeint;
+--select typeof(tonumber('%{kfold}')) ='integer' as typeint;
 
 -- Check the type of "classname"  -- TODO SOFIA:  If the result of the query is 0 then wrong type "classname"
-select categorical = 'Yes' from defaultDB.local_variablesdatatype_Existing where colname1 = '%{classname}';
-
+var 'classnametype' from select categorical = 'Yes' from defaultDB.local_variablesdatatype_Existing where colname1 = '%{classname}' then 1 else 0;
+varclassnametype '%{classnametype}';
 -----------------------------------------------------------------------------------------------------------------
 -- Add two new columns: "idofset","classval"
 -- "idofset" is used in order to split dataset in training and test datasets.
@@ -90,7 +98,7 @@ from table3  as h,
 where h.rid = c.rid and kfold.rid =h.rid;
 
 --Check that initial dataset conatins more than "min_k_data_aggregation" rows
-select count(distinct(rid))>= %{min_k_data_aggregation} from defaultDB.local_inputTBL;  -- TODO SOfia: Prepei na epistrefei 1 gia na sunexizei to nosokomeio
-
+var 'containsmorethantheminimumrecords' select count(distinct(rid))>= %{min_k_data_aggregation} from defaultDB.local_inputTBL then 1 else 0;  -- TODO SOfia: Prepei na epistrefei 1 gia na sunexizei to nosokomeio
+varminimumrec '${containsmorethantheminimumrecords}';
 
 select * from defaultDB.local_variablesdatatype_Existing;
