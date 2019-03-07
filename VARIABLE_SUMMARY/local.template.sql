@@ -17,7 +17,7 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 emptyset '%{empty}';
 ------------------
-create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
+create table columnexist as setschema 'colname' select distinct(__colname) from (file file:/root/mip-algorithms/input_tbl.csv header:t);
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
 vars '%{valExists}';
 -----------------------------------------------------		  
