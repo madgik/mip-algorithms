@@ -43,7 +43,7 @@ select 'classname' as variablename, '%{classname}' as val;
 
 drop table if exists table1;
 create table table1 as
-select __rid as rid,__colname as colname, tonumber(__val) as val  from %{input_local_tbl}
+select rid,colname, tonumber(val) as val from (toeav select * from %{input_local_tbl})
 where colname in (select * from columnsTBL) or colname = '%{classname}' or colname = 'dataset';
 
 --Keep only patients of the correct dataset & delete the rows which are colname = 'dataset'

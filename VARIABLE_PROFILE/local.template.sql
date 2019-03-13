@@ -1,15 +1,16 @@
 requirevars 'defaultDB' 'input_local_tbl' 'variable' 'dataset' ;
 attach database '%{defaultDB}' as defaultDB;
- 
-drop table if exists datasets;		
+--var 'variable' 'apoe4';
+
+drop table if exists datasets;
 create table datasets as
 select strsplitv('%{dataset}','delimiter:,') as d;
 
 drop table if exists tempinputlocaltbl1;
-create temp table tempinputlocaltbl1 as 
-select __rid as rid, __colname as colname, tonumber(__val) as val
---select rid as rid, colname as colname, tonumber(val) as val
-from %{input_local_tbl};
+create table tempinputlocaltbl1 as
+select rid,colname, tonumber(val) as val from (toeav select * from %{input_local_tbl})
+where colname ='%{variable}' or colname ='dataset';
+
 
 --Check if colname is epmpty
 var 'empty' from select case when (select '%{variable}')='' then 0 else 1 end;
@@ -22,20 +23,20 @@ emptyset '%{empty}';
 create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
 vars '%{valExists}';
------------------------------------------------------		  
-	  		  
+-----------------------------------------------------
+
 drop table if exists tempinputlocaltbl;
-create table tempinputlocaltbl as 
+create table tempinputlocaltbl as
 select * from tempinputlocaltbl1
          where rid in (select rid from tempinputlocaltbl1 where colname = 'dataset' and val in (select d from datasets));
-		
+
 var 'totalcount' from select count(rid) from tempinputlocaltbl;
 
 drop table if exists inputlocaltbl;
 create table inputlocaltbl as
-select * from tempinputlocaltbl 
-where val <> 'NA'     
- 	and val is not null      
+select * from tempinputlocaltbl
+where val <> 'NA'
+ 	and val is not null
 	and val <> ""
 	and val not in (select d from datasets)
 order by rid, colname,val;
@@ -44,9 +45,9 @@ order by rid, colname,val;
 var 'minimumrecords' 10;
 create table emptytable(rid  text primary key, colname, val);
 var 'privacycheck' from select case when (select count(distinct(rid)) from inputlocaltbl) < %{minimumrecords} then 0 else 1 end;
-create table inputlocaltbl2 as setschema 'rid , colname, val' 
+create table inputlocaltbl2 as setschema 'rid , colname, val'
 select * from inputlocaltbl where %{privacycheck}=1
-union 
+union
 select * from emptytable where %{privacycheck}=0;
 drop table if exists inputlocaltbl;
 alter table inputlocaltbl2 rename to inputlocaltbl;
@@ -71,13 +72,13 @@ from ( select colname,
               count(val) as N,
 			  %{totalcount} as Ntotal,
               '%{partner}' as partner,
-		      %{valIsNull} as valIsNull, 
-			  %{valIsNumber} as valIsNumber, 
-			  %{categoricalNumber} as categoricalNumber, 
-		          %{categoricalText} as categoricalText,  
+		      %{valIsNull} as valIsNull,
+			  %{valIsNumber} as valIsNumber,
+			  %{categoricalNumber} as categoricalNumber,
+		          %{categoricalText} as categoricalText,
 			  %{valIsText} as valIsText
        from ( select * from inputlocaltbl where %{categoricalNumber}= 1)
-       where val <> 'NA' and val is not null and val <> "" 
+       where val <> 'NA' and val is not null and val <> ""
        group by val
 ) where %{categoricalNumber}= 1
 
@@ -93,10 +94,10 @@ from ( select colname,
               count(val) as N,
 			  %{totalcount} as Ntotal,
               '%{partner}' as partner,
-		      %{valIsNull} as valIsNull, 
-			  %{valIsNumber} as valIsNumber, 
-			  %{categoricalNumber} as categoricalNumber, 
-		          %{categoricalText} as categoricalText,  
+		      %{valIsNull} as valIsNull,
+			  %{valIsNumber} as valIsNumber,
+			  %{categoricalNumber} as categoricalNumber,
+		          %{categoricalText} as categoricalText,
 			  %{valIsText} as valIsText
        from ( select * from inputlocaltbl where %{valIsNumber} = 1)
        where val <> 'NA' and val is not null and val <> ""
@@ -114,10 +115,10 @@ from ( select colname,
               count(val) as N,
               %{totalcount} as Ntotal,
              '%{partner}' as partner,
-		      %{valIsNull} as valIsNull, 
-			  %{valIsNumber} as valIsNumber, 
-			  %{categoricalNumber} as categoricalNumber, 
-		      %{categoricalText} as categoricalText, 
+		      %{valIsNull} as valIsNull,
+			  %{valIsNumber} as valIsNumber,
+			  %{categoricalNumber} as categoricalNumber,
+		      %{categoricalText} as categoricalText,
 			  %{valIsText} as valIsText
        from ( select * from inputlocaltbl where %{valIsText}= 1 and %{categoricalText}= 0)
        where val <> 'NA' and val is not null and val <> ""
@@ -135,10 +136,10 @@ from ( select colname,
               count(val) as N,
               %{totalcount} as Ntotal,
              '%{partner}' as partner,
-		      %{valIsNull} as valIsNull, 
-			  %{valIsNumber} as valIsNumber, 
-			  %{categoricalNumber} as categoricalNumber, 
-		      %{categoricalText} as categoricalText, 
+		      %{valIsNull} as valIsNull,
+			  %{valIsNumber} as valIsNumber,
+			  %{categoricalNumber} as categoricalNumber,
+		      %{categoricalText} as categoricalText,
 			  %{valIsText} as valIsText
        from ( select * from inputlocaltbl where %{valIsText}= 1 and %{categoricalText}= 1)
        where val <> 'NA' and val is not null and val <> ""
@@ -157,10 +158,10 @@ from (  select '%{variable}' as colname,
              0 as N,
              %{totalcount} as Ntotal,
 			 '%{partner}' as partner,
-		     %{valIsNull} as valIsNull, 
-			 %{valIsNumber} as valIsNumber, 
-			 %{categoricalNumber} as categoricalNumber, 
-		     %{categoricalText} as categoricalText, 
+		     %{valIsNull} as valIsNull,
+			 %{valIsNumber} as valIsNumber,
+			 %{categoricalNumber} as categoricalNumber,
+		     %{categoricalText} as categoricalText,
 			 %{valIsText} as valIsText
 		where %{valIsNull} = 1
 )where  %{valIsNull} = 1
@@ -178,12 +179,12 @@ from (  select '%{variable}' as colname,
              %{totalcount}-count(val) as N,
              %{totalcount} as Ntotal,
 			 '%{partner}' as partner,
-		     %{valIsNull} as valIsNull, 
-			 %{valIsNumber} as valIsNumber, 
-			 %{categoricalNumber} as categoricalNumber, 
-		     %{categoricalText} as categoricalText, 
+		     %{valIsNull} as valIsNull,
+			 %{valIsNumber} as valIsNumber,
+			 %{categoricalNumber} as categoricalNumber,
+		     %{categoricalText} as categoricalText,
 			 %{valIsText} as valIsText
-		from  inputlocaltbl 
+		from  inputlocaltbl
 		where %{valIsNull} = 0
 )where  %{valIsNull} = 0
-); 
+);
