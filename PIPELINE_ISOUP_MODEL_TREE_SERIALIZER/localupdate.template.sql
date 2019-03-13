@@ -1,6 +1,6 @@
 requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes' 'input_local_tbl';
 
-------- Create the correct dataset 
+------- Create the correct dataset
 drop table if exists datasets;
 create table datasets as
 select strsplitv('%{dataset}','delimiter:,') as d;
@@ -36,12 +36,12 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 emptyset '%{empty}';
 ------------------
-create table columnexist as setschema 'colname' select distinct(__colname) from (file file:/root/mip-algorithms/input_tbl.csv header:t);
+create table columnexist as setschema 'colname' select distinct(colname) from localinputtbl_1;
 --Check if columns exist
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from columnstable);
 var 'result' from select count(distinct(xname)) from columnstable;
-var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
-vars '%{valExists}'; 
+var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;
+vars '%{valExists}';
 ------
 
 var 'select_vars' from
@@ -55,7 +55,7 @@ create temp table data as select %{select_vars}  from (fromeav select * from loc
 var 'minimumrecords' 10;
 create temp table emptytable as select * from data limit 0;
 var 'privacycheck' from select case when (select count(*) from data) < %{minimumrecords} then 0 else 1 end;
-create temp table safeData as 
+create temp table safeData as
 select * from data where %{privacycheck}=1
 union all
 select * from emptytable where %{privacycheck}=0;

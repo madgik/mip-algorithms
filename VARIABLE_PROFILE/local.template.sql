@@ -6,10 +6,9 @@ drop table if exists datasets;
 create table datasets as
 select strsplitv('%{dataset}','delimiter:,') as d;
 
-drop table if exists tempinputlocaltbl1;
-create table tempinputlocaltbl1 as
-select rid,colname, tonumber(val) as val from (toeav select * from %{input_local_tbl})
-where colname ='%{variable}' or colname ='dataset';
+drop table if exists tempinputlocaltbl1a;
+create table tempinputlocaltbl1a as
+select rid,colname, tonumber(val) as val from (toeav select * from %{input_local_tbl});
 
 
 --Check if colname is epmpty
@@ -20,10 +19,15 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 emptyset '%{empty}';
 ------------------
-create table columnexist as setschema 'colname' select distinct(__colname) from (file file:/root/mip-algorithms/input_tbl.csv header:t);
+create table columnexist as setschema 'colname' select distinct(colname) from tempinputlocaltbl1;
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
 vars '%{valExists}';
 -----------------------------------------------------
+
+drop table if exists tempinputlocaltbl1;
+create table tempinputlocaltbl1 as
+select * from tempinputlocaltbl1a
+where colname ='%{variable}' or colname ='dataset';
 
 drop table if exists tempinputlocaltbl;
 create table tempinputlocaltbl as

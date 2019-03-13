@@ -19,10 +19,9 @@ create table xvariables as
 select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
 
 --1. Keep only the correct colnames from a flat table
-drop table if exists localinputtbl_1;
-create table localinputtbl_1 as
-select rid,colname, tonumber(val) as val from (toeav select * from %{input_local_tbl})
-where colname in (select * from xvariables) or colname  ='%{y}' or colname ='dataset';
+drop table if exists localinputtbl_1a;
+create table localinputtbl_1a as
+select rid,colname, val from (toeav select * from %{input_local_tbl});
 
 --Check if x is empty
 var 'empty' from select case when (select '%{x}')='' then 0 else 1 end;
@@ -36,7 +35,7 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 emptyset '%{empty}';
 ------------------
-create table columnexist as setschema 'colname' select distinct(__colname) from (file file:/root/mip-algorithms/input_tbl.csv header:t);
+create table columnexist as setschema 'colname' select distinct(colname) as colname2 from localinputtbl_1a;
 --Check if x exist in dataset
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from xvariables);
 var 'result' from select count(xname) from xvariables;
@@ -46,6 +45,11 @@ vars '%{valExists}';
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{y}'))=0 then 0 else 1 end;
 vars '%{valExists}';
 ----------
+--1. Keep only the correct colnames from a flat table
+drop table if exists localinputtbl_1;
+create table localinputtbl_1 as
+select rid,colname, tonumber(val) as val from localinputtbl_1a
+where colname in (select * from xvariables) or colname  ='%{y}' or colname ='dataset';
 
 --2. Keep only patients of the correct dataset
 drop table if exists localinputtbl_2;
