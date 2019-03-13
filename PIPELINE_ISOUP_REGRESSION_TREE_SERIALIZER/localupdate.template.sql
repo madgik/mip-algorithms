@@ -34,7 +34,7 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 emptyset '%{empty}';
 ------------------
-create table columnexist as setschema 'colname' select distinct(colname) from (postgresraw);
+create table columnexist as setschema 'colname' select distinct(__colname) from (file file:/root/mip-algorithms/input_tbl.csv header:t);
 --Check if columns exist
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from columnstable);
 var 'result' from select count(distinct(xname)) from columnstable;

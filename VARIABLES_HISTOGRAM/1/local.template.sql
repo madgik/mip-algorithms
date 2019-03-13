@@ -32,7 +32,6 @@ drop table if exists inputtablefromraw;
 create table inputtablefromraw as
 select rid,colname,  val from (toeav select * from %{input_local_tbl});
 
-
 --Check if nobuckets is empty
 var 'nobucketsisempty' from select case when (select '%{nobuckets}')='' then 0 else 1 end;
 emptyfield '%{nobucketsisempty}';
