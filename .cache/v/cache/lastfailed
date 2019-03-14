@@ -1,8 +1,0 @@
-{
-  "unit_tests/test_Histograms.py::test_HISTOGRAM_1": true, 
-  "unit_tests/test_Histograms.py::test_HISTOGRAM_2": true, 
-  "unit_tests/test_LinearRegression.py::test_LinearRegression_FULL_ADNI_NOFILTERS": true, 
-  "unit_tests/test_LinearRegression.py::test_LinearRegression_PARTIAL_ADNI_NOFILTERS": true, 
-  "unit_tests/test_pipeline_model_tree_serializer.py::test_PIPELINE_MODEL_TREE_SERIALIZER_1": true, 
-  "unit_tests/test_pipeline_regression_tree_serializer.py::test_PIPELINE_REGRESSION_TREE_SERIALIZER_1": true
-}
