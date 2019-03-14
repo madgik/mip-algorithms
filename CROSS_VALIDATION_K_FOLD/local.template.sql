@@ -1,10 +1,10 @@
-requirevars 'defaultDB' 'input_local_tbl' 'datasets' 'columns' 'classname' 'kfold';
+requirevars 'defaultDB' 'input_local_tbl' 'dataset' 'columns' 'classname' 'kfold';
 
 --'Dataset_BayesNaive_CategoricalValues.csv' -- 'datasetforTestingBayesNaiveNullInput.csv'
 --var 'columns' 'outlook,temperature,humidity,windy,column1,column2';
 --var 'classname' 'play';
 --var 'kfold' 3;
---var 'datasets' 'adni';
+--var 'dataset' 'adni';
 
 -- 'Iris_dataset'
 --var 'defaultDB' 'defaultDB';
@@ -21,7 +21,7 @@ var 'min_k_data_aggregation' 5;
 --Dataset names
 drop table if exists datasetsTBL;
 create table datasetsTBL as
-select strsplitv('%{datasets}','delimiter:,') as dataset;
+select strsplitv('%{dataset}','delimiter:,') as dataset;
 
 --Column names
 drop table if exists columnsTBL;
