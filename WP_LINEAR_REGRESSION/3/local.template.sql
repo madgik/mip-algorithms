@@ -1,5 +1,15 @@
-requirevars 'defaultDB' 'prv_output_global_tbl' 'y';
+requirevars 'defaultDB' 'input_local_tbl' 'variable' 'covariables' 'groupings';
 attach database '%{defaultDB}' as defaultDB;
+
+var 'y' from (select '%{variable}');
+
+var 'x' from
+(select group_concat(x,'+')
+from (
+select group_concat(x2,'*') as x from (select strsplitv('%{groupings}','delimiter:,') as x2)
+union
+select group_concat(x1,'+') as x from (select strsplitv('%{covariables}','delimiter:,') as x1)));
+
 
 --E. Compute statistics For Estimators ( standardError ,  tvalue  , p value )
 --E1. Compute residuals y-ypredictive = Y-sum(X(i)*estimate(i)) (Local Layer)
@@ -15,6 +25,7 @@ from ( select rid as rid1, sum(val*estimate) as predicted_value
        where colname = "%{y}" )
 where rid1=rid2;
 
-select min(e) as min_e, max(e) as max_e , sum(e) as sum_e,sum(e*e) as sum_ee, count(e) as counte from defaultDB.residuals;
 
---select rowid as rid1,e from defaultDB.residuals;
+select rowid as rid1,e from defaultDB.residuals;
+
+

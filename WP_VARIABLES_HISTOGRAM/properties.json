@@ -4,10 +4,8 @@
   "type"   : "multiple_local_global",
   "status" : "enabled",
   "parameters" : [
-    {"name" : "column1", "desc" : "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.", "value" : "subjectageyears"},
-    {"name" : "column2", "desc" : "It is a variable of the input dataset. The variable should be text. It can also be empty.", "value" : ""},
-    {"name" : "nobuckets", "desc" : "It is a parameter of the algorithm. It should be integer. It cannot be empty.", "value" : "4"},
-    {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty", "value" : "ppmi"},
-    {"name" : "filter", "desc" : "", "value" : ""}
+    {"name" : "column1", "desc" : "", "value" : "AGE"},
+    {"name" : "column2", "desc" : "", "value" : "PTGENDER"},
+    {"name" : "nobuckets", "desc" : "", "value" : "10"}
   ]
 }

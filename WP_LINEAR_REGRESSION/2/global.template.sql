@@ -1,6 +1,12 @@
-requirevars 'defaultDB' 'input_global_tbl' 'y';
+requirevars 'defaultDB' 'input_global_tbl' 'variable';
 attach database '%{defaultDB}' as defaultDB;
 
+var 'y' from (select '%{variable}');
+
+
+
+
+-------------------------------------------------------------------------------------------------------
 --C2. (GLOBAL LAYER)
 drop table if exists gramian;
 create table gramian as
@@ -8,8 +14,10 @@ select attr1,attr2, sum(val) as val, sum(reccount) as reccount
 from %{input_global_tbl}
 group by attr1,attr2;
 
+
 --------------------------------------------------------------------------------------------
 --D. COMPUTE b estimators (X'X)^-1 * X'y = b  (GLOBAL LAYER)
+
 --D1. Create X'X table
 drop table if exists XTX;
 create table XTX as
@@ -32,6 +40,8 @@ from ( select attr1,attr2,val, sizeofarray
        from XTX,
        ( select count(distinct attr1) as sizeofarray from XTX ));
 
+
+
 --D3. Create X'y table
 drop table if exists XTy;
 create table XTy as
@@ -50,4 +60,9 @@ join
 XTy
 on attr2 = attr
 group by attr1;
+
+
+
 select * from defaultDB.coefficients;
+
+--select * from %{input_global_tbl};
