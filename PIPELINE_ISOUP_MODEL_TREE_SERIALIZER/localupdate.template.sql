@@ -14,8 +14,7 @@ create table columnstable as
 select strsplitv('%{target_attributes},%{descriptive_attributes}' ,'delimiter:,') as xname;
 
 create temp table localinputtbl_1 as
-select __rid as rid,__colname as colname, __val as val
-from %{input_local_tbl};
+select rid,colname,  val from (toeav select * from %{input_local_tbl});
 
 var 'target_vars' from
 ( select group_concat('"'||targetname||'"',', ') from targetstable);
