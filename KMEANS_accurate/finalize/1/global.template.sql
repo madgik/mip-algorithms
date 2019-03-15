@@ -1,30 +1,24 @@
-requirevars 'defaultDB' 'input_global_tbl' 'columns' 'k';
+requirevars 'defaultDB' 'input_global_tbl' 'columns' 'outputformat';
 attach database '%{defaultDB}' as defaultDB;
-drop table if exists defaultDB.eleni;
-create table defaultDB.eleni as select * from %{input_global_tbl};
 
+var 'input_global_tbl' 'localresult';
+
+var 'a' from select create_complex_query("","?_clval as ?",",","",'%{columns}');
 drop table if exists defaultDB.globalresult;
-create table defaultDB.globalresult as 
-select clid as rid,
-       clcolname as colname,
-       clval as val,
-       clpoints as noofpoints
+create table defaultDB.globalresult as
+select clid , %{a}, clpoints as noofpoints
 from defaultDB.clustercenters_global,
-     ( select clid1, sum(clpoints) as clpoints
-       from %{input_global_tbl}
-       group by clid1 )
+     ( select clid1, sum(clpoints) as clpoints from %{input_global_tbl} group by clid1 )
 where clid1 = clid;
-drop table if exists defaultDB.sofia;
-create table defaultDB.sofia as select * from %{input_global_tbl};
 
-
-drop table if exists columnstable;
-create table columnstable as
-select strsplitv('%{columns}' ,'delimiter:,') as col;
-
---BE AWARE that there are two udf's for K_MEANS output kmeansresultsviewervis is for visual output and kmeansresultsviewerjson is for json (only the data part)
---select jdict("result",highchartresult) from (
-select kmeansresultsviewer(rid,colname,val,noofpoints,noofvariables,k)
-from (select * from defaultDB.globalresult order by rid),
-     (select case when count(*) is null then 0 else count(*) end as noofvariables from columnstable),
-(select count(distinct rid) as k from defaultDB.globalresult);
+setschema 'result'
+select * from (highchartbubble select %{columns}, noofpoints  from lala)
+where '%{outputformat}'= 'highchart_bubble'
+union
+setschema 'result'
+select * from (highchartscatter3d select %{columns}, noofpoints from lala)
+where '%{outputformat}'= 'highchart_scatter3d'
+union
+setschema 'result'
+select * from (totabulardataresourceformat select clid as `cluster id`, %{columns}, noofpoints as `number of points`
+from lala) where '%{outputformat}'= 'pfa';

@@ -2,30 +2,21 @@ requirevars 'defaultDB' ;
 attach database '%{defaultDB}' as defaultDB;
 
 --Assign Data to Nearest Cluster
-delete from defaultDB.assignnearestcluster;
-insert into defaultDB.assignnearestcluster
-select  rid as rid,
-        clid,
-        min(dist) as mindist
-from ( select rid, clid, sum( (val-clval) * (val-clval) ) as dist
-       from ( select rid, colname, val, clid, clval
-              from ( select * from defaultDB.inputlocaltbl )
-              join defaultDB.clustercenters_local
-              where colname = clcolname )
-       group by rid,clid )
+var 'a' from select create_complex_query("","(?-?_clval)*(?-?_clval)","+","",'%{columns}');
+drop table if exists defaultDB.assignnearestcluster;
+create table  defaultDB.assignnearestcluster as
+select rid, clid, min(%{a}) as mindist
+from ( select * from defaultDB.localinputtbl join (select * from defaultDB.clustercenters_local))
 group by rid;
 
+var 'a' from select create_complex_query("","sum(?) as ?_clS",",",'','%{columns}');
+drop table if exists defaultDB.partialclustercenters;
+create table defaultDB.partialclustercenters as 
+select clid, count(clid) as clN, %{a}
+from (select rid,clid,%{columns} from  (select rid, %{columns} from defaultDB.localinputtbl),
+                                       (select rid as rid1, clid from assignnearestcluster)
+                                 where rid=rid1)
+group by clid;
 
---drop table if exists defaultDB.partialclustercenters;  --DELETE
---create table defaultDB.partialclustercenters as --DELETE
-select clid,
-       colname as clcolname,
-       --avg(val) as clval
-       sum(val) as clS,
-       count(val) as clN
-from ( select * from defaultDB.inputlocaltbl ) as h,
-      ( select * from defaultDB.assignnearestcluster) as a
-where  h.rid = a.rid
-group by clid, colname;
 
---select * from defaultDB.partialclustercenters; --DELETE
+select * from defaultDB.partialclustercenters;
