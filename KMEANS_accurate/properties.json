@@ -12,6 +12,6 @@
 	  {"name" : "centers", "desc" : "A set of initial (distinct) cluster centres" ,"value":""},
     {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
     {"name" : "e", "desc" : "#error_value", "value" : "0.01"},
-    {"name" : "outputformat", "desc" : "json,highchart_bubble, highchart_scatter3d,,pfa", "value" : ""},
+    {"name" : "outputformat", "desc" : "json,highchart_bubble, highchart_scatter3d,pfa", "value" : ""}
   ]
 }
