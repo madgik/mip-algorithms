@@ -46,7 +46,7 @@
 		},
 		{
 			"name": "outputformat",
-			"desc": "json,pfa",
+			"desc": "pfa",
 			"value": "",
 			"notBlank": true,
 			"multiValue": false,
