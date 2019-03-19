@@ -1,4 +1,5 @@
 requirevars 'defaultDB' ;
+attach database '%{defaultDB}' as defaultDB;
 
 --pfa format (json valid)
 setschema 'result'

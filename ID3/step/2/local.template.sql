@@ -1,4 +1,5 @@
 requirevars 'defaultDB' 'prv_output_global_tbl' 'classname';
+attach database '%{defaultDB}' as defaultDB;
 
 --var 'prv_output_global_tbl' 'globalpathforsplittree';
 
@@ -9,5 +10,3 @@ create table defaultDB.localinputtblcurrent as
 filtertable filters:%{filters} select * from defaultDB.localinputtbl;
 
 select 'ok';
-
-select * from defaultDB.globaltree;

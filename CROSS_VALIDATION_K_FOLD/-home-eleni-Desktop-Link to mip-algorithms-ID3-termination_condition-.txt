@@ -1,0 +1,1 @@
+/home/eleni/Desktop/Link to mip-algorithms/ID3/termination_condition/termination_condition.template.sql
