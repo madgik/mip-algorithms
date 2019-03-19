@@ -51,6 +51,6 @@
 			"notBlank": true,
 			"multiValue": false,
 			"type": "generic"
-		},
+		}
 	]
 }

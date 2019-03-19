@@ -1,8 +1,8 @@
 requirevars 'defaultDB' 'input_local_tbl' 'dataset' 'columns' 'classname';
 
 --Input for testing the algorithm
--- drop table if exists mytable; create table mytable as select * from (file header:t 'contact_lenses.csv');
--- var 'input_local_tbl' 'mytable';
+drop table if exists mytable; create table mytable as select * from (file header:t '/root/mip-algorithms/ID3/contact_lenses.csv');
+ --var 'input_local_tbl' 'mytable';
 -- var 'defaultDB' 'defaultDB';
 -- var 'columns' 'age,spectacle-prescrip,astigmatism,tear-prod-rate';
 -- var 'classname' 'contact-lenses';
@@ -17,7 +17,7 @@ var 'a' from select create_complex_query("","tonumber(`?`) as `?`", "," , "" , '
 drop table if exists defaultDB.localinputtbl;
 create table defaultDB.localinputtbl as
 select %{a}, tonumber(`%{classname}`) as `%{classname}`
-from (select %{columnsnew}, `%{classname}`, dataset from %{input_local_tbl}
+from (select %{columnsnew}, `%{classname}`, dataset from mytable
 where dataset in (select strsplitv('%{dataset}','delimiter:,')));
 
 --3.  Delete patients with null values (val is null or val = '' or val = 'NA')
