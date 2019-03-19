@@ -1,8 +1,6 @@
 requirevars 'defaultDB' 'input_global_tbl' 'columns' 'outputformat';
 attach database '%{defaultDB}' as defaultDB;
 
-var 'input_global_tbl' 'localresult';
-
 var 'a' from select create_complex_query("","?_clval as ?",",","",'%{columns}');
 drop table if exists defaultDB.globalresult;
 create table defaultDB.globalresult as
@@ -12,13 +10,13 @@ from defaultDB.clustercenters_global,
 where clid1 = clid;
 
 setschema 'result'
-select * from (highchartbubble select %{columns}, noofpoints  from lala)
+select * from (highchartbubble select %{columns}, noofpoints  from defaultDB.globalresult)
 where '%{outputformat}'= 'highchart_bubble'
 union
 setschema 'result'
-select * from (highchartscatter3d select %{columns}, noofpoints from lala)
+select * from (highchartscatter3d select %{columns}, noofpoints from defaultDB.globalresult)
 where '%{outputformat}'= 'highchart_scatter3d'
 union
 setschema 'result'
 select * from (totabulardataresourceformat select clid as `cluster id`, %{columns}, noofpoints as `number of points`
-from lala) where '%{outputformat}'= 'pfa';
+from defaultDB.globalresult) where '%{outputformat}'= 'pfa';
