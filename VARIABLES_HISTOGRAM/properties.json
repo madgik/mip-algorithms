@@ -1,13 +1,47 @@
 {
-  "name"   : "VARIABLES_HISTOGRAM",
-  "desc"   : "",
-  "type"   : "multiple_local_global",
-  "status" : "enabled",
-  "parameters" : [
-    {"name" : "column1", "desc" : "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.", "value" : "subjectageyears"},
-    {"name" : "column2", "desc" : "It is a variable of the input dataset. The variable should be text. It can also be empty.", "value" : ""},
-    {"name" : "nobuckets", "desc" : "It is a parameter of the algorithm. It should be integer. It cannot be empty.", "value" : "4"},
-    {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty", "value" : "ppmi"},
-    {"name" : "filter", "desc" : "", "value" : ""}
-  ]
+	"name": "VARIABLES_HISTOGRAM",
+	"desc": "",
+	"type": "multiple_local_global",
+	"status": "enabled",
+	"parameters": [{
+			"name": "column1",
+			"desc": "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.",
+			"value": "subjectageyears",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "database_parameter"
+		},
+		{
+			"name": "column2",
+			"desc": "It is a variable of the input dataset. The variable should be text. It can also be empty.",
+			"value": "",
+			"notBlank": false,
+			"multiValue": false,
+			"type": "database_parameter"
+		},
+		{
+			"name": "nobuckets",
+			"desc": "It is a parameter of the algorithm. It should be integer. It cannot be empty.",
+			"value": "4",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "algorithm_parameter"
+		},
+		{
+			"name": "dataset",
+			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty",
+			"value": "ppmi",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "dataset"
+		},
+		{
+			"name": "filter",
+			"desc": "",
+			"value": "",
+			"notBlank": false,
+			"multiValue": true,
+			"type": "filter"
+		}
+	]
 }

@@ -1,11 +1,39 @@
 {
-  "name" : "PIPELINE_ISOUP_REGRESSION_TREE_SERIALIZER",
-  "desc" : "PIPELINE_ISOUP_REGRESSION_TREE_SERIALIZER",
-  "type" : "pipeline",
-  "status" : "disabled",
-  "vtype" : "none",
-  "responseContentType" : "application/visjs+javascript",
-  "parameters" : [ {"name" : "target_attributes", "desc" : "Dependent parameters. One or more can be selected.", "value" : "subjectageyears"}, {"name" : "descriptive_attributes", "desc" : "Independent parameters. One or more can be selected.", "value" : "apoe4,av45"},{"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
-    {"name" : "filter", "desc" : "", "value" : ""}
-    ]
+	"name": "PIPELINE_ISOUP_REGRESSION_TREE_SERIALIZER",
+	"desc": "PIPELINE_ISOUP_REGRESSION_TREE_SERIALIZER",
+	"type": "pipeline",
+	"status": "disabled",
+	"vtype": "none",
+	"responseContentType": "application/visjs+javascript",
+	"parameters": [{
+			"name": "target_attributes",
+			"desc": "Dependent parameters. One or more can be selected.",
+			"value": "subjectageyears",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "database_parameter"
+		}, {
+			"name": "descriptive_attributes",
+			"desc": "Independent parameters. One or more can be selected.",
+			"value": "apoe4,av45",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "database_parameter"
+		}, {
+			"name": "dataset",
+			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
+			"value": "adni,chuv_adni",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "dataset"
+		},
+		{
+			"name": "filter",
+			"desc": "",
+			"value": "",
+			"notBlank": false,
+			"multiValue": true,
+			"type": "filter"
+		}
+	]
 }

@@ -1,12 +1,32 @@
 {
-  "name" : "NAIVE_BAYES_TESTING",
-  "desc" : "BayesNaive_v3",
-  "type" : "local_global",
-  "status" : "enabled",
-  "vtype" : "",
-  "parameters" : [
-   {"name" : "iterationNumber", "desc" : "", "value" : "0"},
-   {"name" : "model", "desc" : "", "value" : ""},
-   {"name" : "dbIdentifier", "desc" : "", "value" : ""}
-]
+	"name": "NAIVE_BAYES_TESTING",
+	"desc": "BayesNaive_v3",
+	"type": "local_global",
+	"status": "enabled",
+	"vtype": "",
+	"parameters": [{
+			"name": "iterationNumber",
+			"desc": "it can not be null",
+			"value": "0",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "generic"
+		},
+		{
+			"name": "model",
+			"desc": "it can not be empty, only one value",
+			"value": "",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "algorithm_parameter"	
+		},
+		{
+			"name": "dbIdentifier",
+			"desc": "",
+			"value": "",
+			"notBlank": false,
+			"multiValue": false,
+			"type": "generic"
+		}
+	]
 }

@@ -1,13 +1,40 @@
 {
-  "name" : "CROSS_VALIDATION_K_FOLD",
-  "desc" : "Cross Validation K Fold",
-  "type" : "local_global",
-  "status" : "enabled",
-  "vtype" : "",
-  "parameters" : [
-   {"name" : "dataset", "desc" : "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.", "value" : "adni,chuv_adni"},
-   {"name" : "columns", "desc" : "", "value" : "outlook,temperature,humidity,windy"},
-   {"name" : "classname", "desc" : "", "value" : "play"},
-   {"name" : "kfold", "desc" : "", "value" : "3"}]
+	"name": "CROSS_VALIDATION_K_FOLD",
+	"desc": "Cross Validation K Fold",
+	"type": "local_global",
+	"status": "enabled",
+	"vtype": "",
+	"parameters": [{
+			"name": "dataset",
+			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
+			"value": "adni,chuv_adni",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "dataset"
+		},
+		{
+			"name": "columns",
+			"desc": "can not be empty",
+			"value": "outlook,temperature,humidity,windy",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "database_parameter"
+		},
+		{
+			"name": "classname",
+			"desc": "can not be empty(something like columns).only one variable",
+			"value": "play",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "database_parameter"
+		},
+		{
+			"name": "kfold",
+			"desc": "",
+			"value": "3",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "algorithm_parameter"
+		}
+	]
 }
-
