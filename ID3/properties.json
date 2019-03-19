@@ -1,0 +1,56 @@
+{
+	"name": "ID3",
+	"desc": "ID3",
+	"type": "iterative",
+	"status": "enabled",
+	"vtype": "...",
+	"parameters": [{
+			"name": "iterations_max_number",
+			"desc": "",
+			"value": "20",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "generic"
+		},
+		{
+			"name": "iterations_condition_query_provided",
+			"desc": "",
+			"value": "true",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "generic"
+		},
+		{
+			"name": "columns",
+			"desc": "columns value",
+			"value": "age,spectacle-prescrip,astigmatism,tear-prod-rate",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "database_parameter"
+		},
+		{
+			"name": "classname",
+			"desc": "class name",
+			"value": "contact-lenses",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "database_parameter"
+		},
+		{
+			"name": "dataset",
+			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
+			"value": "adni,chuv_adni",
+			"notBlank": true,
+			"multiValue": true,
+			"type": "dataset"
+		},
+		{
+			"name": "outputformat",
+			"desc": "json,pfa",
+			"value": "",
+			"notBlank": true,
+			"multiValue": false,
+			"type": "generic"
+		},
+	]
+}
