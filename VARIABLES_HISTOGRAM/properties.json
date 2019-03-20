@@ -6,42 +6,43 @@
 	"parameters": [{
 			"name": "column1",
 			"desc": "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.",
+			"type": "database",
 			"value": "subjectageyears",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "database_parameter"
-		},
-		{
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "string"
+		}, {
 			"name": "column2",
 			"desc": "It is a variable of the input dataset. The variable should be text. It can also be empty.",
+			"type": "database",
 			"value": "",
-			"notBlank": false,
-			"multiValue": false,
-			"type": "database_parameter"
-		},
-		{
+			"valueNotBlank": false,
+			"valueMultiple": false,
+			"valueType": "string"
+		}, {
 			"name": "nobuckets",
 			"desc": "It is a parameter of the algorithm. It should be integer. It cannot be empty.",
+			"type": "other",
 			"value": "4",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "algorithm_parameter"
-		},
-		{
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "integer"
+		}, {
 			"name": "dataset",
 			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty",
+			"type": "dataset",
 			"value": "ppmi",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "dataset"
-		},
-		{
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
+		}, {
 			"name": "filter",
 			"desc": "",
+			"type": "filter",
 			"value": "",
-			"notBlank": false,
-			"multiValue": true,
-			"type": "filter"
+			"valueNotBlank": false,
+			"valueMultiple": true,
+			"valueType": "string"
 		}
 	]
 }

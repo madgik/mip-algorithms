@@ -8,33 +8,35 @@
 	"parameters": [{
 			"name": "target_attributes",
 			"desc": "Dependent parameters. One or more can be selected.",
+			"type": "database",
 			"value": "subjectageyears",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "database_parameter"
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
 		}, {
 			"name": "descriptive_attributes",
 			"desc": "Independent parameters. One or more can be selected.",
+			"type": "database",
 			"value": "apoe4,av45",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "database_parameter"
-		},
-		{
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
+		}, {
 			"name": "dataset",
 			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
+			"type": "dataset",
 			"value": "adni,chuv_adni",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "dataset"
-		},
-		{
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
+		}, {
 			"name": "filter",
 			"desc": "",
+			"type": "filter",
 			"value": "",
-			"notBlank": false,
-			"multiValue": true,
-			"type": "filter"
+			"valueNotBlank": false,
+			"valueMultiple": true,
+			"valueType": "string"
 		}
 	]
 }
