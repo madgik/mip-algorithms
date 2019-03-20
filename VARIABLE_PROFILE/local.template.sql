@@ -19,7 +19,7 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 emptyset '%{empty}';
 ------------------
-create table columnexist as setschema 'colname' select distinct(colname) from tempinputlocaltbl1;
+create table columnexist as setschema 'colname' select distinct(colname) from tempinputlocaltbl1a;
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{variable}'))=0 then 0 else 1 end;
 vars '%{valExists}';
 -----------------------------------------------------
