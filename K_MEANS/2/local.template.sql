@@ -33,7 +33,7 @@ create table assignnearestcluster(rid  text primary key, clid, mindist);
 
 -- Run Loop
 execnselect 'columns' 'k'
-select filetext('/home/eleni/Desktop/Link to mip-algorithms/K_MEANS/2/kmeanslooplocal.sql')
+select filetext('/root/mip-algorithms/K_MEANS/2/kmeanslooplocal.sql')
 from ( whilevt select min(diff)=0
                from (  select clold.clval = clnew.clval as diff
                        from clustercenters as clold,
