@@ -1,5 +1,18 @@
 requirevars 'input_local_tbl' 'columns' 'k' 'defaultDB' 'dataset';
-attach database '%{defaultDB}' as defaultDB; 
+
+--Input for testing the algorithm
+-- drop table if exists rawtable;
+-- create table rawtable as
+--   select rid, key as colname, val from
+--   		(select rid, jdictsplitv(cjdict)
+--   		from (file toj:1 header:t 'chuv_flattable.csv' ));
+-- var 'defaultDB' 'defaultDB';
+-- var 'input_local_tbl' 'rawtable';
+-- var 'columns' 'lefthippocampus,righthippocampus';
+-- var 'k' '5';
+-- var 'dataset' 'adni,ppmi';
+---
+attach database '%{defaultDB}' as defaultDB;
 
 drop table if exists datasets;
 create table datasets as
@@ -10,16 +23,17 @@ create table columnstable as
 select strsplitv('%{columns}' ,'delimiter:,') as xname;
 
 --1. Keep only the correct colnames
-drop table if exists localinputtbl_1; 
+drop table if exists localinputtbl_1;
 create table localinputtbl_1 as
 select __rid as rid,__colname as colname, tonumber(__val) as val
-from %{input_local_tbl};
+--select rid ,colname , tonumber(val) as val   -- For algorithm testing
+from %{input_local_tbl} where colname in( select * from columnstable) or colname='dataset';
 
 --Check If variableS exist
 --var 'counts' from select count(xname) from columnstable where xname in (select distinct(colname) from localinputtbl_1);		-->>By Sof
---var 'result' from select count(xname) from columnstable;						
---var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
---vars '%{valExists}'; 	
+--var 'result' from select count(xname) from columnstable;
+--var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;
+--vars '%{valExists}';
 
 --Check if columns is empty
 var 'empty' from select case when (select '%{columns}')='' then 0 else 1 end;
@@ -41,28 +55,28 @@ create table columnexist as setschema 'colname' select distinct(colname) from (p
 --Check if columns exist
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from columnstable);
 var 'result' from select count(distinct(xname)) from columnstable;
-var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;			
-vars '%{valExists}'; 
+var 'valExists' from select case when(select %{counts})=%{result} then 1 else 0 end;
+vars '%{valExists}';
 --------
 
 --2. Keep only patients of the correct dataset
-drop table if exists localinputtbl_2; 
+drop table if exists localinputtbl_2;
 create table localinputtbl_2 as
 select rid, colname, val
 from localinputtbl_1
-where rid in (select distinct rid  
-              from localinputtbl_1 
+where rid in (select distinct rid
+              from localinputtbl_1
               where colname ='dataset' and val in (select d from datasets));
 
 delete from localinputtbl_2
 where colname = 'dataset';			--14 query
 
---3.  Delete patients with null values 
-drop table if exists inputlocaltbl1; 
+--3.  Delete patients with null values
+drop table if exists inputlocaltbl1;
 create table inputlocaltbl1 as
 select rid, colname, val
 from localinputtbl_2
-where rid not in (select distinct rid from localinputtbl_2 
+where rid not in (select distinct rid from localinputtbl_2
                   where val is null or val = '' or val = 'NA')
 order by rid, colname, val;
 
@@ -80,10 +94,11 @@ vartypecolumns '%{final}';
 var 'minimumrecords' 10;
 create table emptytable(rid  text primary key, colname, val);
 var 'privacycheck' from select case when (select count(distinct(rid)) from inputlocaltbl1) < %{minimumrecords} then 0 else 1 end;
+
 drop table if exists defaultDB.inputlocaltbl;
-create table defaultDB.inputlocaltbl as setschema 'rid , colname, val' 
+create table defaultDB.inputlocaltbl as setschema 'rid , colname, val'
 select * from inputlocaltbl1 where %{privacycheck}=1
-union 
+union
 select * from emptytable where %{privacycheck}=0;
 -----------------------------------------------------------------
 select count(distinct rid) as patients from defaultDB.inputlocaltbl;
