@@ -37,7 +37,7 @@ from ( select distinct colname, val, case when count(*) = 1 then classval else '
 select * from defaultDB.globalnewnodesoftree;
 
 update defaultdb.globaltree set nextnode = (select no from defaultDB.globalnewnodesoftree)
-where  jmerge(no,colname,val) is (select jmerge (no,colname,val) from globalpathforsplittree);
+where  jmerge(no,colname,val) is (select jmerge (no,colname,val) from defaultDB.globalpathforsplittree);
 
 insert into defaultdb.globaltree select * from defaultDB.globalnewnodesoftree;
 
