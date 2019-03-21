@@ -1,7 +1,4 @@
 requirevars 'defaultDB' 'outputformat';
-
-var 'defaultDB' 'defaultDB';
-var 'outputformat' 'pfa';
 attach database '%{defaultDB}' as defaultDB;
 
 --pfa format (json valid)
