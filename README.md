@@ -45,9 +45,9 @@ submitted.</p>
 <h4 id="expected-_directory_-structure-for-each-algorithm-workflow">Expected <em>directory</em> structure for each algorithm workflow</h4>
 <p>For each algorithm workflow refer to the corresponding link for a hands-on example:</p>
 <ol>
-<li><code>local</code> =&gt; <a href="WP_LIST_VARIABLES">WP_LIST_VARIABLES algorithm</a></li>
-<li><code>local_global</code> =&gt; <a href="WP_VARIABLE_PROFILE">WP_VARIABLE_PROFILE algorithm</a>  </li>
-<li><code>multiple_local_global</code> =&gt; <a href="WP_LINEAR_REGRESSION">WP_LINEAR_REGRESSION algorithm</a>  </li>
+<li><code>local</code> =&gt; <a href="LIST_VARIABLES">LIST_VARIABLES algorithm</a></li>
+<li><code>local_global</code> =&gt; <a href="VARIABLE_PROFILE">VARIABLE_PROFILE algorithm</a>  </li>
+<li><code>multiple_local_global</code> =&gt; <a href="LINEAR_REGRESSION">LINEAR_REGRESSION algorithm</a>  </li>
 <li><code>iterative</code> =&gt; <a href="SAMPLE_ITERATIVE">SAMPLE_ITERATIVE algorithm</a>  </li>
 </ol>
 <h2 id="general-directions-for-writing-algorithms">General directions for writing algorithms</h2>
