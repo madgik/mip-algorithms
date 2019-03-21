@@ -7,59 +7,67 @@
 	"parameters": [{
 			"name": "iterations_max_number",
 			"desc": "",
+			"type": "other",
 			"value": "2",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "generic"
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "integer"
 		}, {
 			"name": "iterations_condition_query_provided",
 			"desc": "",
+			"type": "other",
 			"value": "true",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "generic"
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "string"
 		}, {
 			"name": "columns",
 			"desc": "columns value",
+			"type": "database",
 			"value": "lefthippocampus,righthippocampus",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "database_parameter"
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
 		}, {
 			"name": "k",
 			"desc": "#centers",
+			"type": "other",
 			"value": "4",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "algorithm_parameter"
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "integer"
 		}, {
 			"name": "centers",
 			"desc": "A set of initial (distinct) cluster centres",
+			"type": "other",
 			"value": "{}",
-			"notBlank": false,
-			"multiValue": true,
-			"type": "algorithm_parameter"
+			"valueNotBlank": false,
+			"valueMultiple": false,
+			"valueType": "json"
 		}, {
 			"name": "dataset",
 			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
+			"type": "dataset",
 			"value": "adni",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "dataset"
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
 		}, {
 			"name": "e",
 			"desc": "#error_value",
+			"type": "other",
 			"value": "0.01",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "algorithm_parameter"
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "real"
 		}, {
 			"name": "outputformat",
 			"desc": "json,highchart_bubble, highchart_scatter3d,pfa",
+			"type": "other",
 			"value": "",
-			"notBlank": true,
-			"multiValue": false,
-			"type": "generic"
+			"valueNotBlank": true,
+			"valueMultiple": false,
+			"valueType": "string"
 		}
 	]
 }
