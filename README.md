@@ -39,7 +39,7 @@ The parameter has the following properties:<ul>
 <li><code>desc</code> (String) Will be shown in the properties of the algorithm. </li>
 <li><code>type</code> Defines the type of the parameter. It can take the following values: 
 <ol>
-<li><code>database</code> (Used for querying the columns of the database.)</li>
+<li><code>column</code> (Used for querying the columns of the database.)</li>
 <li><code>filter</code> (Used to filter the results of the database.)</li>
 <li><code>dataset</code> (If the property is of type dataset then it will be used to choose on which dataset to run the algorithm on.)</li>
 <li><code>other</code> (For any other reason use this type.)</li>
