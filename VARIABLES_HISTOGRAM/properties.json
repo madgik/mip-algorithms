@@ -6,7 +6,7 @@
 	"parameters": [{
 			"name": "column1",
 			"desc": "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.",
-			"type": "database",
+			"type": "column",
 			"value": "subjectageyears",
 			"valueNotBlank": true,
 			"valueMultiple": false,
@@ -14,7 +14,7 @@
 		}, {
 			"name": "column2",
 			"desc": "It is a variable of the input dataset. The variable should be text. It can also be empty.",
-			"type": "database",
+			"type": "column",
 			"value": "",
 			"valueNotBlank": false,
 			"valueMultiple": false,

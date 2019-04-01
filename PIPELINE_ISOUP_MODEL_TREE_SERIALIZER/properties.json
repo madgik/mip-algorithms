@@ -8,7 +8,7 @@
 	"parameters": [{
 			"name": "target_attributes",
 			"desc": "Dependent parameters. One or more can be selected.",
-			"type": "database",
+			"type": "column",
 			"value": "subjectageyears",
 			"valueNotBlank": true,
 			"valueMultiple": true,
@@ -16,7 +16,7 @@
 		}, {
 			"name": "descriptive_attributes",
 			"desc": "Independent parameters. One or more can be selected.",
-			"type": "database",
+			"type": "column",
 			"value": "apoe4,av45",
 			"valueNotBlank": true,
 			"valueMultiple": true,
