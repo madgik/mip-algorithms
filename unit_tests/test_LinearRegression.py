@@ -3,12 +3,13 @@ import json
 import logging
 import math
 
+# Required datasets: adni
 
-url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_LINEAR_REGRESSION'
+endpointUrl='http://88.197.53.100:9090'
 
 
-def test_LinearRegression_PARTIAL_ADNI_NOFILTERS():
-    logging.info("---------- TEST : Linear Regression Partial ADNI")
+def test_LinearRegression_ADNI_1():
+    logging.info("---------- TEST : Linear Regression ADNI 1")
 
     data = [
           {
@@ -30,59 +31,7 @@ def test_LinearRegression_PARTIAL_ADNI_NOFILTERS():
         ]
     
     headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-    r = requests.post(url,data=json.dumps(data),headers=headers)
-    
-    result = json.loads(r.text)
-    
-    """
-    Results from R
-    
-    Estimate Std. Error t value Pr(>|t|)
-    (Intercept) 1.328236 0.210648 6.305 9.13e-10 ***
-    adnicategoryCN -0.126284 0.060159 -2.099 0.03656 *
-    adnicategoryMCI -0.066678 0.054622 -1.221 0.22305
-    apoe4 0.101813 0.031089 3.275 0.00117 **
-    subjectage 0.003816 0.001582 2.412 0.01639 *
-    minimentalstate -0.013217 0.006516 -2.028 0.04332 *
-    genderM -0.034793 0.022177 -1.569 0.11761
-    adnicategoryCN:apoe4 -0.007487 0.048059 -0.156 0.87630
-    adnicategoryMCI:apoe4 0.020197 0.038245 0.528 0.59778
-"""
-
-    check_variable(result['resources'][0]['data'][1],'(Intercept)', 1.328236,0.210648,6.305,9.13e-10)
-    check_variable(result['resources'][0]['data'][2],'adnicategory(CN)', -0.126284,0.060159,-2.099,0.03656)
-    check_variable(result['resources'][0]['data'][3],'adnicategory(CN):apoe4', -0.007487, 0.048059, -0.156, 0.87630)
-    check_variable(result['resources'][0]['data'][4],'adnicategory(MCI)', -0.066678, 0.054622, -1.221, 0.22305)
-    check_variable(result['resources'][0]['data'][5],'adnicategory(MCI):apoe4', 0.020197, 0.038245, 0.528, 0.59778 )
-    check_variable(result['resources'][0]['data'][6],'apoe4', 0.101813, 0.031089, 3.275, 0.00117)
-    check_variable(result['resources'][0]['data'][7],'gender(M)', -0.034793, 0.022177, -1.569, 0.11761)
-    check_variable(result['resources'][0]['data'][8],'minimentalstate',-0.013217, 0.006516, -2.028, 0.04332)
-    check_variable(result['resources'][0]['data'][9],'subjectage', 0.003816, 0.001582, 2.412, 0.01639)
-
-def test_LinearRegression_FULL_ADNI_NOFILTERS():
-    logging.info("---------- TEST : Linear Regression FULL ADNI")
-
-    data = [
-          {
-            "name": "x",
-            "value": "adnicategory*apoe4+subjectage+minimentalstate+gender"
-          },
-          {
-            "name": "y",
-            "value": "av45"
-          },
-          {
-            "name": "dataset",
-            "value": "adni,epfl_adni,chuv_adni"
-          },
-          {
-            "name": "filter",
-            "value": ""
-          }
-        ]
-    
-    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-    r = requests.post(url,data=json.dumps(data),headers=headers)
+    r = requests.post(endpointUrl+'/mining/query/LINEAR_REGRESSION',data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)
     
