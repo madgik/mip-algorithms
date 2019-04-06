@@ -1,39 +1,29 @@
 import sys
-import sqlite3
-import pickle
-import codecs
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) + '/LibraryAlgorithmHelper/' )
+import algorithmHelper
 
-class MyData():
+# Set the data class that will transfer the data between local-global
+class DataTransferClass():
     def __init__(self):
         self.number = 0
-
-def getopts(argv):
-    opts = {}
-    while argv:
-        if argv[0][0] == '-':
-            opts[argv[0]] = argv[1]
-            argv = argv[2:]
-        else:
-            argv = argv[1:]
-    return opts
-	
-args = sys.argv[1:]
-opts = getopts(args)
-if not opts or len(opts) < 1:
+		
+# Read the parameters
+parameters = algorithmHelper.getParameters(sys.argv[1:])
+if not parameters or len(parameters) < 1:
 	raise ValueError("There should be 1 parameter")
 
-inputDB = opts.get("-input_db")
+inputDB = parameters.get("-input_db")
 if inputDB == None :
 	raise ValueError("input_db not provided as parameter.")
 
-conn = sqlite3.connect(inputDB)
-cur = conn.cursor()
+# Get the output data from the previous step
+data = algorithmHelper.getTransferedData(inputDB)
 
-cur.execute('SELECT results FROM test')
-
+# Execute the algorithm
 sum = 0
-for row in cur:
-	data = pickle.loads(codecs.decode(row[0], "base64")) 
-	sum += data.number
+for dataTransferObject in data:
+	sum += dataTransferObject.number
 
-print('{"output": "' + str(sum) + '"}')
+# Return the algorithm's output
+algorithmHelper.setAlgorithmsOutputData('{"output": "' + str(sum) + '"}')
