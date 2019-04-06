@@ -1,0 +1,7 @@
+{
+	"name": "NUMBER_OF_WORKERS",
+	"desc": "",
+	"type": "python_local_global",
+	"status": "enabled",
+	"parameters": []
+}
