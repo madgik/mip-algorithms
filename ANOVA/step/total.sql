@@ -8,7 +8,7 @@ create table xvariables as
 select xname from (select strsplitv(regexpr("\+|\:|\*|\-",'%{formula}',"+") ,'delimiter:+') as xname) where xname!='intercept' ;
 
 var 'xnames' from select group_concat(xname) as xname from (select distinct xname from xvariables) ;
-select '%{xnames}';
+--select '%{xnames}';
 
 var 'derivedcolumnsofmodel' from
 select group_concat (modelcolnamesdummycodded) from (
@@ -20,13 +20,17 @@ group by modelcolnames)
 where formulaparts = modelcolnames);
 select '%{derivedcolumnsofmodel}';
 
+var 'xnames2' from select case when '%{xnames}' <> 'None' then
+create_complex_query("createderivedcolumns derivedcolumns:%{derivedcolumnsofmodel},%{y} select ","?", "," , " from defaultDB.localinputtblflat;" , '%{xnames},%{y}')
+else
+create_complex_query("createderivedcolumns derivedcolumns:%{derivedcolumnsofmodel},%{y} select ","?", "," , " from defaultDB.localinputtblflat;" , '%{y}')
+end;
 
-var 'xnames2' from select create_complex_query("createderivedcolumns derivedcolumns:%{derivedcolumnsofmodel},%{y} select ","?", "," , " from defaultDB.localinputtblflat;" , '%{xnames},%{y}');
 drop table if exists defaultDB.input_local_tbl_LR_Final;
 create table defaultDB.input_local_tbl_LR_Final as
 %{xnames2};
 
---C. Result (comutation of gramian and statistics):
+--Result: (comutation of gramian and statistics):
 drop table if exists defaultDB.localresult;
 create table defaultDB.localresult (tablename text,attr1 text,attr2 text,val real,reccount real,colname text,S1 real,N real);
 
@@ -39,13 +43,13 @@ select 'statistics' as tablename, null, null, null, null,colname,  S1,  N
 from (statisticsflat select * from defaultDB.input_local_tbl_LR_Final);
 
 select * from defaultDB.localresult;
------
+
+-----------------
 
 
 
 var 'input_global_tbl' 'defaultDB.localresult';
 
---C2. (GLOBAL LAYER)
 drop table if exists gramian;
 create table gramian as
 select attr1,attr2, sum(val) as val, sum(reccount) as reccount
@@ -53,50 +57,32 @@ from %{input_global_tbl}
 where tablename = "gramian"
 group by attr1,attr2;
 
-
 drop table if exists defaultDB.statistics;
 create table  defaultDB.statistics as
-select  colname,
-        FARITH('/',S1A,NA) as mean,
-        NA as N
-from ( select colname,
-              FSUM(S1) as S1A,
-              SUM(N) as NA
-        from %{input_global_tbl}
-        where tablename = "statistics"
-group by colname );
+select  colname, FARITH('/',S1A,NA) as mean, NA as N
+from ( select colname, FSUM(S1) as S1A,SUM(N) as NA
+       from %{input_global_tbl}
+       where tablename = "statistics"
+       group by colname );
 
 --------------------------------------------------------------------------------------------
 --D. COMPUTE b estimators (X'X)^-1 * X'y = b  (GLOBAL LAYER)
 --D1. Create X'X table
 drop table if exists XTX;
 create table XTX as
-select *
-from ( select attr1, attr2, val
-       from gramian
-       where attr1 != "%{y}" and  attr2 != "%{y}"
-       -- union all
-       -- select attr2 as attr1,attr1 as attr2, val
-       -- from gramian
-       -- where attr1 != "%{y}" and  attr2 != "%{y}" and attr1!=attr2
-     )
-order by attr1,attr2;
+select attr1, attr2, val from gramian where attr1 != "%{y}" and  attr2 != "%{y}" order by attr1,attr2;
 
 --D2. Invert table (X'X)^-1
 drop table if exists defaultDB.XTXinverted;
 create table defaultDB.XTXinverted as
 select invertarray(attr1,attr2,val,sizeofarray)
 from ( select attr1,attr2,val, sizeofarray
-       from XTX,
-       ( select count(distinct attr1) as sizeofarray from XTX ));
+       from XTX, (select count(distinct attr1) as sizeofarray from XTX ));
 
 --D3. Create X'y table
 drop table if exists XTy;
 create table XTy as
-select *
-from (select attr2 as attr,val from gramian where attr1 = "%{y}" and attr1!=attr2)
-      -- union all
-      -- select attr1 as attr, val from gramian where  attr2 = "%{y}" and attr1!=attr2)
+select attr2 as attr,val from gramian where attr1 = "%{y}" and attr1!=attr2
 order by attr;
 
 --D4 COMPUTE b estimators (X'X)^-1 * X'y = b
@@ -108,7 +94,6 @@ join
 XTy
 on attr2 = attr
 group by attr1;
-
 
 drop table if exists defaultDB.globalresult;
 create table defaultDB.globalresult (tablename text, attr1 text,estimate real, colname text, mean real);
@@ -127,7 +112,7 @@ select * from defaultDB.globalresult;
 
 
 
-var 'prv_output_global_tbl' 'defaultDB.g.s defaultDBlobalresult'; -- statistics & coefficients
+var 'prv_output_global_tbl' 'defaultDB.globalresult'; -- statistics & coefficients
 
 --E1. Compute residuals y-ypredictive = Y-sum(X(i)*estimate(i)) (Local Layer)
 var 'a' from select tabletojson(attr1,estimate,"attr1,estimate") from defaultDB.globalresult where tablename ="coefficients";
@@ -147,7 +132,11 @@ create table localsss as
 select '%{partial_sst}' as sst,'%{partial_sse}' as sse;
 
 select * from localsss;
--------
+
+
+
+-----
+
 
 
 

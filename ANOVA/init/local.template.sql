@@ -14,8 +14,9 @@ hidden var 'x' 'var_I1*var_I2*var_I3';
 hidden var 'dataset' 'all';
 hidden var 'metadata' '{"var_I1":[0,1,2],"var_I2":[0,1,2],"var_I3":[0,1]}';
 hidden var 'csvfileofinputlocaltbl' 'data_ANOVA_Unbalanced_with_inter_V1V2_copy.csv';
-hidden var 'type' 1;
-
+hidden var 'type' 2;
+hidden var 'effectSize' ;  --TODO!!!!
+hidden var 'outputformat' 'pfa';
 -- Import dataset
 drop table if exists table1;
 create table table1 as
