@@ -13,9 +13,9 @@ parameters = algorithmHelper.getParameters(sys.argv[1:])
 if not parameters or len(parameters) < 1:
 	raise ValueError("There should be 1 parameter")
 
-inputCSV = parameters.get("-input_local_csv")
+inputCSV = parameters.get("-local_csv")
 if inputCSV == None :
-	raise ValueError("input_local_csv not provided as parameter.")
+	raise ValueError("local_csv not provided as parameter.")
 
 # Execute the algorithm
 data = DataTransferClass()

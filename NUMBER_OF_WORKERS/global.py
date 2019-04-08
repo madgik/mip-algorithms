@@ -13,12 +13,12 @@ parameters = algorithmHelper.getParameters(sys.argv[1:])
 if not parameters or len(parameters) < 1:
 	raise ValueError("There should be 1 parameter")
 
-inputDB = parameters.get("-input_db")
-if inputDB == None :
-	raise ValueError("input_db not provided as parameter.")
+localDBs = parameters.get("-local_step_dbs")
+if localDBs == None :
+	raise ValueError("local_step_dbs not provided as parameter.")
 
 # Get the output data from the previous step
-data = algorithmHelper.getTransferedData(inputDB)
+data = algorithmHelper.getTransferedData(localDBs)
 
 # Execute the algorithm
 sum = 0

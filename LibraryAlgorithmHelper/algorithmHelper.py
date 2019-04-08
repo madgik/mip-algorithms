@@ -17,7 +17,7 @@ def getTransferedData(inputDB):
 	conn = sqlite3.connect(inputDB)
 	cur = conn.cursor()
 
-	cur.execute('SELECT results FROM test')
+	cur.execute('SELECT results FROM transfer')
 
 	results = []
 	for row in cur:
