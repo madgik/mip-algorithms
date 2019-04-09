@@ -8,7 +8,7 @@ parameters = algorithmHelper.getParameters(sys.argv[1:])
 
 inputCSV = parameters.get("-local_csv")
 if inputCSV == None :
-	raise ValueError("local_csv not provided as parameter.")
+    raise ValueError("local_csv not provided as parameter.")
 
 # Execute the algorithm
 sum = 0
