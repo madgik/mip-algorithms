@@ -15,8 +15,7 @@ if localDBs == None :
     raise ValueError("local_step_dbs not provided as parameter.")
 
 # Get the output data from the previous step
-data = Data1()
-data = data.load(localDBs)
+data = Data1.load(localDBs)
 
 # Execute the algorithm
 data.number *= 2
