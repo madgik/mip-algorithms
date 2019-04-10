@@ -1,7 +1,10 @@
 
+
 var 'prv_output_global_tbl' 'defaultDB.globalAnovatbl';
 
 var 'formula' from select formula from %{prv_output_global_tbl} where no in ( select min(no) from %{prv_output_global_tbl} where sst is null);
+var 'metadata' from select jgroup(code,enumerations) from defaultdb.metadatatbl;
+
 
 drop table if exists xvariables;
 create table xvariables as
@@ -23,7 +26,7 @@ select '%{derivedcolumnsofmodel}';
 var 'xnames2' from select case when '%{xnames}' <> 'None' then
 create_complex_query("createderivedcolumns derivedcolumns:%{derivedcolumnsofmodel},%{y} select ","?", "," , " from defaultDB.localinputtblflat;" , '%{xnames},%{y}')
 else
-create_complex_query("createderivedcolumns derivedcolumns:%{derivedcolumnsofmodel},%{y} select ","?", "," , " from defaultDB.localinputtblflat;" , '%{y}')
+create_complex_query("createderivedcolumns derivedcolumns:%{derivedcolumnsofmodel},%{y} select ","?", "," , " from defaultDB.localinputtblflat;" ,'%{y}')
 end;
 
 drop table if exists defaultDB.input_local_tbl_LR_Final;
@@ -44,8 +47,7 @@ from (statisticsflat select * from defaultDB.input_local_tbl_LR_Final);
 
 select * from defaultDB.localresult;
 
------------------
-
+--------------------
 
 
 var 'input_global_tbl' 'defaultDB.localresult';
@@ -108,7 +110,9 @@ from defaultDB.statistics;
 
 select * from defaultDB.globalresult;
 
-----
+
+
+----------------------
 
 
 
@@ -134,10 +138,7 @@ select '%{partial_sst}' as sst,'%{partial_sse}' as sse;
 select * from localsss;
 
 
-
------
-
-
+------------------
 
 
 var 'input_global_tbl' 'localsss';

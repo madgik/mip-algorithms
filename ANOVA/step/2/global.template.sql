@@ -1,7 +1,7 @@
-requirevars 'defaultDB' 'x' 'y' 'input_global_tbl' 'type' 'dataset';
+requirevars 'defaultDB'  'input_global_tbl' ;
 attach database '%{defaultDB}' as defaultDB;
 
-var 'input_global_tbl' 'localsss';
+--var 'input_global_tbl' 'localsss';
 
 hidden var 'sse' from select sum(sse) from  %{input_global_tbl};
 hidden var 'sst' from select sum(sst) from  %{input_global_tbl};

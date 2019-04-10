@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'input_local_tbl' 'input_local_metadata' 'x' 'y' 'dataset';
+requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
 -- To input_local_metadata einai ena table ths morfhs:  columnname, type, values (in case of categorical)
 -- to y einai real
 -- to x einai equation me categorical values . Mporei na periexei ta sumbola +-* kai tous arithmous 1,0
@@ -6,22 +6,22 @@ requirevars 'defaultDB' 'input_local_tbl' 'input_local_metadata' 'x' 'y' 'datase
 
 -----------------------------------------------------------------------------
 ---------------------Input for testing
-hidden var 'input_local_tbl' 'table1';
-hidden var 'input_local_metadata'  'metadata_tbl';
-hidden var 'defaultDB' defaultDB_ANOVA;
-hidden var 'y' 'var_D';
-hidden var 'x' 'var_I1*var_I2*var_I3';
-hidden var 'dataset' 'all';
-hidden var 'metadata' '{"var_I1":[0,1,2],"var_I2":[0,1,2],"var_I3":[0,1]}';
-hidden var 'csvfileofinputlocaltbl' 'data_ANOVA_Unbalanced_with_inter_V1V2_copy.csv';
-hidden var 'type' 2;
-hidden var 'effectSize' ;  --TODO!!!!
-hidden var 'outputformat' 'pfa';
--- Import dataset
-drop table if exists table1;
-create table table1 as
-select *,'all' as dataset from (file header:t '%{csvfileofinputlocaltbl}');
---select * from table1;
+-- hidden var 'input_local_tbl' 'table1';
+-- hidden var 'input_local_metadata'  'metadata_tbl';
+-- hidden var 'defaultDB' defaultDB_ANOVA;
+-- hidden var 'y' 'var_D';
+-- hidden var 'x' 'var_I1*var_I2*var_I3';
+-- hidden var 'dataset' 'all';
+-- hidden var 'metadata' '{"var_I1":[0,1,2],"var_I2":[0,1,2],"var_I3":[0,1]}';
+-- hidden var 'csvfileofinputlocaltbl' 'data_ANOVA_Unbalanced_with_inter_V1V2_copy.csv';
+-- hidden var 'type' 2;
+-- hidden var 'outputformat' 'pfa';
+-- hidden var 'metadatafilename' '/home/eleni/Desktop/TESTS/metadata.json';
+-- -- Import dataset
+-- drop table if exists table1;
+-- create table table1 as
+-- select *,'all' as dataset from (file header:t '%{csvfileofinputlocaltbl}');
+-- --select * from table1;
 ------------------ End input for testing
 ------------------------------------------------------------------------------
 attach database '%{defaultDB}' as defaultDB;
@@ -35,7 +35,18 @@ create table xvariables as
 -- select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
 select xname from (select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname) where xname!=0 ;
 
+
+drop table if exists defaultdb.metadatatbl;
+create table defaultdb.metadatatbl as
+select code,enumerations from (readmetadatafile filename:%{metadatafilename})
+where code in (select * from xvariables) or code = '{y}';
+-- insert into defaultDB.metadatatbl  select "var_I1",'0,1,2'; --DELETE
+-- insert into defaultDB.metadatatbl  select "var_I2",'0,1,2';--DELETE
+-- insert into defaultDB.metadatatbl  select "var_I3",'0,1';--DELETE
+
+
 var 'xnames' from select group_concat(xname) as  xname from (select distinct xname from xvariables); -- TODO Add distinct to the rest of the algorithms!!
+
 
 --1. Keep only the correct columns of the table : x,y, dataset
 drop table if exists localinputtbl_1;

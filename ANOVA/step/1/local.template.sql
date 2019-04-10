@@ -1,9 +1,11 @@
 requirevars 'defaultDB' 'y' 'prv_output_global_tbl' ;
 attach database '%{defaultDB}' as defaultDB;
 
-var 'prv_output_global_tbl' 'defaultDB.globalAnovatbl';
+--var 'prv_output_global_tbl' 'defaultDB.globalAnovatbl';
 
 var 'formula' from select formula from %{prv_output_global_tbl} where no in ( select min(no) from %{prv_output_global_tbl} where sst is null);
+var 'metadata' from select jgroup(code,enumerations) from defaultdb.metadatatbl;
+
 
 drop table if exists xvariables;
 create table xvariables as

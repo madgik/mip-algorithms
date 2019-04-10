@@ -1,4 +1,4 @@
 requirevars 'defaultDB' ;
 
 
-select "ok";
+select * from defaultDB.metadatatbl;
