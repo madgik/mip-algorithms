@@ -9,22 +9,24 @@ requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
 -- hidden var 'input_local_tbl' 'table1';
 -- hidden var 'input_local_metadata'  'metadata_tbl';
 -- hidden var 'defaultDB' defaultDB_ANOVA;
--- hidden var 'y' 'var_D';
--- hidden var 'x' 'var_I1*var_I2*var_I3';
+-- hidden var 'y' 'ANOVA_var_D';
+-- hidden var 'x' 'ANOVA_var_I1*ANOVA_var_I2*ANOVA_var_I3';
 -- hidden var 'dataset' 'all';
--- hidden var 'metadata' '{"var_I1":[0,1,2],"var_I2":[0,1,2],"var_I3":[0,1]}';
+-- hidden var 'metadata' '{"ANOVA_var_I1":[0,1,2],"ANOVA_var_I2":[0,1,2],"ANOVA_var_I3":[0,1]}';
 -- hidden var 'csvfileofinputlocaltbl' 'data_ANOVA_Unbalanced_with_inter_V1V2_copy.csv';
 -- hidden var 'type' 2;
 -- hidden var 'outputformat' 'pfa';
--- hidden var 'metadatafilename' '/home/eleni/Desktop/TESTS/metadata.json';
--- -- Import dataset
+--hidden var 'metadatafilename' '/home/eleni/Desktop/TESTS/variablesMetadata.json';
+-- Import dataset
 -- drop table if exists table1;
 -- create table table1 as
 -- select *,'all' as dataset from (file header:t '%{csvfileofinputlocaltbl}');
--- --select * from table1;
+--select * from table1;
 ------------------ End input for testing
 ------------------------------------------------------------------------------
 attach database '%{defaultDB}' as defaultDB;
+
+hidden var 'metadatafilename' '/home/eleni/Desktop/TESTS/variablesMetadata.json';
 
 drop table if exists datasets;
 create table datasets as
@@ -39,10 +41,7 @@ select xname from (select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimite
 drop table if exists defaultdb.metadatatbl;
 create table defaultdb.metadatatbl as
 select code,enumerations from (readmetadatafile filename:%{metadatafilename})
-where code in (select * from xvariables) or code = '{y}';
--- insert into defaultDB.metadatatbl  select "var_I1",'0,1,2'; --DELETE
--- insert into defaultDB.metadatatbl  select "var_I2",'0,1,2';--DELETE
--- insert into defaultDB.metadatatbl  select "var_I3",'0,1';--DELETE
+where code in (select * from xvariables);
 
 
 var 'xnames' from select group_concat(xname) as  xname from (select distinct xname from xvariables); -- TODO Add distinct to the rest of the algorithms!!
