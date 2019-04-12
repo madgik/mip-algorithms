@@ -1986,6 +1986,9 @@
 				}, {
 					"code": "ppmi",
 					"label": "PPMI"
+				}, {
+					"code": "datasetANOVA",
+					"label": "datasetANOVA"
 				}
 			],
 			"label": "Dataset",
@@ -2142,26 +2145,6 @@
 				}
 			],
 			"label": "Age Group",
-			"methodology": "Testing_ANOVA",
-			"sql_type": "text",
-			"type": "polynominal",
-			"categorical": true
-		},
-		{
-			"code": "ANOVA_dataset",
-			"description": "Variable used to differentiate datasets.",
-			"enumerations": [{
-					"code": "dataset1",
-					"label": "dataset1"
-				}, {
-					"code": "dataset2",
-					"label": "dataset1"
-				}, {
-					"code": "dataset3",
-					"label": "dataset1"
-				}
-			],
-			"label": "ANOVA Dataset",
 			"methodology": "Testing_ANOVA",
 			"sql_type": "text",
 			"type": "polynominal",
