@@ -1,6 +1,7 @@
 import sqlite3
 import pickle
 import codecs
+import base64
 
 
 class TransferData():
@@ -8,23 +9,26 @@ class TransferData():
         raise NotImplementedError('The __add__ method should be implemented by the child class.')
 
     @classmethod
-    def load(cls,inputDB):
+    def load(cls, inputDB):
         conn = sqlite3.connect(inputDB)
         cur = conn.cursor()
 
         cur.execute('SELECT results FROM transfer')
 
-        output = cls()
+        first = True
         for row in cur:
-            result = pickle.loads(codecs.decode(row[0], 'base64'))
-            output += result
-        return output
+            if first:
+                result = pickle.loads(codecs.decode(row[0], 'ascii'))
+                first = False
+            else:
+                result += pickle.loads(codecs.decode(row[0], 'ascii'))
+        return result
 
     def transfer(self):
-        print codecs.encode(pickle.dumps(self), 'base64')
+        print codecs.encode(pickle.dumps(self), 'ascii')
 
 
-def getParameters(argv):
+def get_parameters(argv):
     opts = {}
     while argv:
         if argv[0][0] == '-':
@@ -35,5 +39,5 @@ def getParameters(argv):
     return opts
 
 
-def setAlgorithmsOutputData(data):
+def set_algorithms_output_data(data):
     print data
