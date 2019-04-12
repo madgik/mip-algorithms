@@ -10,23 +10,21 @@ requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
 -- hidden var 'x' 'ANOVA_var_I1*ANOVA_var_I2*ANOVA_var_I3';
 -- hidden var 'type' 2;
 -- hidden var 'outputformat' 'pfa';
+
 hidden var 'dataset' 'datasetAnova';
 
-
-hidden var 'input_local_tbl' 'table1';
-hidden var 'csvfileofinputlocaltbl' 'data_ANOVA_Unbalanced_with_inter_V1V2.csv';
-
-
 -- Import dataset
+hidden var 'csvfileofinputlocaltbl' '/home/eleni/Desktop/mip-algorithms/ANOVA/data_ANOVA_Unbalanced_with_inter_V1V2.csv';
 drop table if exists table1;
 create table table1 as
 select * from (file header:t '%{csvfileofinputlocaltbl}');
+hidden var 'input_local_tbl' 'table1';
 
 ------------------ End input for testing
 ------------------------------------------------------------------------------
 attach database '%{defaultDB}' as defaultDB;
 
-hidden var 'metadatafilename' '/home/eleni/Desktop/TESTS/variablesMetadata.json';
+hidden var 'metadatafilename' '/home/eleni/Desktop/mip-algorithms/ANOVA/variablesMetadata.json';
 
 drop table if exists datasets;
 create table datasets as
