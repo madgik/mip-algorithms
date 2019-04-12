@@ -1,5 +1,6 @@
-requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
+requirevars 'defaultDB' 'input_local_DB' 'db_query' 'x' 'y' 'dataset';
 attach database '%{defaultDB}' as defaultDB;
+attach database '%{input_local_DB}' as localDB;
 
 -- It is used for testing
 --drop table if exists mydata;
@@ -21,7 +22,7 @@ select strsplitv(regexpr("\+|\:|\*|\-",'%{x}',"+") ,'delimiter:+') as xname;
 --1. Keep only the correct colnames from a flat table
 drop table if exists localinputtbl_1a;
 create table localinputtbl_1a as
-select rid,colname, val from (toeav select * from %{input_local_tbl});
+select rid,colname, val from (toeav %{db_query});
 
 --Check if x is empty
 var 'empty' from select case when (select '%{x}')='' then 0 else 1 end;
