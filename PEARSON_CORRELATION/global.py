@@ -41,7 +41,7 @@ def pearsonc_global(global_in):
         result_list.append({
             'Variable pair'                  : schema_out[i],
             'Pearson correlation coefficient': r,
-            'p-value'                        : prob
+            'p-value'                        : prob if prob >= 2.2e-16 else '< 2.2e-16'
         })
     global_out = json.dumps({'result': result_list})
     return global_out
