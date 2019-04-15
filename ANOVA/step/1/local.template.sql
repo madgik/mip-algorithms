@@ -1,9 +1,9 @@
-requirevars 'defaultDB' 'y' 'prv_output_global_tbl' ;
+requirevars 'defaultDB' 'y';
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'prv_output_global_tbl' 'defaultDB.globalAnovatbl';
 
-var 'formula' from select formula from %{prv_output_global_tbl} where no in ( select min(no) from %{prv_output_global_tbl} where sst is null);
+var 'formula' from select formula from defaultDB.globalAnovatbl where no in ( select min(no) from defaultDB.globalAnovatbl where sst is null);
 var 'metadata' from select jgroup(code,enumerations) from defaultdb.metadatatbl;
 
 
