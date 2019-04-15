@@ -1,4 +1,6 @@
-requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes' 'input_local_tbl';
+requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes' 'input_local_DB' 'db_query';
+
+attach database '%{input_local_DB}' as localDB;
 
 ------- Create the correct dataset
 drop table if exists datasets;
@@ -14,7 +16,7 @@ create table columnstable as
 select strsplitv('%{target_attributes},%{descriptive_attributes}' ,'delimiter:,') as xname;
 
 create temp table localinputtbl_1 as
-select rid,colname,  val from (toeav select * from %{input_local_tbl});
+select rid,colname,  val from (toeav %{db_query});
 
 var 'target_vars' from
 ( select group_concat('"'||targetname||'"',', ') from targetstable);
