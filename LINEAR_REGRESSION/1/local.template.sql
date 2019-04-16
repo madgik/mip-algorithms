@@ -32,10 +32,6 @@ emptyfield '%{empty}';
 var 'empty' from select case when (select '%{y}')='' then 0 else 1 end;
 emptyfield '%{empty}';
 ------------------
---Check if dataset is empty
-var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
-emptyset '%{empty}';
-------------------
 create table columnexist as setschema 'colname' select distinct(colname) as colname2 from localinputtbl_1a;
 --Check if x exist in dataset
 var 'counts' from select count(distinct(colname)) from columnexist where colname in (select xname from xvariables);
@@ -46,30 +42,13 @@ vars '%{valExists}';
 var 'valExists' from select case when (select exists (select colname from columnexist where colname='%{y}'))=0 then 0 else 1 end;
 vars '%{valExists}';
 ----------
---1. Keep only the correct colnames from a flat table
-drop table if exists localinputtbl_1;
-create table localinputtbl_1 as
-select rid,colname, tonumber(val) as val from localinputtbl_1a
-where colname in (select * from xvariables) or colname  ='%{y}' or colname ='dataset';
-
---2. Keep only patients of the correct dataset
-drop table if exists localinputtbl_2;
-create table localinputtbl_2 as
-select rid, colname, val
-from localinputtbl_1
-where rid in (select distinct rid
-              from localinputtbl_1
-              where colname ='dataset' and val in (select d from datasets));
-
-delete from localinputtbl_2
-where colname = 'dataset';
 
 --3.  Delete patients with null values
 drop table if exists localinputtbl;
 create table localinputtbl as
 select rid, colname, val
-from localinputtbl_2
-where rid not in (select distinct rid from localinputtbl_2
+from localinputtbl_1a
+where rid not in (select distinct rid from localinputtbl_1a
                   where val is null or val = '' or val = 'NA')
 order by rid, colname, val;
 
