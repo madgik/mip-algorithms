@@ -12,8 +12,8 @@ group by attr1,attr2;
 
 drop table if exists defaultDB.statistics;
 create table  defaultDB.statistics as
-select  colname, FARITH('/',S1A,NA) as mean, NA as N
-from ( select colname, FSUM(S1) as S1A,SUM(N) as NA
+select  colname, S1A/NA as mean, NA as N
+from ( select colname, sum(S1) as S1A,sum(N) as NA
        from %{input_global_tbl}
        where tablename = "statistics"
        group by colname );

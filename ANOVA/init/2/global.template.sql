@@ -1,1 +1,3 @@
+requirevars 'defaultDB';
+
 select "ok";

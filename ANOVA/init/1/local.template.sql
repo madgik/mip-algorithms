@@ -11,10 +11,10 @@ requirevars 'defaultDB' 'input_local_tbl' 'x' 'y' 'dataset';
 -- hidden var 'type' 2;
 -- hidden var 'outputformat' 'pfa';
 
-hidden var 'dataset' 'datasetAnova';
+hidden var 'dataset' 'datasetANOVA';
 
 -- Import dataset
-hidden var 'csvfileofinputlocaltbl' '/root/mip-algorithms/ANOVA/Unbalanced1.csv';
+hidden var 'csvfileofinputlocaltbl' '/root/mip-algorithms/ANOVA/data_ANOVA_Unbalanced_with_inter_V1V2.csv';
 drop table if exists table1;
 create table table1 as
 select * from (file header:t '%{csvfileofinputlocaltbl}');

@@ -8,7 +8,7 @@
 			"name": "iterations_max_number",
 			"desc": "",
 			"type": "other",
-			"value": "2",
+			"value": "",
 			"valueNotBlank": true,
 			"valueMultiple": false,
 			"valueType": "integer"
@@ -65,7 +65,7 @@
 			"name": "outputformat",
 			"desc": "pfa",
 			"type": "other",
-			"value": "",
+			"value": "pfa",
 			"valueNotBlank": true,
 			"valueMultiple": false,
 			"valueType": "string"

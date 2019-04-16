@@ -3,7 +3,7 @@ attach database '%{defaultDB}' as defaultDB;
 
 --var 'prv_output_global_tbl' 'defaultDB.globalAnovatbl';
 
-var 'formula' from select formula from defaultDB.globalAnovatbl where no in ( select min(no) from defaultDB.globalAnovatbl where sst is null);
+var 'formula' from select formula from defaultDB.localAnovatbl where no in ( select min(no) from defaultDB.localAnovatbl where sst is null);
 var 'metadata' from select jgroup(code,enumerations) from defaultdb.metadatatbl;
 
 

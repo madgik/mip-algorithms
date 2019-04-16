@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'type' 'input_global_tbl' 'metadata' 'outputformat';
+requirevars 'defaultDB' 'type' 'input_global_tbl' 'outputformat';
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'input_global_tbl' 'defaultDB.metadatatbl';
@@ -23,7 +23,9 @@ select modelvariables as `model variables`, sumofsquares as `sum of squares`, df
         f as`f`,p as`p`,etasquared as`eta squared`,partetasquared as`part eta squared`, omegasquared as `omega squared`
                 from (select anovastatistics(no, modelvariables, sumofsquares, '%{metadata}',%{N} ) from sumofsquares);
 
+update defaultDB.globalresult
+set `f`="",`p`="",`eta squared`="",`part eta squared`="", `omega squared`="" where `model variables` =  'residuals';
 
 setschema 'result'
 select * from (totabulardataresourceformat title:ANOVA_TABLE types:text,number,number,number,number,number,number,number,number
-                select *from defaultDB.globalresult) where '%{outputformat}'= 'pfa';
+                select * from defaultDB.globalresult where `model variables` <> 'intercept') where '%{outputformat}'= 'pfa';
