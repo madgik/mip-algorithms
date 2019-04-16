@@ -28,7 +28,10 @@ for counter in range(0, args.pieces):
 
 firstFile = True
 totalRowsCounter = 0
-rowsCounters = [0, 0, 0]
+rowsCounters = []
+for i in range(0,args.pieces):
+    rowsCounters.append(0)
+
 for file in os.listdir(args.folderPath):
     if file.endswith('.csv'):
         reader = csv.reader(open(file, newline=''), dialect='excel')

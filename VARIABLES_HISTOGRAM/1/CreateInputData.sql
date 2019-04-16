@@ -31,8 +31,6 @@ requirevars 'defaultDB' 'columns' 'columnsshouldbeoftype''dataset' ;
 
 --1. Check if variable columns is empty then 0 else 1
 var 'checkifcolumnsisempty' from select case when (select '%{columns}')='' then 0 else 1 end;
---2. Check if variable datasets is empty then 0 else 1
-var 'checkifdatasetsisempty' from select case when (select '%{dataset}')='' then 0 else 1 end;
 
 --Column names
 drop table if exists columns;
@@ -40,20 +38,12 @@ create table columns as
 select key as id, val as colname from 
 (select jdictsplitv('%{columns}'));
 
---Dataset names
-drop table if exists datasets;
-create table datasets as
-select strsplitv('%{dataset}','delimiter:,') as d;
-
 -- Keep only the  datasets and columns at hand
 drop table if exists table2; 
 create table table2 as
 select rid, colname, tonumber(val) as val
 from inputtablefromraw
-where rid in (select rid
-              from inputtablefromraw 
-              where colname ='dataset' and val in (select d from datasets))
-      and colname in (select colname from columns);
+where colname in (select colname from columns);
 
 
 --3. Check if columns exist in the dataset
@@ -90,11 +80,10 @@ select case when count(*)=0 then 1 else 0 end from(
 select jmerge(id,type) as c from columns2 where c not in (select jmerge(id,type)));
 
 --emptyfield '%{checkifcolumnsisempty}';
---emptyset '%{checkifdatasetsisempty}';
 --vars '%{checkifcolumnsexistinthedataset}';
 --vartypeshistogram '%{checkifcolumnstypeiscorrect}';
 
-select '%{checkifcolumnsisempty}' as v1, '%{checkifdatasetsisempty}' as v2, '%{checkifcolumnsexistinthedataset}' as v3, '%{checkifcolumnstypeiscorrect}' as v4;
+select '%{checkifcolumnsisempty}' as v1, '%{checkifcolumnsexistinthedataset}' as v2, '%{checkifcolumnstypeiscorrect}' as v3;
 
 
 

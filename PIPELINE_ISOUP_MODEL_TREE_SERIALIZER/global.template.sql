@@ -1,4 +1,4 @@
-requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes' 'input_local_tbl';
+requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes';
 
 drop table if exists columnstable;
 create table columnstable as
