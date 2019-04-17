@@ -1,5 +1,23 @@
 {
 	"variables": [{
+			"code": "brainstem",
+			"description": "Brainstem volume",
+			"label": "Brainstem",
+			"units": "cm3",
+			"sql_type": "real",
+			"type": "",
+			"categorical": false,
+			"methodology": "lren-nmm-volumes"
+		}, {
+			"code": "tiv",
+			"description": "Total intra-cranial volume",
+			"label": "TIV",
+			"units": "cm3",
+			"sql_type": "real",
+			"type": "",
+			"categorical": false,
+			"methodology": "lren-nmm-volumes"
+		}, {
 			"code": "apoe4",
 			"description": "Apolipoprotein E (APOE) e4 allele: is the strongest risk factor for Late Onset Alzheimer Disease (LOAD). At least one copy of APOE-e4 ",
 			"enumerations": [{
@@ -1540,37 +1558,37 @@
 			"enumerations": [{
 					"code": "0",
 					"label": "0"
-				},{
+				}, {
 					"code": "1",
 					"label": "1"
-				},{
+				}, {
 					"code": "2",
 					"label": "2"
-				},{
+				}, {
 					"code": "3",
 					"label": "3"
-				},{
+				}, {
 					"code": "4",
 					"label": "4"
-				},{
+				}, {
 					"code": "5",
 					"label": "5"
-				},{
+				}, {
 					"code": "6",
 					"label": "6"
-				},{
+				}, {
 					"code": "7",
 					"label": "7"
-				},{
+				}, {
 					"code": "8",
 					"label": "8"
-				},{
+				}, {
 					"code": "9",
 					"label": "9"
-				},{
+				}, {
 					"code": "10",
 					"label": "10"
-				},{
+				}, {
 					"code": "11",
 					"label": "11"
 				}
@@ -1663,19 +1681,19 @@
 			"enumerations": [{
 					"code": "0",
 					"label": "0"
-				},{
+				}, {
 					"code": "1",
 					"label": "1"
-				},{
+				}, {
 					"code": "2",
 					"label": "2"
-				},{
+				}, {
 					"code": "3",
 					"label": "3"
-				},{
+				}, {
 					"code": "4",
 					"label": "4"
-				},{
+				}, {
 					"code": "5",
 					"label": "5"
 				}
@@ -1693,19 +1711,19 @@
 			"enumerations": [{
 					"code": "0",
 					"label": "0"
-				},{
+				}, {
 					"code": "1",
 					"label": "1"
-				},{
+				}, {
 					"code": "2",
 					"label": "2"
-				},{
+				}, {
 					"code": "3",
 					"label": "3"
-				},{
+				}, {
 					"code": "4",
 					"label": "4"
-				},{
+				}, {
 					"code": "5",
 					"label": "5"
 				}
@@ -1723,94 +1741,94 @@
 			"enumerations": [{
 					"code": "0",
 					"label": "0"
-				},{
+				}, {
 					"code": "1",
 					"label": "1"
-				},{
+				}, {
 					"code": "2",
 					"label": "2"
-				},{
+				}, {
 					"code": "3",
 					"label": "3"
-				},{
+				}, {
 					"code": "4",
 					"label": "4"
-				},{
+				}, {
 					"code": "5",
 					"label": "5"
-				},{
+				}, {
 					"code": "6",
 					"label": "6"
-				},{
+				}, {
 					"code": "7",
 					"label": "7"
-				},{
+				}, {
 					"code": "8",
 					"label": "8"
-				},{
+				}, {
 					"code": "9",
 					"label": "9"
-				},{
+				}, {
 					"code": "10",
 					"label": "10"
-				},{
+				}, {
 					"code": "11",
 					"label": "11"
-				},{
+				}, {
 					"code": "12",
 					"label": "12"
-				},{
+				}, {
 					"code": "13",
 					"label": "13"
-				},{
+				}, {
 					"code": "14",
 					"label": "14"
-				},{
+				}, {
 					"code": "15",
 					"label": "15"
-				},{
+				}, {
 					"code": "16",
 					"label": "16"
-				},{
+				}, {
 					"code": "17",
 					"label": "17"
-				},{
+				}, {
 					"code": "18",
 					"label": "18"
-				},{
+				}, {
 					"code": "19",
 					"label": "19"
-				},{
+				}, {
 					"code": "20",
 					"label": "20"
-				},{
+				}, {
 					"code": "21",
 					"label": "21"
-				},{
+				}, {
 					"code": "22",
 					"label": "22"
-				},{
+				}, {
 					"code": "23",
 					"label": "23"
-				},{
+				}, {
 					"code": "24",
 					"label": "24"
-				},{
+				}, {
 					"code": "25",
 					"label": "25"
-				},{
+				}, {
 					"code": "26",
 					"label": "26"
-				},{
+				}, {
 					"code": "27",
 					"label": "27"
-				},{
+				}, {
 					"code": "28",
 					"label": "28"
-				},{
+				}, {
 					"code": "29",
 					"label": "29"
-				},{
+				}, {
 					"code": "30",
 					"label": "30"
 				}
