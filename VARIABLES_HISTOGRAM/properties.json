@@ -2,7 +2,6 @@
 	"name": "VARIABLES_HISTOGRAM",
 	"desc": "",
 	"type": "multiple_local_global",
-	"status": "enabled",
 	"parameters": [{
 			"name": "column1",
 			"desc": "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.",

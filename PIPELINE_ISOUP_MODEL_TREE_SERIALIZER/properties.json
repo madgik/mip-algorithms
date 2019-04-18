@@ -2,8 +2,6 @@
 	"name": "PIPELINE_ISOUP_MODEL_TREE_SERIALIZER",
 	"desc": "PIPELINE_ISOUP_MODEL_TREE_SERIALIZER",
 	"type": "pipeline",
-	"status": "disabled",
-	"vtype": "none",
 	"responseContentType": "application/visjs+javascript",
 	"parameters": [{
 			"name": "target_attributes",
