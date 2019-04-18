@@ -68,7 +68,7 @@ def main():
 
     # Create the list with all the columns
 
-    harmonisedColumnList = createColumnList(args.metadataPath)
+    harmonisedColumnList = createColumnList(os.path.abspath(args.metadataPath))
 
     # Create the csv's that are going to be filled with the data
 
