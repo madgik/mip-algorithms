@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'COLON NUMBER PLUS STAR STARARG VARexpression : expression PLUS termexpression : termterm : NUMBERterm : VARterm : STAR STARARGterm : factor COLON VARfactor : factor COLON VARfactor : VAR'
+_lr_signature = 'COLON CROSS_LIMIT HAT LPAREN NUMBER PLUS RPAREN STAR STARARG VARexpression : expression PLUS termexpression : termterm : NUMBERterm : VARterm : STAR STARARGterm : LPAREN STAR STARARG RPARENterm : LPAREN STAR STARARG RPAREN HAT CROSS_LIMITterm : factor COLON VARfactor : factor COLON VARfactor : VAR'
     
-_lr_action_items = {'NUMBER':([0,7,],[3,3,]),'VAR':([0,7,9,],[4,4,11,]),'STAR':([0,7,],[5,5,]),'$end':([1,2,3,4,8,10,11,],[0,-2,-3,-4,-5,-1,-6,]),'PLUS':([1,2,3,4,8,10,11,],[7,-2,-3,-4,-5,-1,-6,]),'COLON':([4,6,11,],[-8,9,-7,]),'STARARG':([5,],[8,]),}
+_lr_action_items = {'NUMBER':([0,8,],[3,3,]),'VAR':([0,8,11,],[4,4,14,]),'STAR':([0,6,8,],[5,10,5,]),'LPAREN':([0,8,],[6,6,]),'$end':([1,2,3,4,9,12,14,15,17,],[0,-2,-3,-4,-5,-1,-8,-6,-7,]),'PLUS':([1,2,3,4,9,12,14,15,17,],[8,-2,-3,-4,-5,-1,-8,-6,-7,]),'COLON':([4,7,14,],[-10,11,-9,]),'STARARG':([5,10,],[9,13,]),'RPAREN':([13,],[15,]),'HAT':([15,],[16,]),'CROSS_LIMIT':([16,],[17,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,],[1,]),'term':([0,7,],[2,10,]),'factor':([0,7,],[6,6,]),}
+_lr_goto_items = {'expression':([0,],[1,]),'term':([0,8,],[2,12,]),'factor':([0,8,],[7,7,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,12 +27,14 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression PLUS term','expression',3,'p_expression_plus','formula_parser.py',84),
-  ('expression -> term','expression',1,'p_expression_term','formula_parser.py',89),
-  ('term -> NUMBER','term',1,'p_term_number','formula_parser.py',93),
-  ('term -> VAR','term',1,'p_term_var','formula_parser.py',97),
-  ('term -> STAR STARARG','term',2,'p_term_star','formula_parser.py',101),
-  ('term -> factor COLON VAR','term',3,'p_term_factor','formula_parser.py',106),
-  ('factor -> factor COLON VAR','factor',3,'p_factor_facotr','formula_parser.py',110),
-  ('factor -> VAR','factor',1,'p_factor_var','formula_parser.py',114),
+  ('expression -> expression PLUS term','expression',3,'p_expression_plus','formula_parser.py',106),
+  ('expression -> term','expression',1,'p_expression_term','formula_parser.py',111),
+  ('term -> NUMBER','term',1,'p_term_number','formula_parser.py',115),
+  ('term -> VAR','term',1,'p_term_var','formula_parser.py',119),
+  ('term -> STAR STARARG','term',2,'p_term_star','formula_parser.py',123),
+  ('term -> LPAREN STAR STARARG RPAREN','term',4,'p_term_star_paren','formula_parser.py',137),
+  ('term -> LPAREN STAR STARARG RPAREN HAT CROSS_LIMIT','term',6,'p_term_star_limit','formula_parser.py',151),
+  ('term -> factor COLON VAR','term',3,'p_term_factor','formula_parser.py',168),
+  ('factor -> factor COLON VAR','factor',3,'p_factor_facotr','formula_parser.py',172),
+  ('factor -> VAR','factor',1,'p_factor_var','formula_parser.py',176),
 ]

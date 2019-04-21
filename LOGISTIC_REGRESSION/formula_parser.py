@@ -18,10 +18,18 @@ VAR_NAMES = (
     'c'
 )
 
-def powerset(iterable):
-    "powerset([1,2,3]) --> (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+def powerset(iterable, limit=None):
+    """
+    powerset([1,2,3], limit=None) --> (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)
+    powerset([1,2,3], limit=2) --> (1,) (2,) (3,) (1,2) (1,3) (2,3)
+    :param iterable:
+    :param limit:
+    :return:
+    """
     s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
+    if limit is None:
+        limit = len(s)
+    return chain.from_iterable(combinations(s, r) for r in range(1, limit + 1))
 
 # Input formula
 formula = input('Enter formula:\n')
@@ -50,6 +58,10 @@ tokens = (
     'PLUS',
     'STAR',
     'COLON',
+    'LPAREN',
+    'RPAREN',
+    'HAT',
+    'CROSS_LIMIT'
 )
 
 # Regular expression rules for simple tokens
@@ -59,6 +71,10 @@ t_NUMBER = r'(0|-1|-0)'
 t_PLUS = r'\+'
 t_STAR = r'_star'
 t_COLON = r':'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_HAT = r'\^'
+t_CROSS_LIMIT = r'(?!\)\^)\d+'
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
@@ -117,6 +133,41 @@ def p_term_star(p):
             raise ValueError('Invalid star arguments')
     p[0] = ', '.join(res)
 
+def p_term_star_paren(p):
+    'term : LPAREN STAR STARARG RPAREN'
+    args = p[3].split('*')
+    ps = list(powerset(args))
+    res = []
+    for t in ps:
+        if len(t) == 1:
+            res.append(t[0])
+        elif len(t) > 1:
+            res.append(' * '.join(t))
+        else:
+            raise ValueError('Invalid star arguments')
+    p[0] = ', '.join(res)
+
+def p_term_star_limit(p):
+    'term : LPAREN STAR STARARG RPAREN HAT CROSS_LIMIT'
+    args = p[3].split('*')
+    try:
+        limit = int(p[6])
+    except ValueError:
+        print('Illegal crossing limit', p[6])
+    if limit < len(args):
+        ps = list(powerset(args, limit=limit))
+    else:
+        ps = list(powerset(args))
+    res = []
+    for t in ps:
+        if len(t) == 1:
+            res.append(t[0])
+        elif len(t) > 1:
+            res.append(' * '.join(t))
+        else:
+            raise ValueError('Invalid star arguments')
+    p[0] = ', '.join(res)
+
 def p_term_factor(p):
     'term : factor COLON VAR'
     p[0] = p[1] + ' * ' + p[3]
@@ -139,11 +190,12 @@ parser = yacc.yacc()
 
 query = parser.parse(formula_fmt)
 
-if '(no_intercept)' in query:
-    query = query.replace('(no_intercept), ', '')
-    query = 'SELECT ' + query + ' FROM TABLE;'
-else:
-    query = 'SELECT 1 AS (Intercept), ' + query + ' FROM TABLE;'
+if query is not None:
+    if '(no_intercept)' in query:
+        query = query.replace('(no_intercept), ', '')
+        query = 'SELECT ' + query + ' FROM TABLE;'
+    else:
+        query = 'SELECT 1 AS (Intercept), ' + query + ' FROM TABLE;'
 
-print('Query:')
-print('  ' + query)
+    print('Query:')
+    print('  ' + query)
