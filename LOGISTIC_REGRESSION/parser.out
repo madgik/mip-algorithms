@@ -1,0 +1,151 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> expression PLUS term
+Rule 2     expression -> term
+Rule 3     term -> NUMBER
+Rule 4     term -> VAR
+Rule 5     term -> STAR STARARG
+Rule 6     term -> factor COLON VAR
+Rule 7     factor -> factor COLON VAR
+Rule 8     factor -> VAR
+
+Terminals, with rules where they appear
+
+COLON                : 6 7
+NUMBER               : 3
+PLUS                 : 1
+STAR                 : 5
+STARARG              : 5
+VAR                  : 4 6 7 8
+error                : 
+
+Nonterminals, with rules where they appear
+
+expression           : 1 0
+factor               : 6 7
+term                 : 1 2
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . expression PLUS term
+    (2) expression -> . term
+    (3) term -> . NUMBER
+    (4) term -> . VAR
+    (5) term -> . STAR STARARG
+    (6) term -> . factor COLON VAR
+    (7) factor -> . factor COLON VAR
+    (8) factor -> . VAR
+
+    NUMBER          shift and go to state 3
+    VAR             shift and go to state 4
+    STAR            shift and go to state 5
+
+    expression                     shift and go to state 1
+    term                           shift and go to state 2
+    factor                         shift and go to state 6
+
+state 1
+
+    (0) S' -> expression .
+    (1) expression -> expression . PLUS term
+
+    PLUS            shift and go to state 7
+
+
+state 2
+
+    (2) expression -> term .
+
+    PLUS            reduce using rule 2 (expression -> term .)
+    $end            reduce using rule 2 (expression -> term .)
+
+
+state 3
+
+    (3) term -> NUMBER .
+
+    PLUS            reduce using rule 3 (term -> NUMBER .)
+    $end            reduce using rule 3 (term -> NUMBER .)
+
+
+state 4
+
+    (4) term -> VAR .
+    (8) factor -> VAR .
+
+    PLUS            reduce using rule 4 (term -> VAR .)
+    $end            reduce using rule 4 (term -> VAR .)
+    COLON           reduce using rule 8 (factor -> VAR .)
+
+
+state 5
+
+    (5) term -> STAR . STARARG
+
+    STARARG         shift and go to state 8
+
+
+state 6
+
+    (6) term -> factor . COLON VAR
+    (7) factor -> factor . COLON VAR
+
+    COLON           shift and go to state 9
+
+
+state 7
+
+    (1) expression -> expression PLUS . term
+    (3) term -> . NUMBER
+    (4) term -> . VAR
+    (5) term -> . STAR STARARG
+    (6) term -> . factor COLON VAR
+    (7) factor -> . factor COLON VAR
+    (8) factor -> . VAR
+
+    NUMBER          shift and go to state 3
+    VAR             shift and go to state 4
+    STAR            shift and go to state 5
+
+    term                           shift and go to state 10
+    factor                         shift and go to state 6
+
+state 8
+
+    (5) term -> STAR STARARG .
+
+    PLUS            reduce using rule 5 (term -> STAR STARARG .)
+    $end            reduce using rule 5 (term -> STAR STARARG .)
+
+
+state 9
+
+    (6) term -> factor COLON . VAR
+    (7) factor -> factor COLON . VAR
+
+    VAR             shift and go to state 11
+
+
+state 10
+
+    (1) expression -> expression PLUS term .
+
+    PLUS            reduce using rule 1 (expression -> expression PLUS term .)
+    $end            reduce using rule 1 (expression -> expression PLUS term .)
+
+
+state 11
+
+    (6) term -> factor COLON VAR .
+    (7) factor -> factor COLON VAR .
+
+    PLUS            reduce using rule 6 (term -> factor COLON VAR .)
+    $end            reduce using rule 6 (term -> factor COLON VAR .)
+    COLON           reduce using rule 7 (factor -> factor COLON VAR .)
+
