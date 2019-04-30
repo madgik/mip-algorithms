@@ -2,8 +2,9 @@ import requests
 import json
 import logging
 
+# Required datasets: adni
 
-url='http://prozac.madgik.di.uoa.gr:9090/mining/query/WP_VARIABLES_HISTOGRAM'
+endpointUrl='http://88.197.53.100:9090'
 
 
 def test_HISTOGRAM_1():
@@ -24,7 +25,7 @@ def test_HISTOGRAM_1():
                 },
                 {
                     "name": "dataset",
-                    "value": "adni,chuv_adni,epfl_adni"
+                    "value": "adni"
                 },
                 {
                     "name": "filter",
@@ -33,10 +34,11 @@ def test_HISTOGRAM_1():
             ]
     
     headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-    r = requests.post(url,data=json.dumps(data),headers=headers)
+    r = requests.post(endpointUrl+'/mining/query/VARIABLES_HISTOGRAM',data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)
     
+	
     """
     Results from exareme:
     
@@ -91,7 +93,7 @@ def test_HISTOGRAM_1():
       ]
     }
     """
-    
+	   
     assert result['xAxis']['categories'][0] == "55.0 - 63.7525"
     assert result['xAxis']['categories'][1] == "63.7525 - 72.505"
     assert result['xAxis']['categories'][2] == "72.505 - 81.2575"
@@ -122,7 +124,7 @@ def test_HISTOGRAM_2():
                 },
                 {
                     "name": "dataset",
-                    "value": "adni,chuv_adni,epfl_adni"
+                    "value": "adni"
                 },
                 {
                     "name": "filter",
@@ -131,7 +133,7 @@ def test_HISTOGRAM_2():
             ]
     
     headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-    r = requests.post(url,data=json.dumps(data),headers=headers)
+    r = requests.post(endpointUrl+'/mining/query/VARIABLES_HISTOGRAM',data=json.dumps(data),headers=headers)
     
     result = json.loads(r.text)
     

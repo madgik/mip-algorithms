@@ -1,5 +1,4 @@
-
-  <body class='markdown-preview' data-use-github-style><p><img src="https://www.humanbrainproject.eu/image/company_logo?img_id=10795&amp;t=1480587142258" alt="Human Brain Project logo"></p>
+<body class='markdown-preview' data-use-github-style><p><img src="https://www.humanbrainproject.eu/image/company_logo?img_id=10795&amp;t=1480587142258" alt="Human Brain Project logo"></p>
 <h1 id="medical-informatics-platform">Medical Informatics Platform</h1>
 <h1 id="data-mining-algorithms-algorithm-developer-s-manual">Data Mining Algorithms - Algorithm developer&#39;s manual</h1>
 <p>This is the repository containing all data mining algorithms for the <a href="https://www.humanbrainproject.eu/mip">Medical Informatics Platform</a> 
@@ -33,21 +32,41 @@ submitted.</p>
 <li><code>local</code></li>
 <li><code>local_global</code></li>
 <li><code>multiple_local_global</code></li>
-<li><code>iterative</code><ol>
-<li>parameters<br>These parameters are passed as parameters in each SQL file which <strong>requires</strong> to use them 
-(i.e. using <a href="http://madgik.github.io/madis/row.html?highlight=requirevars#functions.row.variables.requirevars"><code>requirevars</code> UDF</a>).  </li>
+<li><code>iterative</code></li></ul>
+<li>parameters<br>These parameters are required for the algorithm to run and are provided by the user. The algorithms' SQL files require these variables as input. 
+The parameter has the following properties:<ul>
+<li><code>name</code> (String) </li>
+<li><code>desc</code> (String) Will be shown in the properties of the algorithm. </li>
+<li><code>type</code> Defines the type of the parameter. It can take the following values: 
+<ol>
+<li><code>column</code> (Used for querying the columns of the database.)</li>
+<li><code>filter</code> (Used to filter the results of the database.)</li>
+<li><code>dataset</code> (If the property is of type dataset then it will be used to choose on which dataset to run the algorithm on.)</li>
+<li><code>other</code> (For any other reason use this type.)</li>
+</ol>
+</li>
+<li><code>value</code> (String) It is used as an example value. </li>
+<li><code>valueNotBlank</code> (Boolean) Defines if the value can be blank.</li>
+<li><code>valueMultiple</code> (Boolean) Defines if the parameter can have multiple values. </li>
+<li><code>valueType</code> Defines the type of the value. It can take the following values: 
+<ol>
+<li><code>string</code></li>
+<li><code>integer</code></li>
+<li><code>real</code></li>
+<li><code>json</code></li>
 </ol>
 </li>
 </ul>
+</ol>
 </li>
 </ol>
-<p><strong>Example</strong>: See <a href="WP_LINEAR_REGRESSION/properties.json">here</a> for the properties file of WP_LINEAR_REGRESSION algorithm.</p>
+<p><strong>Example</strong>: See <a href="LINEAR_REGRESSION/properties.json">here</a> for the properties file of LINEAR_REGRESSION algorithm.</p>
 <h4 id="expected-_directory_-structure-for-each-algorithm-workflow">Expected <em>directory</em> structure for each algorithm workflow</h4>
 <p>For each algorithm workflow refer to the corresponding link for a hands-on example:</p>
 <ol>
-<li><code>local</code> =&gt; <a href="WP_LIST_VARIABLES">WP_LIST_VARIABLES algorithm</a></li>
-<li><code>local_global</code> =&gt; <a href="WP_VARIABLE_PROFILE">WP_VARIABLE_PROFILE algorithm</a>  </li>
-<li><code>multiple_local_global</code> =&gt; <a href="WP_LINEAR_REGRESSION">WP_LINEAR_REGRESSION algorithm</a>  </li>
+<li><code>local</code> =&gt; <a href="LIST_VARIABLES">LIST_VARIABLES algorithm</a></li>
+<li><code>local_global</code> =&gt; <a href="VARIABLE_PROFILE">VARIABLE_PROFILE algorithm</a>  </li>
+<li><code>multiple_local_global</code> =&gt; <a href="LINEAR_REGRESSION">LINEAR_REGRESSION algorithm</a>  </li>
 <li><code>iterative</code> =&gt; <a href="SAMPLE_ITERATIVE">SAMPLE_ITERATIVE algorithm</a>  </li>
 </ol>
 <h2 id="general-directions-for-writing-algorithms">General directions for writing algorithms</h2>
