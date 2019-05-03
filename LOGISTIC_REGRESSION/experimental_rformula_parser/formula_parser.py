@@ -18,6 +18,7 @@ VAR_NAMES = (
     'c'
 )
 
+
 def powerset(iterable, limit=None):
     """
     powerset([1,2,3], limit=None) --> (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)
@@ -31,21 +32,21 @@ def powerset(iterable, limit=None):
         limit = len(s)
     return chain.from_iterable(combinations(s, r) for r in range(1, limit + 1))
 
+
 # Input formula
 formula = input('Enter formula:\n')
 # formula = 'c1+ c2 + x*y*z + s* t+ a:b '
 print('Formula:')
 print('  ' + formula)
 # Format spaces
-formula_fmt = formula.replace(' ', '')\
-                     .replace('+', ' + ')\
-                     .replace(':', ' : ')
+formula_fmt = formula.replace(' ', '') \
+    .replace('+', ' + ') \
+    .replace(':', ' : ')
 # Substitutes the patterns: x1*x2*... -> _star x1*x2*...
 regex_star = r'(?!\*)((([a-zA-Z][a-zA-Z_0-9]*)\*)+([a-zA-Z][a-zA-Z_0-9]*))(?!\*)'
 groups = re.findall(regex_star, formula_fmt)
 for g in groups:
     formula_fmt = formula_fmt.replace(g[0], '_star ' + g[0])
-
 
 print('Intermediate Representation:')
 print('  ' + formula_fmt)
@@ -77,7 +78,8 @@ t_HAT = r'\^'
 t_CROSS_LIMIT = r'(?!\)\^)\d+'
 
 # A string containing ignored characters (spaces and tabs)
-t_ignore  = ' \t'
+t_ignore = ' \t'
+
 
 # Error handling rule
 def t_error(t):
@@ -96,8 +98,8 @@ while True:
     tok = lexer.token()
     if not tok:
         break  # No more input
-    if tok.type == 'VAR' and tok.value not in VAR_NAMES:
-        raise KeyError('No variable {}'.format(tok.value))
+    # if tok.type == 'VAR' and tok.value not in VAR_NAMES:
+    #     raise KeyError('No variable {}'.format(tok.value))
     print(tok)
 
 
@@ -111,13 +113,16 @@ def p_expression_term(p):
     'expression : term'
     p[0] = p[1]
 
+
 def p_term_number(p):
     'term : NUMBER'
     p[0] = '(no_intercept)'
 
+
 def p_term_var(p):
     'term : VAR'
     p[0] = p[1]
+
 
 def p_term_star(p):
     'term : STAR STARARG'
@@ -133,6 +138,7 @@ def p_term_star(p):
             raise ValueError('Invalid star arguments')
     p[0] = ', '.join(res)
 
+
 def p_term_star_paren(p):
     'term : LPAREN STAR STARARG RPAREN'
     args = p[3].split('*')
@@ -146,6 +152,7 @@ def p_term_star_paren(p):
         else:
             raise ValueError('Invalid star arguments')
     p[0] = ', '.join(res)
+
 
 def p_term_star_limit(p):
     'term : LPAREN STAR STARARG RPAREN HAT CROSS_LIMIT'
@@ -168,13 +175,16 @@ def p_term_star_limit(p):
             raise ValueError('Invalid star arguments')
     p[0] = ', '.join(res)
 
+
 def p_term_factor(p):
     'term : factor COLON VAR'
     p[0] = p[1] + ' * ' + p[3]
 
+
 def p_factor_facotr(p):
     'factor : factor COLON VAR'
     p[0] = p[1] + ' * ' + p[3]
+
 
 def p_factor_var(p):
     'factor : VAR'
@@ -184,6 +194,7 @@ def p_factor_var(p):
 # Error rule for syntax errors
 def p_error(p):
     print("Syntax error in input!")
+
 
 # Build the parser
 parser = yacc.yacc()
