@@ -57,7 +57,7 @@ def main():
     # Read the parameters
 
     parser = ArgumentParser()
-    parser.add_argument('-mP', '--metadataPath', required=True,
+    parser.add_argument('-mp', '--metadataPath', required=True,
                         help='The file with the metadata of the csvs.')
     parser.add_argument('-p', '--pieces', required=True, type=int,
                         help='Split into X pieces.')
