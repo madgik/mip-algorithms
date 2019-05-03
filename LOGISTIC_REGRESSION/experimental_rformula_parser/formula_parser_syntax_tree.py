@@ -152,11 +152,11 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-syntax_tree = parser.parse(formula)
+query = parser.parse(formula)
 
-print(syntax_tree)
+print(query)
 
-tree_json = repr(syntax_tree)
+tree_json = repr(query)
 
 tree_dict = {}
 
@@ -172,7 +172,7 @@ def create_tree_dict(root, visited):
         tree_dict[root.name + '_' + str(id(root))] = ()
     return visited
 
-create_tree_dict(syntax_tree, set())
+create_tree_dict(query, set())
 for key in tree_dict.keys():
     print(key + ' -> ' + str(tree_dict[key]))
 
@@ -184,7 +184,7 @@ def dfs(tree, node, visited):
             dfs(tree, child, visited)
     return visited
 
-visited = dfs(tree_dict, syntax_tree.name + '_' + str(id(syntax_tree)), [])
+visited = dfs(tree_dict, query.name + '_' + str(id(query)), [])
 print(visited)
 
 # def dfs(root, visited):
@@ -209,5 +209,5 @@ print(visited)
 
 
 
-# with open('syntax_tree.json', 'wb') as f:
+# with open('query.json', 'wb') as f:
 #     f.write(json.dumps(tree_json))

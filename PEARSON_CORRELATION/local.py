@@ -60,11 +60,11 @@ def main():
     fname_db = parameters.get("-input_local_DB")
     if fname_db is None:
         raise ValueError("input_local_DB not provided as parameter.")
-    # get syntax_tree
+    # get query
     query = parameters['-db_query']
     if query is None:
         raise ValueError('db_query not provided as parameter.')
-    # read formula from csv file
+    # read data from csv file
     conn = sqlite3.connect(fname_db)
     cur = conn.cursor()
     c = cur.execute(query)
@@ -77,7 +77,7 @@ def main():
     # run algorithm local step
     local_out = pearsonc_local(X, Y, schema_X, schema_Y)
 
-    # return the output formula (should be the last command)
+    # return the output data (should be the last command)
     local_out.transfer()
 
 
