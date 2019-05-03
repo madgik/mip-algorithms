@@ -46,8 +46,8 @@ def pearsonc_local(X, Y, schema_X, schema_Y):
         sxx[i] = (xm.filled(0) * xm.filled(0)).sum()
         sxy[i] = (xm.filled(0) * ym.filled(0)).sum()
         syy[i] = (ym.filled(0) * ym.filled(0)).sum()
-        local_out = PearsonCorrelationLocalDT((nn, sx, sy, sxx, sxy, syy, schema_X, schema_Y))
 
+    local_out = PearsonCorrelationLocalDT((nn, sx, sy, sxx, sxy, syy, schema_X, schema_Y))
     return local_out
 
 
@@ -58,13 +58,13 @@ def main():
         raise ValueError("There should be 1 parameter")
     # get db path
     fname_db = parameters.get("-input_local_DB")
-    if fname_db == None:
+    if fname_db is None:
         raise ValueError("input_local_DB not provided as parameter.")
-    # get query
+    # get syntax_tree
     query = parameters['-db_query']
-    if query == None:
+    if query is None:
         raise ValueError('db_query not provided as parameter.')
-    # read data from csv file
+    # read formula from csv file
     conn = sqlite3.connect(fname_db)
     cur = conn.cursor()
     c = cur.execute(query)
@@ -77,7 +77,7 @@ def main():
     # run algorithm local step
     local_out = pearsonc_local(X, Y, schema_X, schema_Y)
 
-    # return the output data (should be the last command)
+    # return the output formula (should be the last command)
     local_out.transfer()
 
 

@@ -5,11 +5,10 @@ import sys
 from os import path
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
-
 from algorithm_utils import TransferData
 
 
-# Set the data class that will transfer the data between local-global
+# Set the formula class that will transfer the formula between local-global
 class PearsonCorrelationLocalDT(TransferData):
 
     def __init__(self, args):
