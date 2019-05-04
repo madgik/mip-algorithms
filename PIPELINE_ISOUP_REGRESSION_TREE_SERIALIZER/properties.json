@@ -32,7 +32,6 @@
 			"valueMultiple": true,
 			"valueType": "string"
 		}, {
-
 			"name": "filter",
 			"desc": "",
 			"type": "filter",
