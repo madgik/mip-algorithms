@@ -40,11 +40,14 @@ The parameter has the following properties:<ul>
 <li><code>type</code> Defines the type of the parameter. It can take the following values: 
 <ol>
 <li><code>column</code> (Used for querying the columns of the database.)</li>
+<li><code>formula</code> (Same as the column type but is is parsed as a formula of R. Allowed characters are '+ - * : 0.' )</li>
 <li><code>filter</code> (Used to filter the results of the database.)</li>
 <li><code>dataset</code> (If the property is of type dataset then it will be used to choose on which dataset to run the algorithm on.)</li>
 <li><code>other</code> (For any other reason use this type.)</li>
 </ol>
 </li>
+<li><code>columnValuesSQLType</code> (String) If type is column or formula then this is required. Specifies the possible types that the column can have. Allowed types 'text, integer, real'. They could be more than one in combination with a comma. </li>
+<li><code>columnValuesCategorical</code> (String) If type is column or formula then this is required. Specifies the categorical type that the column can have. Allowed types 'false,true'. They could be more than one in combination with a comma. </li>
 <li><code>value</code> (String) It is used as an example value. </li>
 <li><code>valueNotBlank</code> (Boolean) Defines if the value can be blank.</li>
 <li><code>valueMultiple</code> (Boolean) Defines if the parameter can have multiple values. </li>
