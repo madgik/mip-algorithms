@@ -7,7 +7,8 @@
 			"desc": "It is a variable of the input dataset.",
 			"type": "column",
 			"columnValuesSQLType": "real,integer",
-			"columnValuesCategorical": "true,false",
+			"columnValuesIsCategorical": "",
+			"columnValuesNumOfEnumerations": "",
 			"value": "subjectageyears",
 			"valueNotBlank": true,
 			"valueMultiple": false,
@@ -17,14 +18,15 @@
 			"desc": "It is a variable of the input dataset.",
 			"type": "column",
 			"columnValuesSQLType": "text",
-			"columnValuesCategorical": "true",
+			"columnValuesIsCategorical": "true",
+			"columnValuesNumOfEnumerations": "",
 			"value": "",
 			"valueNotBlank": false,
 			"valueMultiple": false,
 			"valueType": "string"
 		}, {
 			"name": "nobuckets",
-			"desc": "It is a parameter of the algorithm. It should be integer. It cannot be empty.",
+			"desc": "It is a parameter of the algorithm.",
 			"type": "other",
 			"value": "4",
 			"valueNotBlank": true,
@@ -32,7 +34,7 @@
 			"valueType": "integer"
 		}, {
 			"name": "dataset",
-			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty",
+			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed.",
 			"type": "dataset",
 			"value": "ppmi",
 			"valueNotBlank": true,
