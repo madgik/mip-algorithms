@@ -1,7 +1,6 @@
 import sqlite3
 import pickle
 import codecs
-import base64
 
 
 class TransferData(object):
@@ -41,7 +40,7 @@ class StateData(object):  # TODO Call save in constructor to simplify algorithm 
             try:
                 pickle.dump(self, file, protocol=pickle_protocol)
             except pickle.PicklingError:
-                print('unpicklable object')
+                print 'Unpicklable object.'
 
     @classmethod
     def load(cls, fname):
@@ -49,7 +48,7 @@ class StateData(object):  # TODO Call save in constructor to simplify algorithm 
             try:
                 obj = pickle.load(file)
             except pickle.UnpicklingError:
-                print('cannot unpickle')
+                print 'Cannot unpickle.'
                 return
         return obj
 

@@ -6,10 +6,10 @@ import sqlite3
 from os import path
 from argparse import ArgumentParser
 
+import numpy as np
+
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/LOGISTIC_REGRESSION/')
-
-import numpy as np
 
 from algorithm_utils import StateData
 from log_regr_lib import LogRegrInit_Loc2Glob_TD
@@ -17,14 +17,23 @@ from log_regr_lib import LogRegrInit_Loc2Glob_TD
 
 def logregr_local_init(local_in):
     # Unpack local input
-    X, Y, schema_X, schema_Y = local_in
+    data, schema = local_in
+    schema_Y, schema_X = schema[0], schema[1:]
+    X = np.array(data[:, 1:], dtype=np.float64)
+    Y = data[:, 0]
+    assert len(set(Y)) == 2, "Y vector should only contain 2 distinct values"
+    y_val_dict = {
+        sorted(set(Y))[0]: 0,
+        sorted(set(Y))[1]: 1
+    }
+    Y = np.array([y_val_dict[yi] for yi in Y], dtype=np.int)
 
     n_obs = len(Y)
     n_cols = len(X[0])
 
     # Pack state and results
-    local_state = StateData(n_obs=n_obs, n_cols=n_cols, X=X, Y=Y, schema_X=schema_X, schema_Y=schema_Y)
-    local_out = LogRegrInit_Loc2Glob_TD(n_obs, n_cols)
+    local_state = StateData(X=X, Y=Y)
+    local_out = LogRegrInit_Loc2Glob_TD(n_obs, n_cols, y_val_dict, schema_X, schema_Y)
     return local_state, local_out
 
 
@@ -47,11 +56,9 @@ def main():
     cur = conn.cursor()
     cur.execute(query)
     schema = [description[0] for description in cur.description]
-    data = np.array(cur.fetchall(), dtype=np.float64)
-    schema_Y, schema_X = schema[0], schema[1:]
-    Y, X = data[:, 0], data[:, 1:]
+    data = cur.fetchall()
 
-    local_in = X, Y, schema_X, schema_Y
+    local_in = data, schema
     # Run algorithm local step
     local_state, local_out = logregr_local_init(local_in=local_in)
     # Save local state

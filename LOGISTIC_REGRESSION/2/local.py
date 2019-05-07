@@ -2,15 +2,13 @@ from __future__ import division
 from __future__ import print_function
 
 import sys
-import sqlite3
 from os import path
 from argparse import ArgumentParser
+import numpy as np
+from scipy.special import expit
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/LOGISTIC_REGRESSION/')
-
-import numpy as np
-from scipy.special import expit
 
 from algorithm_utils import StateData
 from log_regr_lib import LogRegrIter_Loc2Glob_TD, LogRegrIter_Glob2Loc_TD
@@ -18,7 +16,7 @@ from log_regr_lib import LogRegrIter_Loc2Glob_TD, LogRegrIter_Glob2Loc_TD
 
 def logregr_local_iter(local_state, local_in):
     # Unpack local state
-    n_obs, n_cols, X, Y, schema_X, schema_Y = local_state
+    X, Y = local_state
     # Unpack local input
     coeff = local_in.get_data()
 
@@ -45,7 +43,7 @@ def logregr_local_iter(local_state, local_in):
     ll = np.dot(Y, ls1) + np.dot(1 - Y, ls2)
 
     # Pack state and results
-    local_state = StateData(n_obs=n_obs, n_cols=n_cols, X=X, Y=Y, schema_X=schema_X, schema_Y=schema_Y)
+    local_state = StateData(X=X, Y=Y)
     local_out = LogRegrIter_Loc2Glob_TD(ll, grad, hess)
     return local_state, local_out
 
