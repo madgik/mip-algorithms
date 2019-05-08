@@ -61,7 +61,7 @@ def main():
                         help='The file with the metadata of the csvs.')
     parser.add_argument('-p', '--pieces', required=True, type=int,
                         help='Split into X pieces.')
-    parser.add_argument('-fp', '--folderPath', default='',
+    parser.add_argument('-fp', '--folderPath', required=True,
                         help='The path of the folder with the csv files.'
                         )
     args = parser.parse_args()
