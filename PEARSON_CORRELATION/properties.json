@@ -8,6 +8,9 @@
       "name": "X",
       "desc": "A list of variables from database. The variable should be Real, Float, Integer. It cannot be empty. The length of the list should match Υ",
       "type": "column",
+      "columnValuesSQLType": "real, integer",
+      "columnValuesCategorical": "false",
+      "columnValuesNumEnumerations": "",
       "value": "leftaccumbensarea, leftacgganteriorcingulategyrus, leftainsanteriorinsula",
       "valueNotBlank": true,
       "valueMultiple": true,
@@ -17,6 +20,9 @@
       "name": "Y",
       "desc": "A list of variables from database. The variable should be Real, Float, Integer. It cannot be empty. The length of the list should match Χ",
       "type": "column",
+      "columnValuesSQLType": "real, integer",
+      "columnValuesCategorical": "false",
+      "columnValuesNumEnumerations": "",
       "value": "rightaccumbensarea, rightacgganteriorcingulategyrus, rightainsanteriorinsula",
       "valueNotBlank": true,
       "valueMultiple": true,
@@ -28,6 +34,15 @@
       "type": "dataset",
       "value": "adni",
       "valueNotBlank": true,
+      "valueMultiple": true,
+      "valueType": "string"
+    },
+    {
+      "name": "filter",
+      "desc": "",
+      "type": "filter",
+      "value": "",
+      "valueNotBlank": false,
       "valueMultiple": true,
       "valueType": "string"
     }
