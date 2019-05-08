@@ -1,30 +1,28 @@
 import sys
 import sqlite3
-import math
-import csv
 from os import path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
+from argparse import ArgumentParser
 
 import numpy as np
 import numpy.ma as ma
 
-# from utils.algorithm_utils import get_parameters
-from algorithm_utils import get_parameters
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
+
 from pearsonc_lib import PearsonCorrelationLocalDT
 
 
-def pearsonc_local(X, Y, schema_X, schema_Y):
+def pearsonc_local(local_in):
+    # Unpack data
+    X, Y, schema_X, schema_Y = local_in
     n_obs, n_cols = len(X), len(X[0])
-    if (len(Y), len(Y[0])) != (n_obs, n_cols):
-        raise ValueError('Matrices X and Y should have the same size')
+    assert (len(Y), len(Y[0])) == (n_obs, n_cols), 'Matrices X and Y should have the same size'
 
-    # create output schema forming x, y variable pairs
+    # Create output schema forming x, y variable pairs
     schema_out = [None] * (n_cols)
     for i in xrange(n_cols):
         schema_out[i] = schema_X[i] + '_' + schema_Y[i]
 
-    # init vars
+    # Init statistics
     nn = np.empty(n_cols, dtype=np.int)
     sx = np.empty(n_cols, dtype=np.float)
     sy = np.empty(n_cols, dtype=np.float)
@@ -32,14 +30,13 @@ def pearsonc_local(X, Y, schema_X, schema_Y):
     sxy = np.empty(n_cols, dtype=np.float)
     syy = np.empty(n_cols, dtype=np.float)
 
-    # iterate on variable pairs
     for i in xrange(n_cols):
-        # create masked arrays
+        # Create masked arrays
         x, y = X[:, i], Y[:, i]
         mask = [np.isnan(xi) or np.isnan(xi) for xi, yi in zip(x, y)]
         xm = ma.masked_array(x, mask=mask)
         ym = ma.masked_array(y, mask=mask)
-        # compute statistics
+        # Compute local statistics
         nn[i] = n_obs - sum(mask)
         sx[i] = xm.filled(0).sum()
         sy[i] = ym.filled(0).sum()
@@ -52,32 +49,45 @@ def pearsonc_local(X, Y, schema_X, schema_Y):
 
 
 def main():
-    # read parameters
-    parameters = get_parameters(sys.argv[1:])
-    if not parameters or len(parameters) < 1:
-        raise ValueError("There should be 1 parameter")
-    # get db path
-    fname_db = parameters.get("-input_local_DB")
-    if fname_db == None:
-        raise ValueError("input_local_DB not provided as parameter.")
-    # get query
-    query = parameters['-db_query']
-    if query == None:
-        raise ValueError('db_query not provided as parameter.')
-    # read data from csv file
-    conn = sqlite3.connect(fname_db)
+    # Parse arguments
+    parser = ArgumentParser()
+    parser.add_argument('-X', required=True, help='Variable names in X, comma separated.')
+    parser.add_argument('-Y', required=True, help='Variable names in Y, comma separated.')
+    parser.add_argument('-input_local_DB', required=True, help='Path to local db.')
+    parser.add_argument('-db_query', required=True, help='Query to be executed on local db.')
+    args = parser.parse_args()
+    query = args.db_query
+    fname_loc_db = path.abspath(args.input_local_DB)
+    schema_X = list(set(
+            args.X
+                .replace(' ', '')
+                .split(',')
+    ))
+    schema_Y = list(set(
+            args.Y
+                .replace(' ', '')
+                .split(',')
+    ))
+
+    # Read data and split between X and Y matrices
+    conn = sqlite3.connect(fname_loc_db)
     cur = conn.cursor()
-    c = cur.execute(query)
+    cur.execute(query)
     schema = [description[0] for description in cur.description]
-    n_cols = len(schema) // 2
-    data = np.array(cur.fetchall(), dtype=np.float64)
-    schema_X, schema_Y = schema[:n_cols], schema[n_cols:]
-    X, Y = data[:, :n_cols], data[:, n_cols:]
+    try:
+        data = np.array(cur.fetchall(), dtype=np.float64)
+    except ValueError:
+        print 'Values in X and Y must be numbers'
+    idx_X = [schema.index(v) for v in schema_X if v in schema]
+    idx_Y = [schema.index(v) for v in schema_Y if v in schema]
+    X = data[:, idx_X]
+    Y = data[:, idx_Y]
+    local_in = X, Y, schema_X, schema_Y
 
-    # run algorithm local step
-    local_out = pearsonc_local(X, Y, schema_X, schema_Y)
+    # Run algorithm local step
+    local_out = pearsonc_local(local_in=local_in)
 
-    # return the output data (should be the last command)
+    # Return the output data (should be the last command)
     local_out.transfer()
 
 

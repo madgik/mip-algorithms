@@ -2,13 +2,13 @@ import sys
 import math
 import json
 from os import path
+import numpy as np
+import scipy.special as special
+from argparse import ArgumentParser
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
 
-import numpy as np
-import scipy.special as special
-
-from algorithm_utils import get_parameters, set_algorithms_output_data
+from algorithm_utils import set_algorithms_output_data
 from pearsonc_lib import PearsonCorrelationLocalDT
 
 
@@ -19,7 +19,7 @@ def pearsonc_global(global_in):
     result_list = []
     for i in xrange(n_cols):
         schema_out[i] = schema_X[i] + '_' + schema_Y[i]
-        # compute pearson correlation coefficient and p-value
+        # Compute pearson correlation coefficient and p-value
         if nn[i] == 0:
             r = None
             prob = None
@@ -48,18 +48,16 @@ def pearsonc_global(global_in):
 
 
 def main():
-    # read parameters
-    parameters = get_parameters(sys.argv[1:])
-    if not parameters or len(parameters) < 1:
-        raise ValueError("There should be 1 parameter")
-    # get data from local db
-    localdbs = parameters.get("-local_step_dbs")
-    if localdbs == None:
-        raise ValueError("local_step_dbs not provided as parameter.")
-    local_out = PearsonCorrelationLocalDT.load(localdbs)
-    # run algorithm global step
+    # Parse arguments
+    parser = ArgumentParser()
+    parser.add_argument('-local_step_dbs', required=True, help='Path to local db.')
+    args = parser.parse_args()
+    local_dbs = path.abspath(args.local_step_dbs)
+
+    local_out = PearsonCorrelationLocalDT.load(local_dbs)
+    # Run algorithm global step
     global_out = pearsonc_global(global_in=local_out)
-    # return the algorithm's output
+    # Return the algorithm's output
     set_algorithms_output_data(global_out)
 
 
