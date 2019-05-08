@@ -29,9 +29,7 @@ select group_concat(xname) as  xname from
 
 --Read dataset
 drop table if exists inputdata;
-create table inputdata as --select * from (%{db_query});
-select %{xnames}, %{y} from (file header:t '/root/mip-algorithms/ANOVA/data_ANOVA_Total.csv')
-where dataset='%{dataset}';
+create table inputdata as select * from (%{db_query});
 
 -- Delete patients with null values (val is null or val = '' or val = 'NA'). Cast values of columns using cast function.
 var 'nullCondition' from select create_complex_query(""," ? is not null and ? <>'NA' and ? <>'' ", "and" , "" , '%{xnames},%{y}');
