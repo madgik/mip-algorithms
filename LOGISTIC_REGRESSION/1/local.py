@@ -17,11 +17,7 @@ from log_regr_lib import LogRegrInit_Loc2Glob_TD
 
 def logregr_local_init(local_in):
     # Unpack local input
-    data, schema = local_in
-    schema_Y, schema_X = schema[0], schema[1:]
-    X = np.array(data[:, 1:], dtype=np.float64)
-    Y = data[:, 0]
-    assert len(set(Y)) == 2, "Y vector should only contain 2 distinct values"
+    X, Y, schema_X, schema_Y = local_in
     y_val_dict = {
         sorted(set(Y))[0]: 0,
         sorted(set(Y))[1]: 1
@@ -40,16 +36,21 @@ def logregr_local_init(local_in):
 def main():
     # Parse arguments
     parser = ArgumentParser()
-    parser.add_argument('-s', '-cur_state_pkl', required=True,
-                        help='Path to the pickle file holding the current state.')
-    parser.add_argument('-d', '-input_local_DB', required=True,
-                        help='Path to local db.')
-    parser.add_argument('-q', '-db_query', required=True,
-                        help='Query to be executed on local db.')
+    parser.add_argument('-X', required=True, help='Variable names in X, comma separated.')
+    parser.add_argument('-Y', required=True, help='Variable names in Y, comma separated.')
+    parser.add_argument('-cur_state_pkl', required=True, help='Path to the pickle file holding the current state.')
+    parser.add_argument('-input_local_DB', required=True, help='Path to local db.')
+    parser.add_argument('-db_query', required=True, help='Query to be executed on local db.')
     args = parser.parse_args()
     fname_cur_state = path.abspath(args.cur_state_pkl)
     fname_loc_db = path.abspath(args.input_local_DB)
     query = args.db_query
+    schema_X = list(set(
+            args.X
+                .replace(' ', '')
+                .split(',')
+    ))
+    schema_Y = args.Y.strip()
 
     # Get data from local DB
     conn = sqlite3.connect(fname_loc_db)
@@ -57,8 +58,17 @@ def main():
     cur.execute(query)
     schema = [description[0] for description in cur.description]
     data = cur.fetchall()
+    idx_X = [schema.index(v) for v in schema_X if v in schema]
+    idx_Y = schema.index(schema_Y)
+    try:
+        X = np.array([[x for idx, x in enumerate(row) if idx in idx_X] for row in data], dtype=np.float64)
+    except ValueError:
+        print('Values in X and Y must be numbers')
 
-    local_in = data, schema
+    Y = [data[i][idx_Y] for i in range(len(data))]
+    assert len(set(Y)) == 2, "Y vector should only contain 2 distinct values"
+
+    local_in = X, Y, schema_X, schema_Y
     # Run algorithm local step
     local_state, local_out = logregr_local_init(local_in=local_in)
     # Save local state
