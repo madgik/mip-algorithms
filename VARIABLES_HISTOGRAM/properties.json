@@ -2,26 +2,31 @@
 	"name": "VARIABLES_HISTOGRAM",
 	"desc": "",
 	"type": "multiple_local_global",
-	"status": "enabled",
 	"parameters": [{
 			"name": "column1",
-			"desc": "It is a variable of the input dataset. The variable should be Real, Float, Integer. It cannot be empty.",
+			"desc": "It is a variable of the input dataset.",
 			"type": "column",
+			"columnValuesSQLType": "real,integer",
+			"columnValuesIsCategorical": "",
+			"columnValuesNumOfEnumerations": "",
 			"value": "subjectageyears",
 			"valueNotBlank": true,
 			"valueMultiple": false,
 			"valueType": "string"
 		}, {
 			"name": "column2",
-			"desc": "It is a variable of the input dataset. The variable should be text. It can also be empty.",
+			"desc": "It is a variable of the input dataset.",
 			"type": "column",
+			"columnValuesSQLType": "text",
+			"columnValuesIsCategorical": "true",
+			"columnValuesNumOfEnumerations": "",
 			"value": "",
 			"valueNotBlank": false,
 			"valueMultiple": false,
 			"valueType": "string"
 		}, {
 			"name": "nobuckets",
-			"desc": "It is a parameter of the algorithm. It should be integer. It cannot be empty.",
+			"desc": "It is a parameter of the algorithm.",
 			"type": "other",
 			"value": "4",
 			"valueNotBlank": true,
@@ -29,7 +34,7 @@
 			"valueType": "integer"
 		}, {
 			"name": "dataset",
-			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty",
+			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed.",
 			"type": "dataset",
 			"value": "ppmi",
 			"valueNotBlank": true,
