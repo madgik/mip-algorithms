@@ -1,7 +1,7 @@
 requirevars 'defaultDB' 'input_global_tbl' 'y';
 attach database '%{defaultDB}' as defaultDB;
 
---var 'input_global_tbl' 'defaultDB.localresult';
+--var 'input_global_tbl' 'defaultDB.localgramianandstatistics';
 
 drop table if exists gramian;
 create table gramian as
@@ -48,15 +48,15 @@ XTy
 on attr2 = attr
 group by attr1;
 
-drop table if exists defaultDB.globalresult;
-create table defaultDB.globalresult (tablename text, attr1 text,estimate real, colname text, mean real);
+drop table if exists defaultDB.globalcoefficientsandstatistics;
+create table defaultDB.globalcoefficientsandstatistics (tablename text, attr1 text,estimate real, colname text, mean real);
 
-insert into defaultDB.globalresult
+insert into defaultDB.globalcoefficientsandstatistics
 select "coefficients" as tablename, attr1, estimate, null, null
 from defaultDB.coefficients;
 
-insert into defaultDB.globalresult
+insert into defaultDB.globalcoefficientsandstatistics
 select "statistics" as tablename, null, null, colname, mean
 from defaultDB.statistics;
 
-select * from defaultDB.globalresult;
+select * from defaultDB.globalcoefficientsandstatistics;

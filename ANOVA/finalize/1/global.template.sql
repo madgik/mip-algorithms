@@ -16,16 +16,22 @@ select %{a}+1, "residuals", sse
 from defaultDB.globalAnovatbl,(select max(no) as maxno from defaultDB.globalAnovatbl)
 where no==maxno;
 
+var 'SST' from select max(sst) from defaultDB.globalAnovatbl;
 var 'N' from select N from defaultDB.statistics limit 1;
 drop table if exists defaultDB.globalresult;
-create table defaultDB.globalresult as
-select modelvariables as `model variables`, sumofsquares as `sum of squares`, df as `Df`, meansquare as `mean square`,
-        f as`f`,p as`p`,etasquared as`eta squared`,partetasquared as`part eta squared`, omegasquared as `omega squared`
-                from (select anovastatistics(no, modelvariables, sumofsquares, '%{metadata}',%{N} ) from sumofsquares);
+create table defaultDB.globalresult (`model variables` text, `sum of squares` real,`Df` int,`mean square` real, `f` real, `p` real,`eta squared` real, `part eta squared` real, `omega squared` real);
+
+insert into defaultDB.globalresult
+select modelvariables, sumofsquares, df, meansquare, f, p, etasquared, partetasquared, omegasquared
+                from (select anovastatistics(no, modelvariables, sumofsquares, '%{metadata}',%{N},%{SST} ) from sumofsquares);
 
 update defaultDB.globalresult
-set `f`="",`p`="",`eta squared`="",`part eta squared`="", `omega squared`="" where `model variables` =  'residuals';
+set `f`= null,`p`= null,`eta squared`= null,`part eta squared`= null, `omega squared`= null where `model variables` =  'residuals';
 
+drop table if exists defaultDB.ANOVAresult;
+create table defaultDB.ANOVAresult as
 setschema 'result'
 select * from (totabulardataresourceformat title:ANOVA_TABLE types:text,number,number,number,number,number,number,number,number
                 select * from defaultDB.globalresult where `model variables` <> 'intercept') where '%{outputformat}'= 'pfa';
+
+select * from defaultDB.ANOVAresult;

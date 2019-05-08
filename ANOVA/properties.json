@@ -48,7 +48,7 @@
     			"name": "dataset",
     			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
     			"type": "dataset",
-    			"value": "datasetANOVA",
+    			"value": "ANOVA_Balanced_with_inter_V1V2",
     			"valueNotBlank": true,
     			"valueMultiple": true,
     			"valueType": "string"
