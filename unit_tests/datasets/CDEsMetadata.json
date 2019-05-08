@@ -1,5 +1,149 @@
 {
 	"variables": [{
+			"code": "ANOVA_pp",
+			"description": "",
+			"minValue": 0,
+			"maxValue": 180,
+			"label": "pp",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "integer",
+			"type": "",
+			"categorical": false
+		}, {
+			"code": "ANOVA_var_I1",
+			"description": "",
+			"enumerations": [{
+					"code": 0,
+					"label": 0
+				}, {
+					"code": 1,
+					"label": 1
+				}, {
+					"code": 2,
+					"label": 2
+				}
+			],
+			"label": "var_I1",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "integer",
+			"type": "polynominal",
+			"categorical": true
+		}, {
+			"code": "ANOVA_var_I2",
+			"description": "",
+			"enumerations": [{
+					"code": 0,
+					"label": 0
+				}, {
+					"code": 1,
+					"label": 1
+				}, {
+					"code": 2,
+					"label": 2
+				}
+			],
+			"label": "var_I2",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "integer",
+			"type": "polynominal",
+			"categorical": true
+		}, {
+			"code": "ANOVA_var_I3",
+			"description": "",
+			"enumerations": [{
+					"code": 0,
+					"label": 0
+				}, {
+					"code": 1,
+					"label": 1
+				}
+			],
+			"label": "var_I3",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "integer",
+			"type": "binominal",
+			"categorical": true
+		}, {
+			"code": "ANOVA_var_D",
+			"description": "",
+			"minValue": 2,
+			"maxValue": 131,
+			"label": "var_D",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "integer",
+			"type": "",
+			"categorical": false
+		}, {
+			"code": "ANOVA_lefthippocampus",
+			"description": "",
+			"label": "Left Hippocampus",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "real",
+			"type": "",
+			"categorical": false,
+			"units": "cm3"
+		}, {
+			"code": "ANOVA_alzheimerbroadcategory",
+			"description": "",
+			"enumerations": [{
+					"code": "AD",
+					"label": "Alzheimer''s disease"
+				}, {
+					"code": "CN",
+					"label": "Cognitively Normal"
+				}, {
+					"code": "Other",
+					"label": "Other"
+				}
+			],
+			"label": "Alzheimer Broad Category",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "text",
+			"type": "polynominal",
+			"categorical": true
+		}, {
+			"code": "ANOVA_gender",
+			"description": "Gender of the patient - Sex assigned at birth",
+			"enumerations": [{
+					"code": "M",
+					"label": "Male"
+				}, {
+					"code": "F",
+					"label": "Female"
+				}
+			],
+			"label": "Gender",
+			"length": 1,
+			"methodology": "Testing_ANOVA",
+			"sql_type": "text",
+			"type": "binominal",
+			"categorical": true
+		}, {
+			"code": "ANOVA_agegroup",
+			"description": "Age Group",
+			"enumerations": [{
+					"code": "-50y",
+					"label": "-50y"
+				}, {
+					"code": "50-59y",
+					"label": "50-59y"
+				}, {
+					"code": "60-69y",
+					"label": "60-69y"
+				}, {
+					"code": "70-79y",
+					"label": "70-79y"
+				}, {
+					"code": "+80y",
+					"label": "+80y"
+				}
+			],
+			"label": "Age Group",
+			"methodology": "Testing_ANOVA",
+			"sql_type": "text",
+			"type": "polynominal",
+			"categorical": true
+		}, {
 			"code": "av45",
 			"description": "AV45 Average AV45 SUVR of frontal, anterior cingulate, precuneus, and parietal cortex relative to the cerebellum",
 			"label": "AV45",
@@ -35,6 +179,21 @@
 				}, {
 					"code": "ppmi",
 					"label": "PPMI"
+				}, {
+					"code": "ANOVA_Balanced_with_inter_V1V2",
+					"label": "ANOVA_Balanced_with_inter_V1V2"
+				}, {
+					"code": "ANOVA_UnBalanced_with_inter_V1V2",
+					"label": "ANOVA_UnBalanced_with_inter_V1V2"
+				}, {
+					"code": "ANOVA_dataset1",
+					"label": "ANOVA_dataset1"
+				}, {
+					"code": "ANOVA_dataset2",
+					"label": "ANOVA_dataset2"
+				}, {
+					"code": "ANOVA_dataset3",
+					"label": "ANOVA_dataset3"
 				}
 			],
 			"label": "Dataset",
