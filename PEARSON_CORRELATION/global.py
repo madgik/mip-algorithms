@@ -51,7 +51,7 @@ def main():
     # Parse arguments
     parser = ArgumentParser()
     parser.add_argument('-local_step_dbs', required=True, help='Path to local db.')
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
     local_dbs = path.abspath(args.local_step_dbs)
 
     local_out = PearsonCorrelationLocalDT.load(local_dbs)
