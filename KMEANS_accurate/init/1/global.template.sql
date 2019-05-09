@@ -2,21 +2,19 @@ requirevars 'defaultDB' 'input_global_tbl' 'centers' ;
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'input_global_tbl' 'defaultDB.partialclustercenters'; --DELETE
+var 'centersisempty' from select case when (select '%{centers}')='' then 1 else 0 end;
 
-var 'centersisempty' from select case when (select '%{centers}')='{}' then 1 else 0 end;
+var 'schema' from select create_complex_query("clid,","?_clval",",","",'%{columns}');
+var 'Sums' from select create_complex_query("clid,","sum(?_clS)/sum(clN) as ?_clval",",","",'%{columns}');
+var 'renamecolnamestoschema' from select create_complex_query("clid ,","? as ?_clval ",",","",'%{columns}');
 
-var 'a' from select create_complex_query("","sum(?_clS)/sum(clN) as ?_clval",",","",'%{columns}');
-var 'b' from select create_complex_query("clid,","?_clval",",","",'%{columns}');
 drop table if exists defaultDB.clustercentersnew_global;
-create table defaultDB.clustercentersnew_global as
-setschema '%{b}'
-select * from (select clid, %{a} from %{input_global_tbl}  group by clid)
-where %{centersisempty} = 1
+create table defaultDB.clustercentersnew_global (%{schema});
+
+insert into defaultDB.clustercentersnew_global
+select %{Sums} from %{input_global_tbl}  where  %{centersisempty} = 1 group by clid
 union
-setschema '%{b}'
-select * from (
-select key as clid, jdictsplit(val)  from ( setschema 'key, val' select jdictsplitv('%{centers}')))
-where  %{centersisempty} = 0 ;
+select %{renamecolnamestoschema} from (select jsontotable('%{centers}','clid,%{columns}')) where %{centersisempty} = 0;
 
 drop table if exists defaultDB.clustercenters_global;
 create table defaultDB.clustercenters_global as select * from defaultDB.clustercentersnew_global;

@@ -1,4 +1,4 @@
-requirevars 'defaultDB' 'input_local_tbl' 'columns' 'k' 'e';
+requirevars 'defaultDB' 'columns' 'e';
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'e' 0.0001; --DELETE

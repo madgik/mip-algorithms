@@ -9,7 +9,7 @@
 			"desc": "",
 			"type": "other",
 			"value": "2",
-			"valueNotBlank": true,
+			"valueNotBlank": false,
 			"valueMultiple": false,
 			"valueType": "integer"
 		}, {
@@ -23,32 +23,37 @@
 		}, {
 			"name": "columns",
 			"desc": "columns value",
-			"type": "database",
-			"value": "lefthippocampus,righthippocampus",
+			"type": "column",
+			"columnValuesSQLType": "real,integer",
+		 	"columnValuesIsCategorical": "",
+		 	"columnValuesNumOfEnumerations": "",
+			"value": "Iris_Sepal_Length,Iris_Sepal_Width,Iris_Petal_Length,Iris_Petal_Width",
 			"valueNotBlank": true,
 			"valueMultiple": true,
 			"valueType": "string"
 		}, {
-			"name": "k",
-			"desc": "#centers",
-			"type": "other",
-			"value": "4",
-			"valueNotBlank": true,
-			"valueMultiple": false,
-			"valueType": "integer"
-		}, {
+				"name": "k",
+				"desc": "#centers",
+				"type": "other",
+				"value": "",
+				"valueNotBlank": false,
+				"valueMultiple": false,
+				"valueType": "integer"
+		},{
 			"name": "centers",
-			"desc": "A set of initial (distinct) cluster centres",
+			"desc": "a set of initial (distinct) cluster centres",
 			"type": "other",
-			"value": "{}",
+			"value": "[{\"clid\":1, \"Iris_Sepal_Length\":6.0, \"Iris_Sepal_Width\":2.5, \"Iris_Petal_Length\":4.0 ,\"Iris_Petal_Width\":1.5 },
+			{\"clid\":2, \"Iris_Sepal_Length\":5.0, \"Iris_Sepal_Width\":3.5, \"Iris_Petal_Length\":1.5 ,\"Iris_Petal_Width\":0.5},
+			{\"clid\":3, \"Iris_Sepal_Length\":6.5, \"Iris_Sepal_Width\":3.0, \"Iris_Petal_Length\":6.0 ,\"Iris_Petal_Width\":2.0}]",
 			"valueNotBlank": false,
 			"valueMultiple": false,
 			"valueType": "json"
-		}, {
+		},{
 			"name": "dataset",
 			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
 			"type": "dataset",
-			"value": "adni",
+			"value": "Iris",
 			"valueNotBlank": true,
 			"valueMultiple": true,
 			"valueType": "string"
@@ -62,9 +67,9 @@
 			"valueType": "real"
 		}, {
 			"name": "outputformat",
-			"desc": "json,highchart_bubble, highchart_scatter3d,pfa",
+			"desc": "highchart_bubble, highchart_scatter3d,pfa",
 			"type": "other",
-			"value": "",
+			"value": "pfa",
 			"valueNotBlank": true,
 			"valueMultiple": false,
 			"valueType": "string"

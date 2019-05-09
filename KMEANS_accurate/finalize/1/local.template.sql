@@ -1,11 +1,11 @@
-requirevars 'defaultDB' 'input_local_tbl' 'columns' 'k';
+requirevars 'defaultDB' 'columns' 'k';
 attach database '%{defaultDB}' as defaultDB;
 
---drop table if exists localresult; --DELETE
---create table localresult as  --DELETE
 
+drop table if exists defaultDB.kmeanslocalresult;
+create table defaultDB.kmeanslocalresult as
 select clid as clid1, count(*) as clpoints
 from defaultDB.assignnearestcluster
 group by clid;
 
---select * from localresult; --DELETE
+select * from defaultDB.kmeanslocalresult;
