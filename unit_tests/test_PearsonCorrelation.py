@@ -111,10 +111,180 @@ def test_PearsonCorrelation_ADNI_alldata():
             result['result'][2], 'leftainsanteriorinsula_rightainsanteriorinsula', 0.907680160667781, 0.000000000000000
     )
 
+
+def test_PearsonCorrlation_MIP_AlgoTesting_1():
+    """
+    Results from 2019_MIP_Algo_Testing/PearsonCorrelation
+
+    lefthippocampus vs righthippocampus
+        Pearson's r     0.902
+        p-value         < .001
+        95% CI Upper    0.913
+        95% CI Lower    0.889
+    """
+
+    logging.info("---------- TEST : Pearson Correlation MIP_Algo_Testing_1")
+
+    data = [
+        {
+            "name" : "X",
+            "value": "lefthippocampus"
+        },
+        {
+            "name" : "Y",
+            "value": "righthippocampus"
+        },
+        {
+            "name" : "dataset",
+            "value": "desd-synthdata"
+        },
+        {
+            "name" : "filter",
+            "value": ""
+        },
+    ]
+
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+    r = requests.post(endpointUrl + '/mining/query/PEARSON_CORRELATION', data=json.dumps(data), headers=headers)
+
+    result = json.loads(r.text)
+
+    check_result(
+            result['result'][0], 'lefthippocampus_righthippocampus', 0.902, 0.000000000000000
+    )
+
+
+def test_PearsonCorrlation_MIP_AlgoTesting_2():
+    """
+    Results from 2019_MIP_Algo_Testing/PearsonCorrelation
+
+    lefthippocampus vs opticchiasm
+        Pearson's r     0.211
+        p-value         < .001
+        95% CI Upper    0.272
+        95% CI Lower    0.148
+    """
+
+    logging.info("---------- TEST : Pearson Correlation MIP_Algo_Testing_2")
+
+    data = [
+        {
+            "name" : "X",
+            "value": "lefthippocampus"
+        },
+        {
+            "name" : "Y",
+            "value": "opticchiasm"
+        },
+        {
+            "name" : "dataset",
+            "value": "desd-synthdata"
+        },
+        {
+            "name" : "filter",
+            "value": ""
+        },
+    ]
+
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+    r = requests.post(endpointUrl + '/mining/query/PEARSON_CORRELATION', data=json.dumps(data), headers=headers)
+
+    result = json.loads(r.text)
+
+    check_result(
+            result['result'][0], 'lefthippocampus_opticchiasm', 0.211, 0.000000000000000
+    )
+
+
+def test_PearsonCorrlation_MIP_AlgoTesting_2p1():
+    """
+    Results from 2019_MIP_Algo_Testing/PearsonCorrelation
+
+    subjectage vs minimentalstate
+        Pearson's r     -0.149
+        p-value         < .001
+        95% CI Upper    -0.079
+        95% CI Lower    -0.218
+    """
+
+    logging.info("---------- TEST : Pearson Correlation MIP_Algo_Testing_2p1")
+
+    data = [
+        {
+            "name" : "X",
+            "value": "subjectage"
+        },
+        {
+            "name" : "Y",
+            "value": "minimentalstate"
+        },
+        {
+            "name" : "dataset",
+            "value": "desd-synthdata"
+        },
+        {
+            "name" : "filter",
+            "value": ""
+        },
+    ]
+
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+    r = requests.post(endpointUrl + '/mining/query/PEARSON_CORRELATION', data=json.dumps(data), headers=headers)
+
+    result = json.loads(r.text)
+
+    check_result(
+            result['result'][0], 'subjectage_minimentalstate', -0.149, 0.000000000000000
+    )
+
+
+def test_PearsonCorrlation_MIP_AlgoTesting_3():
+    """
+    Results from 2019_MIP_Algo_Testing/PearsonCorrelation
+
+    subjectage vs opticchiasm
+        Pearson's r     -0.006
+        p-value          0.867
+        95% CI Upper     0.067
+        95% CI Lower    -0.079
+    """
+
+    logging.info("---------- TEST : Pearson Correlation MIP_Algo_Testing_3")
+
+    data = [
+        {
+            "name" : "X",
+            "value": "subjectage"
+        },
+        {
+            "name" : "Y",
+            "value": "opticchiasm"
+        },
+        {
+            "name" : "dataset",
+            "value": "desd-synthdata"
+        },
+        {
+            "name" : "filter",
+            "value": ""
+        },
+    ]
+
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+    r = requests.post(endpointUrl + '/mining/query/PEARSON_CORRELATION', data=json.dumps(data), headers=headers)
+
+    result = json.loads(r.text)
+
+    check_result(
+            result['result'][0], 'subjectage_opticchiasm', -0.006, 0.867
+    )
+
+# TODO TEST 3.1 etc
+
 def check_result(my_result, r_var_pair, r_corr, r_pval):
     var_pair = my_result['Variable pair']
     corr = float(my_result['Pearson correlation coefficient'])
     pval = float(my_result['p-value'])
     assert var_pair == r_var_pair
-    assert math.isclose(corr, r_corr, rel_tol=0, abs_tol=1e-06)
-    assert math.isclose(pval, r_pval, rel_tol=0, abs_tol=1e-06)
+    assert math.isclose(corr, r_corr, rel_tol=0, abs_tol=1e-03)
+    assert math.isclose(pval, r_pval, rel_tol=0, abs_tol=1e-03)
