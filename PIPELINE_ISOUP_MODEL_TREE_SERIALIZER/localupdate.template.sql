@@ -1,9 +1,6 @@
-requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes' 'input_local_tbl';
+requirevars 'prv_output_local_tbl' 'target_attributes' 'descriptive_attributes' 'input_local_DB' 'db_query';
 
-------- Create the correct dataset
-drop table if exists datasets;
-create table datasets as
-select strsplitv('%{dataset}','delimiter:,') as d;
+attach database '%{input_local_DB}' as localDB;
 
 drop table if exists targetstable;
 create table targetstable as
@@ -14,7 +11,7 @@ create table columnstable as
 select strsplitv('%{target_attributes},%{descriptive_attributes}' ,'delimiter:,') as xname;
 
 create temp table localinputtbl_1 as
-select rid,colname,  val from (toeav select * from %{input_local_tbl});
+select rid,colname,  val from (toeav %{db_query});
 
 var 'target_vars' from
 ( select group_concat('"'||targetname||'"',', ') from targetstable);
@@ -30,10 +27,6 @@ emptyfield '%{empty}';
 --Check if target_attributes is empty
 var 'empty' from select case when (select '%{target_attributes}')='' then 0 else 1 end;
 emptyfield '%{empty}';
----------
---Check if dataset is epmpty
-var 'empty' from select case when (select '%{dataset}')='' then 0 else 1 end;
-emptyset '%{empty}';
 ------------------
 create table columnexist as setschema 'colname' select distinct(colname) from localinputtbl_1;
 --Check if columns exist
@@ -48,7 +41,7 @@ var 'select_vars' from
 
 var 'target_var_count' from select count(*) from (select strsplitv('%{target_attributes}' ,'delimiter:,') as xname);
 
-create temp table data as select %{select_vars}  from (fromeav select * from localinputtbl_1 where rid in (select rid from localinputtbl_1 where colname = 'dataset' and val in (select d from datasets)));
+create temp table data as select %{select_vars}  from (fromeav select * from localinputtbl_1);
 
 ----Check if number of patients are more than minimum records----
 var 'minimumrecords' 10;
