@@ -55,7 +55,7 @@ def main():
     parser.add_argument('-Y', required=True, help='Variable names in Y, comma separated.')
     parser.add_argument('-input_local_DB', required=True, help='Path to local db.')
     parser.add_argument('-db_query', required=True, help='Query to be executed on local db.')
-    args = parser.parse_args()
+	args, unknown = parser.parse_known_args()
     query = args.db_query
     fname_loc_db = path.abspath(args.input_local_DB)
     schema_X = list(set(
