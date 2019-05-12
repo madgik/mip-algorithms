@@ -26,10 +26,10 @@ select colname, max(sumofentropies) from (
 
 --2. Find new nodes of tree and update global_tree
 drop table if exists defaultDB.globalnewnodesoftree;
-create table defaultDB.globalnewnodesoftree (no int,colname text,val text, nextnode text);
+create table defaultDB.globalnewnodesoftree (no int, colname text, colval text, nextnode int, leafval text);
 insert into  globalnewnodesoftree
-select no, colname, val, nextnode
-from ( select distinct colname, val, case when count(*) = 1 then classval else '?' end as nextnode
+select no, colname, colval, nextnode, leafval
+from ( select distinct colname, val as colval, case when count(*) = 1 then "-" else "?" end as nextnode,  case when count(*) == 1 then classval else "?" end as  leafval
        from defaultDB.globalcounts where colname in (select colname from defaultDB.gain)
        group by colname,val),
      ( select case when no is null then '1' else cast(max(no)+1 as text)   end as no from defaultdb.globaltree );
@@ -37,7 +37,7 @@ from ( select distinct colname, val, case when count(*) = 1 then classval else '
 select * from defaultDB.globalnewnodesoftree;
 
 update defaultdb.globaltree set nextnode = (select no from defaultDB.globalnewnodesoftree)
-where  jmerge(no,colname,val) is (select jmerge (no,colname,val) from defaultDB.globalpathforsplittree);
+where  jmerge(no,colname,colval) is (select jmerge (no,colname,colval) from defaultDB.globalpathforsplittree);
 
 insert into defaultdb.globaltree select * from defaultDB.globalnewnodesoftree;
 

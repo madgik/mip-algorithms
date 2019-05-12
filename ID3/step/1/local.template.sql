@@ -1,5 +1,7 @@
-requirevars 'defaultDB' 'input_local_tbl' 'columns' 'classname';
+requirevars 'defaultDB' 'columns' 'classname';
 attach database '%{defaultDB}' as defaultDB;
+
+update defaultDB.algorithmparameters set val=val+1 where name ='iterations';
 
 --For each categorical column x:
 --segment the data by the distinct values of each column, and by the class values, and then count the rows.
