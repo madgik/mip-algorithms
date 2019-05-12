@@ -8,39 +8,39 @@ import math
 url='http://localhost:9090/mining/query/KMEANS_accurate'
 
 
-# def test_KMEANS_1():
-#     logging.info("---------- TEST : KMEANS - Iris dataset  & 4 variables, 3 clusters")
-#     data = [
-#             {   "name": "iterations_max_number", "value": "50" },
-#             {   "name": "iterations_condition_query_provided", "value": "true" },
-#             {   "name": "columns", "value": "Iris_Sepal_Length,Iris_Sepal_Width,Iris_Petal_Length,Iris_Petal_Width" },
-#             {   "name": "k", "value":""},
-#             {   "name":"centers", "value": "[{\"clid\":1, \"Iris_Sepal_Length\":6.0, \"Iris_Sepal_Width\":2.5, \"Iris_Petal_Length\":4.0 ,\"Iris_Petal_Width\":1.5 },\
-#             {\"clid\":2, \"Iris_Sepal_Length\":5.0, \"Iris_Sepal_Width\":3.5, \"Iris_Petal_Length\":1.5 ,\"Iris_Petal_Width\":0.5},\
-#             {\"clid\":3, \"Iris_Sepal_Length\":6.5, \"Iris_Sepal_Width\":3.0, \"Iris_Petal_Length\":6.0 ,\"Iris_Petal_Width\":2.0}]" },
-#             {   "name": "dataset", "value": "Iris" },
-#             {   "name": "e", "value": "0.01" },
-#             {   "name": "filter", "value": "" },
-#             {   "name": "outputformat", "value": "pfa" }
-#         ]
-#     headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-#     r = requests.post(url,data=json.dumps(data),headers=headers)
-#     print (r.text)
-#     result = json.loads(r.text)
+def test_KMEANS_1():
+    logging.info("---------- TEST : KMEANS - Iris dataset  & 4 variables, 3 clusters")
+    data = [
+            {   "name": "iterations_max_number", "value": "50" },
+            {   "name": "iterations_condition_query_provided", "value": "true" },
+            {   "name": "columns", "value": "Iris_Sepal_Length,Iris_Sepal_Width,Iris_Petal_Length,Iris_Petal_Width" },
+            {   "name": "k", "value":""},
+            {   "name":"centers", "value": "[{\"clid\":1, \"Iris_Sepal_Length\":6.0, \"Iris_Sepal_Width\":2.5, \"Iris_Petal_Length\":4.0 ,\"Iris_Petal_Width\":1.5 },\
+            {\"clid\":2, \"Iris_Sepal_Length\":5.0, \"Iris_Sepal_Width\":3.5, \"Iris_Petal_Length\":1.5 ,\"Iris_Petal_Width\":0.5},\
+            {\"clid\":3, \"Iris_Sepal_Length\":6.5, \"Iris_Sepal_Width\":3.0, \"Iris_Petal_Length\":6.0 ,\"Iris_Petal_Width\":2.0}]" },
+            {   "name": "dataset", "value": "Iris" },
+            {   "name": "e", "value": "0.01" },
+            {   "name": "filter", "value": "" },
+            {   "name": "outputformat", "value": "pfa" }
+        ]
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+    r = requests.post(url,data=json.dumps(data),headers=headers)
+    print (r.text)
+    result = json.loads(r.text)
 
-#
-# # KMEANS
-# #     k$centers
-# #       Sepal_Length Sepal_Width Petal_Length Petal_Width
-# #     1  5.883606557 2.740983607  4.388524590 1.434426230
-# #     2  5.006000000 3.418000000  1.464000000 0.244000000
-# #     3  6.853846154 3.076923077  5.715384615 2.053846154
-# #     k$size
-# #       [1] 61 50 39
-#     check_variablename(result['resources'][0]['data'][0][1:], ["Iris_Sepal_Length", "Iris_Sepal_Width","Iris_Petal_Length", "Iris_Petal_Width"] )
-#     check_variable(result['resources'][0]['data'][1], [1, 5.883606557, 2.740983607, 4.388524590, 1.434426230,61])
-#     check_variable(result['resources'][0]['data'][2], [2, 5.006000000, 3.418000000, 1.464000000, 0.244000000,50])
-#     check_variable(result['resources'][0]['data'][3], [3, 6.853846154, 3.076923077, 5.715384615 ,2.053846154,39])
+
+# KMEANS
+#     k$centers
+#       Sepal_Length Sepal_Width Petal_Length Petal_Width
+#     1  5.883606557 2.740983607  4.388524590 1.434426230
+#     2  5.006000000 3.418000000  1.464000000 0.244000000
+#     3  6.853846154 3.076923077  5.715384615 2.053846154
+#     k$size
+#       [1] 61 50 39
+    check_variablename(result['resources'][0]['data'][0][1:], ["Iris_Sepal_Length", "Iris_Sepal_Width","Iris_Petal_Length", "Iris_Petal_Width"] )
+    check_variable(result['resources'][0]['data'][1], [1, 5.883606557, 2.740983607, 4.388524590, 1.434426230,61])
+    check_variable(result['resources'][0]['data'][2], [2, 5.006000000, 3.418000000, 1.464000000, 0.244000000,50])
+    check_variable(result['resources'][0]['data'][3], [3, 6.853846154, 3.076923077, 5.715384615 ,2.053846154,39])
 
 
 def test_KMEANS_2():
