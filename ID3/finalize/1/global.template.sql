@@ -1,7 +1,6 @@
 requirevars 'defaultDB' 'outputformat' 'outputformat';
 attach database '%{defaultDB}' as defaultDB;
 
-
 update defaultDB.globaltree set nextnode = ""  where nextnode ="-";
 update defaultDB.globaltree set leafval = ""  where leafval ="?";
 
@@ -20,7 +19,7 @@ group by no)
 where '%{outputformat}'= 'json';
 
 insert into id3resultl
-select tabletojson(no,result, "no,result") from 
+select tabletojson(no,result, "no,result") from
 (formattreetotableoutput select no as id ,jgroup(jpack(colname,colval,nextnode,leafval)) as nodeinfo
 from defaultDB.globaltree group by no order by id)
 where '%{outputformat}'= 'wekaviewer';
