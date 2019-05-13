@@ -1,4 +1,4 @@
-rid,CL_age,CL_spectacle_prescrip,CL_astigmatism,CL_tear_prod_rate,CL_contact_lenses,dataset
+subjectcode,CL_age,CL_spectacle_prescrip,CL_astigmatism,CL_tear_prod_rate,CL_contact_lenses,dataset
 1,young,myope,no,reduced,none,contact-lenses
 2,young,myope,no,normal,soft,contact-lenses
 3,young,myope,yes,reduced,none,contact-lenses

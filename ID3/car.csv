@@ -1,4 +1,4 @@
-rid,car_buying,car_maint,car_doors,car_persons,car_lug_boot,car_safety,car_class,dataset
+subjectcode,car_buying,car_maint,car_doors,car_persons,car_lug_boot,car_safety,car_class,dataset
 1,vhigh,vhigh,2,2,small,low,unacc,car
 2,vhigh,vhigh,2,2,small,med,unacc,car
 3,vhigh,vhigh,2,2,small,high,unacc,car
