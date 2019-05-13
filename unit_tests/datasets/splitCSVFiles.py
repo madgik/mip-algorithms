@@ -105,7 +105,7 @@ def main():
                                     file)
             reader = csv.reader(open(filePath, newline=''),
                                 dialect='excel')
-            print 'Splitting file: ' + filePath
+            print ('Splitting file: ' + filePath)
             headerDict = headerToDict(next(reader))
 
             # TODO Check if every column in the header exists in the metadata
