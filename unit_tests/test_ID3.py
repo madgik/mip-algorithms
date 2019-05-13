@@ -3,7 +3,7 @@ import json
 import logging
 
 
-url='http://localhost:9090/mining/query/ID3'
+url='http://88.197.53.38:9090/mining/query/ID3'
 
 def test_ID3_1():
     logging.info("---------- TEST : ID3 - Test using contact-lenses dataset  ")
@@ -60,8 +60,17 @@ CL_tear_prod_rate = normal
 |  |  |  CL_age = young: hard'''
 
     check_variable(result,correctResult)
+def check_variable(exaremeResult, correctResult):
 
-#
+    exaremeresultfinal=""
+    for i in range(len(exaremeResult)):
+        exaremeresultfinal += str(exaremeResult[i]['result'])
+    correctResult=str(correctResult)
+    correctResult = correctResult.replace(' ','')
+    correctResult = correctResult.replace('\n','')
+
+    assert (str(exaremeresultfinal) == str(correctResult))
+
 # def test_ID3_2():
 #     logging.info("---------- TEST : ID3 - Test using contact-lenses dataset  ")
 #
@@ -500,14 +509,4 @@ CL_tear_prod_rate = normal
 #
 #
 #
-# def check_variable(exaremeResult, correctResult):
-#
-#     exaremeresultfinal=""
-#     for i in range(len(exaremeResult)):
-#         exaremeresultfinal += str(exaremeResult[i]['result'])
-#
-#     correctResult=str(correctResult)
-#     correctResult = correctResult.replace(' ','')
-#     correctResult = correctResult.replace('\n','')
-#
-#     assert (str(exaremeresultfinal) == str(correctResult))
+
