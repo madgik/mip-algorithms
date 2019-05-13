@@ -585,13 +585,13 @@ def test_PearsonCorrlation_MIP_AlgoTesting_7():
     result = json.loads(r.text)
 
     check_result(
-            result['result'][0], 'lefthippocampus_subjectageyears', -0.208, 0.00
+            result['result'][0], 'subjectageyears_lefthippocampus', -0.208, 0.00
     )
     check_result(
-            result['result'][1], 'lefthippocampus_opticchiasm', 0.202, 0.00
+            result['result'][1], 'subjectageyears_opticchiasm', 0.202, 0.00
     )
     check_result(
-            result['result'][2], 'subjectageyears_opticchiasm', -0.006, 0.867
+            result['result'][2], 'lefthippocampus_opticchiasm', -0.006, 0.867
     )
 
 
