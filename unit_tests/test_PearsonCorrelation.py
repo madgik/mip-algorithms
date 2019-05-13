@@ -52,11 +52,11 @@ def test_PearsonCorrelation_ADNI_9rows():
             result['result'][0], 'leftaccumbensarea_rightaccumbensarea', 0.832696403083016, 0.005332947202092
     )
     check_result(
-            result['result'][1], 'leftacgganteriorcingulategyrus_rightacgganteriorcingulategyrus',
+            result['result'][4], 'leftacgganteriorcingulategyrus_rightacgganteriorcingulategyrus',
             0.764766782355394, 0.016370022484567
     )
     check_result(
-            result['result'][2], 'leftainsanteriorinsula_rightainsanteriorinsula', 0.928237609063798, 0.000874899301446
+            result['result'][8], 'leftainsanteriorinsula_rightainsanteriorinsula', 0.928237609063798, 0.000874899301446
     )
 
 
@@ -103,11 +103,11 @@ def test_PearsonCorrelation_ADNI_alldata():
             result['result'][0], 'leftaccumbensarea_rightaccumbensarea', 0.911518956593483, 0.000000000000000
     )
     check_result(
-            result['result'][1], 'leftacgganteriorcingulategyrus_rightacgganteriorcingulategyrus',
+            result['result'][4], 'leftacgganteriorcingulategyrus_rightacgganteriorcingulategyrus',
             0.872706907353685, 0.000000000000000
     )
     check_result(
-            result['result'][2], 'leftainsanteriorinsula_rightainsanteriorinsula', 0.907680160667781, 0.000000000000000
+            result['result'][8], 'leftainsanteriorinsula_rightainsanteriorinsula', 0.907680160667781, 0.000000000000000
     )
 
 
