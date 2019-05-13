@@ -1,5 +1,7 @@
-requirevars 'defaultDB' 'input_local_tbl' 'column1' 'column2' 'nobuckets' 'dataset';
+requirevars 'defaultDB' 'input_local_DB' 'db_query' 'column1' 'column2' 'nobuckets' 'dataset';
+
 attach database '%{defaultDB}' as defaultDB;
+attach database '%{input_local_DB}' as localDB;
 
 -- We assume that a categorical integer does not have more than 32 different values. Check: var 'column1IsCategoricalNumber'
 -- We assume that all the columns of text type are categorical
@@ -30,7 +32,7 @@ attach database '%{defaultDB}' as defaultDB;
 
 drop table if exists inputtablefromraw;
 create table inputtablefromraw as
-select rid,colname,  val from (toeav select * from %{input_local_tbl});
+select rid,colname,  val from (toeav %{db_query});
 
 --Check if nobuckets is empty
 var 'nobucketsisempty' from select case when (select '%{nobuckets}')='' then 0 else 1 end;
@@ -44,7 +46,7 @@ var 'columns' from select case when '%{column2}'<>'' then '{"1": "'||'%{column1}
 var 'columnsshouldbeoftype' from select case when '%{column2}'<>'' then '{"1": "Real,Float,Integer,Text", "2": "Text"}' else '{"1": "Real,Float,Integer,Text"}' end as  columnstype;
 
 execnselect 'defaultDB' 'columns''columnsshouldbeoftype''dataset'
-select filetext('/root/mip-algorithms/WP_VARIABLES_HISTOGRAM/1/CreateInputData.sql');
+select filetext('/root/mip-algorithms/VARIABLES_HISTOGRAM/1/CreateInputData.sql');
 --select filetext('/root/mip-algorithms/WP_VARIABLES_HISTOGRAM/CreateInputData_v1_EL_SO.sql');
 
 var 'column1IsText' from select case when (select typeof(val) from defaultDB.inputlocaltbl where colname = '%{column1}' limit 1) ='text' then 1 else 0 end;

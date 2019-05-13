@@ -2,39 +2,45 @@
 	"name": "PIPELINE_ISOUP_MODEL_TREE_SERIALIZER",
 	"desc": "PIPELINE_ISOUP_MODEL_TREE_SERIALIZER",
 	"type": "pipeline",
-	"status": "disabled",
-	"vtype": "none",
 	"responseContentType": "application/visjs+javascript",
 	"parameters": [{
 			"name": "target_attributes",
 			"desc": "Dependent parameters. One or more can be selected.",
+			"type": "column",
+			"columnValuesSQLType": "",
+			"columnValuesIsCategorical": "",
+			"columnValuesNumOfEnumerations": "",
 			"value": "subjectageyears",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "database_parameter"
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
 		}, {
 			"name": "descriptive_attributes",
 			"desc": "Independent parameters. One or more can be selected.",
+			"type": "column",
+			"columnValuesSQLType": "",
+			"columnValuesIsCategorical": "",
+			"columnValuesNumOfEnumerations": "",
 			"value": "apoe4,av45",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "database_parameter"
-		},
-		{
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
+		}, {
 			"name": "dataset",
 			"desc": "It contains the names of one or more datasets, in which the algorithm will be executed. It cannot be empty.",
-			"value": "adni,chuv_adni",
-			"notBlank": true,
-			"multiValue": true,
-			"type": "dataset"
-		},
-		{
+			"type": "dataset",
+			"value": "adni",
+			"valueNotBlank": true,
+			"valueMultiple": true,
+			"valueType": "string"
+		}, {
 			"name": "filter",
 			"desc": "",
+			"type": "filter",
 			"value": "",
-			"notBlank": false,
-			"multiValue": true,
-			"type": "filter"
+			"valueNotBlank": false,
+			"valueMultiple": true,
+			"valueType": "string"
 		}
 	]
 }
