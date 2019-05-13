@@ -199,7 +199,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_2p1():
     """
     Results from 2019_MIP_Algo_Testing/PearsonCorrelation
 
-    subjectage vs minimentalstate
+    subjectageyears vs minimentalstate
         Pearson's r     -0.149
         p-value         < .001
         95% CI Upper    -0.079
@@ -211,7 +211,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_2p1():
     data = [
         {
             "name" : "X",
-            "value": "subjectage"
+            "value": "subjectageyears"
         },
         {
             "name" : "Y",
@@ -233,7 +233,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_2p1():
     result = json.loads(r.text)
 
     check_result(
-            result['result'][0], 'subjectage_minimentalstate', -0.149, 0.000000000000000
+            result['result'][0], 'subjectageyears_minimentalstate', -0.149, 0.000000000000000
     )
 
 
@@ -241,7 +241,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_3():
     """
     Results from 2019_MIP_Algo_Testing/PearsonCorrelation
 
-    subjectage vs opticchiasm
+    subjectageyears vs opticchiasm
         Pearson's r     -0.006
         p-value          0.867
         95% CI Upper     0.067
@@ -253,7 +253,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_3():
     data = [
         {
             "name" : "X",
-            "value": "subjectage"
+            "value": "subjectageyears"
         },
         {
             "name" : "Y",
@@ -275,7 +275,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_3():
     result = json.loads(r.text)
 
     check_result(
-            result['result'][0], 'subjectage_opticchiasm', -0.006, 0.867
+            result['result'][0], 'subjectageyears_opticchiasm', -0.006, 0.867
     )
 
 
@@ -389,11 +389,11 @@ def test_PearsonCorrlation_MIP_AlgoTesting_4():
     data = [
         {
             "name" : "X",
-            "value": "righthippocampus, righthippocampus, lefthippocampus"
+            "value": "righthippocampus, lefthippocampus, leftententorhinalarea"
         },
         {
             "name" : "Y",
-            "value": "lefthippocampus, leftententorhinalarea,leftententorhinalarea"
+            "value": ""
         },
         {
             "name" : "dataset",
@@ -447,11 +447,11 @@ def test_PearsonCorrlation_MIP_AlgoTesting_5():
     data = [
         {
             "name" : "X",
-            "value": "righthippocampus, righthippocampus, lefthippocampus"
+            "value": "righthippocampus, lefthippocampus, opticchiasm"
         },
         {
             "name" : "Y",
-            "value": "lefthippocampus, opticchiasm, opticchiasm"
+            "value": ""
         },
         {
             "name" : "dataset",
@@ -483,7 +483,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_6():
     """
     Results from 2019_MIP_Algo_Testing/PearsonCorrelation
 
-    lefthippocampus vs subjectage
+    lefthippocampus vs subjectageyears
         Pearson's r     -0.208
         p-value         0.000
         95% CI Upper    -0.137
@@ -493,7 +493,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_6():
         p-value         0.000
         95% CI Upper    0.271
         95% CI Lower    0.130
-    subjectage vs opticchiasm
+    subjectageyears vs opticchiasm
         Pearson's r     -0.006
         p-value         0.867
         95% CI Upper    0.067
@@ -505,11 +505,11 @@ def test_PearsonCorrlation_MIP_AlgoTesting_6():
     data = [
         {
             "name" : "X",
-            "value": "lefthippocampus, lefthippocampus, subjectage"
+            "value": "lefthippocampus, subjectageyears, opticchiasm"
         },
         {
             "name" : "Y",
-            "value": "subjectage, opticchiasm, opticchiasm"
+            "value": ""
         },
         {
             "name" : "dataset",
@@ -527,13 +527,13 @@ def test_PearsonCorrlation_MIP_AlgoTesting_6():
     result = json.loads(r.text)
 
     check_result(
-            result['result'][0], 'lefthippocampus_subjectage', -0.208, 0.00
+            result['result'][0], 'lefthippocampus_subjectageyears', -0.208, 0.00
     )
     check_result(
             result['result'][1], 'lefthippocampus_opticchiasm', 0.202, 0.00
     )
     check_result(
-            result['result'][2], 'subjectage_opticchiasm', -0.006, 0.867
+            result['result'][2], 'subjectageyears_opticchiasm', -0.006, 0.867
     )
 
 
@@ -541,7 +541,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_7():
     """
     Results from 2019_MIP_Algo_Testing/PearsonCorrelation
 
-    subjectage vs lefthippocampus
+    subjectageyears vs lefthippocampus
         Pearson's r     -0.208
         p-value         0.000
         95% CI Upper    -0.137
@@ -551,7 +551,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_7():
         p-value         0.000
         95% CI Upper    0.271
         95% CI Lower    0.130
-    subjectage vs opticchiasm
+    subjectageyears vs opticchiasm
         Pearson's r     -0.006
         p-value         0.867
         95% CI Upper    0.067
@@ -563,11 +563,11 @@ def test_PearsonCorrlation_MIP_AlgoTesting_7():
     data = [
         {
             "name" : "X",
-            "value": "subjectage, lefthippocampus, subjectage"
+            "value": "subjectageyears, lefthippocampus, opticchiasm"
         },
         {
             "name" : "Y",
-            "value": "lefthippocampus, opticchiasm, opticchiasm"
+            "value": ""
         },
         {
             "name" : "dataset",
@@ -585,13 +585,13 @@ def test_PearsonCorrlation_MIP_AlgoTesting_7():
     result = json.loads(r.text)
 
     check_result(
-            result['result'][0], 'lefthippocampus_subjectage', -0.208, 0.00
+            result['result'][0], 'lefthippocampus_subjectageyears', -0.208, 0.00
     )
     check_result(
             result['result'][1], 'lefthippocampus_opticchiasm', 0.202, 0.00
     )
     check_result(
-            result['result'][2], 'subjectage_opticchiasm', -0.006, 0.867
+            result['result'][2], 'subjectageyears_opticchiasm', -0.006, 0.867
     )
 
 
