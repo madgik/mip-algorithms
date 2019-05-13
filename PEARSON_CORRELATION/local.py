@@ -58,16 +58,28 @@ def main():
     args, unknown = parser.parse_known_args()
     query = args.db_query
     fname_loc_db = path.abspath(args.input_local_DB)
-    schema_X = list(
+    args_X = list(
             args.X
                 .replace(' ', '')
                 .split(',')
     )
-    schema_Y = list(
+    args_Y = list(
             args.Y
                 .replace(' ', '')
                 .split(',')
     )
+    schema_X, schema_Y = [], []
+    if args_Y == ['']:
+        for i in range(len(args_X)):
+            for j in range(i + 1, len(args_X)):
+                schema_X.append(args_X[i])
+                schema_Y.append(args_X[j])
+    else:
+        assert len(args_X) == len(args_Y), 'Number of variables in X should match number of variables in Y.'
+        for i in range(len(args_X)):
+            for j in range(len(args_Y)):
+                schema_X.append(args_X[i])
+                schema_Y.append(args_Y[j])
 
     # Read data and split between X and Y matrices
     conn = sqlite3.connect(fname_loc_db)
@@ -77,7 +89,7 @@ def main():
     try:
         data = np.array(cur.fetchall(), dtype=np.float64)
     except ValueError:
-        print 'Values in X and Y must be numbers'
+        print 'Values in X and Y must be numbers or blanks'
     idx_X = [schema.index(v) for v in schema_X if v in schema]
     idx_Y = [schema.index(v) for v in schema_Y if v in schema]
     X = data[:, idx_X]
