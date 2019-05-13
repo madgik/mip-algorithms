@@ -2,6 +2,7 @@ import requests
 import json
 import logging
 import math
+from decimal import *
 
 
 url='http://localhost:9090/mining/query/ANOVA'
@@ -280,39 +281,39 @@ def test_ANOVA_6():
 
 
 
-# def test_ANOVA_7():
-#     logging.info("---------- TEST : ANOVA - Tests With Unbalanced data set(data_ANOVA_Unbalanced_with_inter_V1V2.csv) - Test the 3 main effects only with type III ANOVA.  ")
-#
-#     data = [
-#             {   "name": "iterations_max_number", "value": "20" },
-#             {   "name": "iterations_condition_query_provided", "value": "true" },
-#             {   "name": "x", "value": "ANOVA_var_I1+ANOVA_var_I2+ANOVA_var_I3" },
-#             {   "name": "y", "value": "ANOVA_var_D" },
-#             {   "name": "type", "value": "3" },
-#             {   "name": "dataset", "value": "ANOVA_UnBalanced_with_inter_V1V2" },
-#             {   "name": "filter", "value": "" },
-#             {   "name": "outputformat", "value": "pfa" }
-#         ]
-#
-#     headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-#     r = requests.post(url,data=json.dumps(data),headers=headers)
-#     result = json.loads(r.text)
-#     print (r.text)
-#
-# ##  ANOVA
-# ##  ────────────────────────────────────────────────────────────────────────────────────────────
-# ##                 Sum of Squares    df     Mean Square    F          p         η²       η²p
-# ##  ────────────────────────────────────────────────────────────────────────────────────────────
-# ##    var_I1               353946      2      176972.80    74962.1    < .001    0.954    0.999
-# ##    var_I2                16284      2        8141.93     3448.8    < .001    0.044    0.973
-# ##    var_I3                  134      1         134.48       57.0    < .001    0.000    0.227
-# ##    Residuals               458    194           2.36
-# ##  ────────────────────────────────────────────────────────────────────────────────────────────
-#
-#     check_variable(result['resources'][0]['data'][1],'ANOVA_var_I1', 353946,  2,  176972.80,74962.1,'< .001',0.954,0.999)
-#     check_variable(result['resources'][0]['data'][2],'ANOVA_var_I2', 16284,  2,8141.93, 3448.8,'< .001',0.044,0.973 )
-#     check_variable(result['resources'][0]['data'][3],'ANOVA_var_I3', 134,  1, 134.48,   57.0,'< .001',0.000,0.227)
-#     check_variable(result['resources'][0]['data'][4],'residuals', 458, 194, 2.36 )
+def test_ANOVA_7():
+    logging.info("---------- TEST : ANOVA - Tests With Unbalanced data set(data_ANOVA_Unbalanced_with_inter_V1V2.csv) - Test the 3 main effects only with type III ANOVA.  ")
+
+    data = [
+            {   "name": "iterations_max_number", "value": "20" },
+            {   "name": "iterations_condition_query_provided", "value": "true" },
+            {   "name": "x", "value": "ANOVA_var_I1+ANOVA_var_I2+ANOVA_var_I3" },
+            {   "name": "y", "value": "ANOVA_var_D" },
+            {   "name": "type", "value": "3" },
+            {   "name": "dataset", "value": "ANOVA_UnBalanced_with_inter_V1V2" },
+            {   "name": "filter", "value": "" },
+            {   "name": "outputformat", "value": "pfa" }
+        ]
+
+    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+    r = requests.post(url,data=json.dumps(data),headers=headers)
+    result = json.loads(r.text)
+    print (r.text)
+
+##  ANOVA
+##  ────────────────────────────────────────────────────────────────────────────────────────────
+##                 Sum of Squares    df     Mean Square    F          p         η²       η²p
+##  ────────────────────────────────────────────────────────────────────────────────────────────
+##    var_I1               353946      2      176972.80    74962.1    < .001    0.954    0.999
+##    var_I2                16284      2        8141.93     3448.8    < .001    0.044    0.973
+##    var_I3                  134      1         134.48       57.0    < .001    0.000    0.227
+##    Residuals               458    194           2.36
+##  ────────────────────────────────────────────────────────────────────────────────────────────
+
+    check_variable(result['resources'][0]['data'][1],'ANOVA_var_I1', 353946,  2,  176972.80,74962.1,'< .001',0.954,0.999)
+    check_variable(result['resources'][0]['data'][2],'ANOVA_var_I2', 16284,  2,8141.93, 3448.8,'< .001',0.044,0.973 )
+    check_variable(result['resources'][0]['data'][3],'ANOVA_var_I3', 134,  1, 134.48,   57.0,'< .001',0.000,0.227)
+    check_variable(result['resources'][0]['data'][4],'residuals', 458, 194, 2.36 )
 
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
@@ -347,6 +348,7 @@ def test_ANOVA_8():
 ##    gender                              14.1      1         14.058    120.3    < .001    0.129    0.144
 ##    Residuals                           83.5    714          0.117
 ##  ───────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
     check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 11.6, 2, 5.789, 49.5, '< .001',  0.106,   0.122)
     check_variable(result['resources'][0]['data'][2],'ANOVA_gender', 14.1, 1 , 14.058, 120.3 , '< .001',   0.129,    0.144  )
@@ -420,7 +422,7 @@ def test_ANOVA_10():
 
     check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 10.63 , 2, 5.315 , 46.13,'< .001',0.100 , 0.115)
     check_variable(result['resources'][0]['data'][2],'ANOVA_gender', 12.48,1 ,12.479 , 108.32,'< .001',0.117,0.132 )
-    check_variable(result['resources'][0]['data'][3],'ANOVA_alzheimerbroadcategory:ANOVA_gender ',1.42 , 2 , 0.712,6.18 ,0.002,0.013 , 0.017)
+    check_variable(result['resources'][0]['data'][3],'ANOVA_alzheimerbroadcategory:ANOVA_gender',1.42 , 2 , 0.712,6.18 ,0.002,0.013 , 0.017)
     check_variable(result['resources'][0]['data'][4],'residuals',82.03 , 712 ,  0.115)
 
 
@@ -457,7 +459,7 @@ def test_ANOVA_11():
 
     check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 11.58,2, 5.789, 50.24, '< .001',    0.106 ,   0.124 )
     check_variable(result['resources'][0]['data'][2],'ANOVA_gender',  14.06,      1 ,        14.058 ,   122.02  ,  '< .001'   , 0.129 ,   0.146 )
-    check_variable(result['resources'][0]['data'][3],'ANOVA_alzheimerbroadcategory:ANOVA_gender ',1.42   ,   2  ,        0.712 ,     6.18,     0.002  ,  0.013 ,   0.017 )
+    check_variable(result['resources'][0]['data'][3],'ANOVA_alzheimerbroadcategory:ANOVA_gender',1.42   ,   2  ,        0.712 ,     6.18,     0.002  ,  0.013 ,   0.017 )
     check_variable(result['resources'][0]['data'][4],'residuals',82.03  ,  712      ,    0.115 )
 
 
@@ -592,7 +594,7 @@ def test_ANOVA_15():
         {   "name": "iterations_condition_query_provided", "value": "true" },
         {   "name": "x", "value": "ANOVA_alzheimerbroadcategory*ANOVA_gender+ANOVA_agegroup" },
         {   "name": "y", "value": "ANOVA_lefthippocampus" },
-        {   "name": "type", "value": "2" },
+        {   "name": "type", "value": "3" },
         {   "name": "dataset", "value": "ANOVA_dataset1,ANOVA_dataset2,ANOVA_dataset3" },
         {   "name": "filter", "value": "" },
         {   "name": "outputformat", "value": "pfa" }
@@ -614,9 +616,9 @@ def test_ANOVA_15():
 ##    Residuals                                 79.92    708          0.113
 ##  ───────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 9.14  ,    2    ,      4.569,     40.48 ,   '< .001',    0.087,    0.103    )
-    check_variable(result['resources'][0]['data'][2],'ANOVA_gender',  12.81 ,     1    ,     12.811 ,   113.49 ,   '< .001' ,   0.122 ,   0.138   )
-    check_variable(result['resources'][0]['data'][3],'ANOVA_agegroup',    2.11  ,    4    ,      0.528 ,     4.68,    '< .001' ,   0.020 ,   0.026   )
+    check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 9.14 ,  2, 4.569, 40.48 , '< .001',    0.087,    0.103    )
+    check_variable(result['resources'][0]['data'][2],'ANOVA_gender',  12.81 , 1    ,12.811 ,   113.49 ,   '< .001' ,   0.122 ,   0.138   )
+    check_variable(result['resources'][0]['data'][3],'ANOVA_agegroup', 2.11 , 4    ,  0.528 ,     4.68,    '< .001' ,   0.020 ,   0.026   )
     check_variable(result['resources'][0]['data'][4],'ANOVA_alzheimerbroadcategory:ANOVA_gender',   1.17  ,    2  ,        0.587  ,    5.20  ,   0.006 ,   0.011  ,  0.014   )
     check_variable(result['resources'][0]['data'][5],'residuals',  79.92  ,  708  ,        0.113  )
 
@@ -632,7 +634,7 @@ def test_ANOVA_16():
         {   "name": "iterations_condition_query_provided", "value": "true" },
         {   "name": "x", "value": "ANOVA_alzheimerbroadcategory*ANOVA_gender*ANOVA_agegroup" },
         {   "name": "y", "value": "ANOVA_lefthippocampus" },
-        {   "name": "type", "value": "2" },
+        {   "name": "type", "value": "3" },
         {   "name": "dataset", "value": "ANOVA_dataset1,ANOVA_dataset2,ANOVA_dataset3" },
         {   "name": "filter", "value": "" },
         {   "name": "outputformat", "value": "pfa" }
@@ -704,14 +706,14 @@ def test_ANOVA_17():
 ##  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-    check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 9.403   ,   2    ,     4.7016  ,   41.537 ,   '< .001' ,   0.090 ,   0.108        )
-    check_variable(result['resources'][0]['data'][2],'ANOVA_gender',   12.293   ,   1  ,      12.2928 ,   108.602  ,  '< .001'  ,  0.117  ,  0.136       )
-    check_variable(result['resources'][0]['data'][3],'ANOVA_agegroup',  2.112  ,    4  ,       0.5279  ,    4.664  ,   0.001 ,   0.020 ,   0.026      )
-    check_variable(result['resources'][0]['data'][4],'ANOVA_alzheimerbroadcategory:ANOVA_gender',      1.210    ,  2   ,      0.6048 ,     5.343  ,   0.005 ,   0.012 ,   0.015  )
-    check_variable(result['resources'][0]['data'][5],'ANOVA_alzheimerbroadcategory:ANOVA_agegroup'   ,                 0.707    ,  8   ,      0.0883 ,     0.781  ,   0.620 ,   0.007  ,  0.009  )
-    check_variable(result['resources'][0]['data'][6],'ANOVA_gender:ANOVA_agegroup'           ,                         0.462   ,   4    ,     0.1155   ,   1.020   ,  0.396  ,  0.004  ,  0.006    )
-    check_variable(result['resources'][0]['data'][7],'ANOVA_alzheimerbroadcategory:ANOVA_gender:ANOVA_agegroup'    ,       0.857   ,   8      ,   0.1072  ,    0.947  ,   0.477 ,   0.008  ,  0.011    )
-    check_variable(result['resources'][0]['data'][8],'residuals', 77.876  ,  688  ,       0.1132          )
+    check_variable(result['resources'][0]['data'][1],'ANOVA_alzheimerbroadcategory', 9.403,   2, 4.7016 , 41.537 ,   '< .001' ,   0.090 ,   0.108        )
+    check_variable(result['resources'][0]['data'][2],'ANOVA_gender',  12.293,   1  , 12.2928 , 108.602 ,  '< .001'  ,  0.117  ,  0.136       )
+    check_variable(result['resources'][0]['data'][3],'ANOVA_agegroup', 2.112,    4  , 0.5279  , 4.664 , 0.001, 0.020 ,   0.026      )
+    check_variable(result['resources'][0]['data'][4],'ANOVA_alzheimerbroadcategory:ANOVA_gender', 1.210, 2, 0.6048 , 5.343  ,   0.005 ,   0.012 ,   0.015  )
+    check_variable(result['resources'][0]['data'][5],'ANOVA_alzheimerbroadcategory:ANOVA_agegroup', 0.707,  8 , 0.0883 , 0.781  , 0.620 ,   0.007  ,  0.009  )
+    check_variable(result['resources'][0]['data'][6],'ANOVA_gender:ANOVA_agegroup', 0.462, 4, 0.1155,   1.020,  0.396  ,  0.004  ,  0.006 )
+    check_variable(result['resources'][0]['data'][7],'ANOVA_alzheimerbroadcategory:ANOVA_gender:ANOVA_agegroup' ,  0.857, 8, 0.1072, 0.947, 0.477 , 0.008  ,  0.011    )
+    check_variable(result['resources'][0]['data'][8],'residuals', 77.876  ,  688  ,   0.1132     )
 
 
 
@@ -728,15 +730,16 @@ def check_variable(variable_data,corr_variable,corr_sumOfSquares,corr_Df,corr_me
         partEtaSquared = float(variable_data[7])
         # omegaSquared = float(variable_data[8])
     assert (variable == corr_variable)
-    assert (math.isclose(sumOfSquares,corr_sumOfSquares,rel_tol=0,abs_tol=1e-03))
+
+    assert (math.isclose(sumOfSquares,corr_sumOfSquares,rel_tol=0,abs_tol=10**(-abs(Decimal(str(corr_sumOfSquares)).as_tuple().exponent))))
     assert (Df == corr_Df)
-    assert (math.isclose(meanSquare,corr_meanSquare,rel_tol=0,abs_tol=1e-03))
+    assert (math.isclose(meanSquare,corr_meanSquare,rel_tol=0,abs_tol=10**(-abs(Decimal(str(corr_meanSquare)).as_tuple().exponent))))
     if corr_variable != 'residuals':
-        assert (math.isclose(f,corr_f,rel_tol=0,abs_tol=1e-04))
+        assert (math.isclose(f,corr_f,rel_tol=0,abs_tol=10**(-abs(Decimal(str(corr_f)).as_tuple().exponent))))
         if type(corr_p) is str:
             assert (p <= float(corr_p.replace('< ','0')))
         else:
-            assert (math.isclose(p,corr_p,rel_tol=0,abs_tol=1e-03))
-        assert (math.isclose(etaSquared,corr_etaSquared,rel_tol=0,abs_tol=1e-03))
-        assert (math.isclose(partEtaSquared,corr_partEtaSquared,rel_tol=0,abs_tol=1e-03))
+            assert (math.isclose(p,corr_p,rel_tol=0,abs_tol=10**(-abs(Decimal(str(corr_p)).as_tuple().exponent))))
+        assert (math.isclose(etaSquared,corr_etaSquared,rel_tol=0,abs_tol=10**(-abs(Decimal(str(corr_etaSquared)).as_tuple().exponent))))
+        assert (math.isclose(partEtaSquared,corr_partEtaSquared,rel_tol=0,abs_tol=10**(-abs(Decimal(str(corr_partEtaSquared)).as_tuple().exponent))))
         #assert math.isclose(omegaSquared,corr_omegaSquared,rel_tol=0,abs_tol=1e-06)
