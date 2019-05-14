@@ -30,10 +30,11 @@ def pearsonc_local(local_in):
     sxy = np.empty(n_cols, dtype=np.float)
     syy = np.empty(n_cols, dtype=np.float)
 
+    mask = [True in np.isnan(X[row, :]) or True in np.isnan(Y[row, :]) for row in range(n_obs)]
     for i in xrange(n_cols):
         # Create masked arrays
         x, y = X[:, i], Y[:, i]
-        mask = [np.isnan(xi) or np.isnan(xi) for xi, yi in zip(x, y)]
+        # mask = [np.isnan(xi) or np.isnan(yi) for xi, yi in zip(x, y)] Deprecated: mask is computed indep for each pair
         xm = ma.masked_array(x, mask=mask)
         ym = ma.masked_array(y, mask=mask)
         # Compute local statistics

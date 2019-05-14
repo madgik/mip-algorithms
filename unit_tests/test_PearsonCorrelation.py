@@ -5,7 +5,7 @@ import math
 
 # Required datasets: adni_9rows, adni, data_pr1, desd-synthdata
 
-endpointUrl = 'http://88.197.53.100:9090'
+endpointUrl = 'http://88.197.53.52:9090'
 
 
 def test_PearsonCorrelation_ADNI_9rows():
@@ -195,46 +195,46 @@ def test_PearsonCorrlation_MIP_AlgoTesting_2():
     )
 
 
-def test_PearsonCorrlation_MIP_AlgoTesting_2p1():
-    """
-    Results from 2019_MIP_Algo_Testing/PearsonCorrelation
-
-    subjectageyears vs minimentalstate
-        Pearson's r     -0.149
-        p-value         < .001
-        95% CI Upper    -0.079
-        95% CI Lower    -0.218
-    """
-
-    logging.info("---------- TEST : Pearson Correlation MIP_Algo_Testing_2p1")
-
-    data = [
-        {
-            "name" : "X",
-            "value": "subjectageyears"
-        },
-        {
-            "name" : "Y",
-            "value": "minimentalstate"
-        },
-        {
-            "name" : "dataset",
-            "value": "desd-synthdata"
-        },
-        {
-            "name" : "filter",
-            "value": ""
-        },
-    ]
-
-    headers = {'Content-type': 'application/json', "Accept": "text/plain"}
-    r = requests.post(endpointUrl + '/mining/query/PEARSON_CORRELATION', data=json.dumps(data), headers=headers)
-
-    result = json.loads(r.text)
-
-    check_result(
-            result['result'][0], 'subjectageyears_minimentalstate', -0.149, 0.000000000000000
-    )
+# def test_PearsonCorrlation_MIP_AlgoTesting_2p1():
+#     """
+#     Results from 2019_MIP_Algo_Testing/PearsonCorrelation
+#
+#     subjectageyears vs minimentalstate
+#         Pearson's r     -0.149
+#         p-value         < .001
+#         95% CI Upper    -0.079
+#         95% CI Lower    -0.218
+#     """
+#
+#     logging.info("---------- TEST : Pearson Correlation MIP_Algo_Testing_2p1")
+#
+#     data = [
+#         {
+#             "name" : "X",
+#             "value": "subjectageyears"
+#         },
+#         {
+#             "name" : "Y",
+#             "value": "minimentalstate"
+#         },
+#         {
+#             "name" : "dataset",
+#             "value": "desd-synthdata"
+#         },
+#         {
+#             "name" : "filter",
+#             "value": ""
+#         },
+#     ]
+#
+#     headers = {'Content-type': 'application/json', "Accept": "text/plain"}
+#     r = requests.post(endpointUrl + '/mining/query/PEARSON_CORRELATION', data=json.dumps(data), headers=headers)
+#
+#     result = json.loads(r.text)
+#
+#     check_result(
+#             result['result'][0], 'subjectageyears_minimentalstate', -0.149, 0.000000000000000
+#     )
 
 
 def test_PearsonCorrlation_MIP_AlgoTesting_3():
@@ -359,7 +359,7 @@ def test_PearsonCorrlation_MIP_AlgoTesting_3p2():
     result = json.loads(r.text)
 
     check_result(
-            result['result'][0], 'var1_var2', 0.008, 0.838
+            result['result'][0], 'var3_var4', 0.008, 0.838
     )
 
 
@@ -588,10 +588,10 @@ def test_PearsonCorrlation_MIP_AlgoTesting_7():
             result['result'][0], 'subjectageyears_lefthippocampus', -0.208, 0.00
     )
     check_result(
-            result['result'][1], 'subjectageyears_opticchiasm', 0.202, 0.00
+            result['result'][1], 'subjectageyears_opticchiasm', -0.006, 0.867
     )
     check_result(
-            result['result'][2], 'lefthippocampus_opticchiasm', -0.006, 0.867
+            result['result'][2], 'lefthippocampus_opticchiasm', 0.202, 0.00
     )
 
 
