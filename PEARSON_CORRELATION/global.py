@@ -39,18 +39,25 @@ def pearsonc_global(global_in):
                 prob = special.betainc(
                         0.5 * df, 0.5, np.fmin(np.asarray(df / (df + t_squared)), 1.0)
                 )
-        # Compute 95% confidence intervals
-        alpha = 0.05 / 2  # Two-tail test with confidence intervals 95%
-        z_critical = st.norm.ppf(1 - alpha)
-        z_prime = 0.5 * np.log((1 + r) / (1 - r))
-        se = 1 / np.sqrt(nn[i] - 3)  # Sample standard error
-        ci_lower, ci_upper = z_prime - z_critical * se, z_prime + z_critical * se
+        # test
+        alpha = 0.05  # Two-tail test with confidence intervals 95%
+        r_z = np.arctanh(r)
+        se = 1 / np.sqrt(nn[i] - 3)
+        z = st.norm.ppf(1 - alpha / 2)
+        lo_z, hi_z = r_z - z * se, r_z + z * se
+        ci_lo, ci_hi = np.tanh((lo_z, hi_z))
+        # # Compute 95% confidence intervals
+        # alpha = 0.05  # Two-tail test with confidence intervals 95%
+        # z_critical = st.norm.ppf(1 - alpha / 2)
+        # z_prime = 0.5 * np.log((1 + r) / (1 - r))
+        # se = 1 / np.sqrt(nn[i] - 3)  # Sample standard error
+        # ci_lower, ci_upper = z_prime - z_critical * se, z_prime + z_critical * se
         result_list.append({
             'Variable pair'                  : schema_out[i],
             'Pearson correlation coefficient': r,
             'p-value'                        : prob if prob >= 0.001 else 0.0,
-            'C.I. Lower'                     : ci_lower,
-            'C.I. Upper'                     : ci_upper
+            'C.I. Lower'                     : ci_lo,
+            'C.I. Upper'                     : ci_hi
         })
     global_out = json.dumps({'result': result_list})
     return global_out
