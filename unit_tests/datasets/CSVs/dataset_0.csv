@@ -1,4 +1,4 @@
-rid,ANOVA_lefthippocampus,ANOVA_alzheimerbroadcategory,ANOVA_gender,ANOVA_agegroup,dataset
+subjectcode,ANOVA_lefthippocampus,ANOVA_alzheimerbroadcategory,ANOVA_gender,ANOVA_agegroup,dataset
 1,3.4613,AD,M,60-69y,ANOVA_dataset1
 2,3.3827,AD,M,60-69y,ANOVA_dataset1
 3,2.6429,Other,M,70-79y,ANOVA_dataset1

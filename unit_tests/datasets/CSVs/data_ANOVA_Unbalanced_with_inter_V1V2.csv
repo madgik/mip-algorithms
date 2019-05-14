@@ -1,4 +1,4 @@
-rid,ANOVA_pp,ANOVA_var_I1,ANOVA_var_I2,ANOVA_var_I3,ANOVA_var_D,dataset
+subjectcode,ANOVA_pp,ANOVA_var_I1,ANOVA_var_I2,ANOVA_var_I3,ANOVA_var_D,dataset
 1,1,0,0,0,3,ANOVA_UnBalanced_with_inter_V1V2
 2,2,0,0,0,5,ANOVA_UnBalanced_with_inter_V1V2
 3,3,0,0,0,5,ANOVA_UnBalanced_with_inter_V1V2
