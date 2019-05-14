@@ -4,6 +4,7 @@ import json
 from os import path
 import numpy as np
 import scipy.special as special
+import scipy.stats as st
 from argparse import ArgumentParser
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
@@ -29,7 +30,7 @@ def pearsonc_global(global_in):
                 r = 0
             else:
                 r = float((nn[i] * sxy[i] - sx[i] * sy[i]) / d)
-            r = max(min(r, 1.0), -1.0)  # if abs(r) > 1 correct: artifact of floating point arithmetic.
+            r = max(min(r, 1.0), -1.0)  # If abs(r) > 1 correct it: artifact of floating point arithmetic.
             df = nn[i] - 2
             if abs(r) == 1.0:
                 prob = 0.0
@@ -38,10 +39,18 @@ def pearsonc_global(global_in):
                 prob = special.betainc(
                         0.5 * df, 0.5, np.fmin(np.asarray(df / (df + t_squared)), 1.0)
                 )
+        # Compute 95% confidence intervals
+        alpha = 0.05 / 2  # Two-tail test with confidence intervals 95%
+        z_critical = st.norm.ppf(1 - alpha)
+        z_prime = 0.5 * np.log((1 + r) / (1 - r))
+        se = 1 / np.sqrt(nn[i] - 3)  # Sample standard error
+        ci_lower, ci_upper = z_prime - z_critical * se, z_prime + z_critical * se
         result_list.append({
             'Variable pair'                  : schema_out[i],
             'Pearson correlation coefficient': r,
-            'p-value'                        : prob if prob >= 0.001 else 0.0
+            'p-value'                        : prob if prob >= 0.001 else 0.0,
+            'C.I. Lower'                     : ci_lower,
+            'C.I. Upper'                     : ci_upper
         })
     global_out = json.dumps({'result': result_list})
     return global_out
