@@ -12,11 +12,19 @@ insert into defaultDB.algorithmparameters select 'outputformat' , '%{outputforma
 insert into defaultDB.algorithmparameters select 'dataset' , '%{dataset}' ;
 
 
-drop table if exists defaultDB.metadatatbl;
-create table defaultDB.metadatatbl as
-select code, group_concat(vals) as enumerations from
-(select code, vals from (select code, strsplitv(enumerations ,'delimiter:,') as vals
-from %{input_global_tbl}) group by code,vals) group by code;
+  drop table if exists defaultDB.metadatatbl;
+  create table defaultDB.metadatatbl as
+  select code, group_concat(vals) as enumerations from
+  (select code, vals from (select code, strsplitv(enumerations ,'delimiter:,') as vals
+  from %{input_global_tbl}) group by code,vals) group by code;
+
+--
+-- drop table if exists defaultDB.metadatatbl;
+-- create table defaultDB.metadatatbl as
+-- select mergepartialmetadata(code, enumerations,enumerationsDB) from
+-- (select code, group_concat(vals) as enumerations , enumerationsDB from
+-- ( select code, vals ,enumerationsDB  from (select code, strsplitv(enumerations ,'delimiter:,') as vals ,enumerationsDB
+-- from %{input_global_tbl}) group by code,vals) group by code);
 
 
 drop table if exists defaultDB.globalAnovatbl;

@@ -1,6 +1,7 @@
 
 ------------------Input for testing
 ------------------------------------------------------------------------------
+--Test 1
 -- drop table if exists inputdata;
 -- create table inputdata as
 --    select ANOVA_var_I1,ANOVA_var_I2,ANOVA_var_I3,ANOVA_var_D
@@ -10,8 +11,20 @@
 -- hidden var 'defaultDB' defaultDB_ANOVA3;
 -- hidden var 'y' 'ANOVA_var_D';
 -- hidden var 'x' 'ANOVA_var_I1*ANOVA_var_I2*ANOVA_var_I3';
--- hidden var 'type' 2;
+ --var 'type' 2;
 -- hidden var 'outputformat' 'pfa';
+
+-- Test2
+-- drop table if exists inputdata;
+-- create table inputdata as
+--    select ANOVA_alzheimerbroadcategory,ANOVA_gender,ANOVA_agegroup,ANOVA_lefthippocampus
+--    from (file header:t '/home/eleni/Desktop/HBP/exareme/Exareme-Docker/src/mip-algorithms/unit_tests/datasets/CSVs/dataset_0.csv');
+--
+-- var 'type' 2;
+-- var 'x' 'ANOVA_alzheimerbroadcategory*ANOVA_gender+ANOVA_agegroup' ;
+-- var 'y' 'ANOVA_lefthippocampus';
+-- var 'defaultDB' 'ANOVA_defaultDB';
+-- var 'input_local_DB' 'datasets.db';
 
 -- .s inputdata;
 -- .s inputmetadata;
@@ -45,5 +58,15 @@ var 'metadata' from select create_complex_query(""," insert into  defaultDB.part
                                                      select '?' as code, group_concat(vals) as enumerations
                                                      from (select distinct ? as vals from defaultDB.localinputtblflat);", "" , "" , '%{xnames}');
 %{metadata};
+
+-- drop table if exists defaultDB.partialmetadatatbl;
+-- create table defaultDB.partialmetadatatbl (code text, enumerations text,enumerationsDB text);
+-- var 'metadata' from select create_complex_query(""," insert into  defaultDB.partialmetadatatbl
+--                                                      select '?' as code, group_concat(vals) as enumerations, enumerationsDB from
+--                                                      (select distinct ? as vals from defaultDB.localinputtblflat),
+--                                                      (select code as codeDB, enumerations as enumerationsDB from metadata
+--                                                      where code in (select distinct xname from (select strsplitv(regexpr('\+|\:|\*|\-','%{x}','+') ,'delimiter:+') as xname) where xname!=0))
+--                                                      where codeDB=code ;", "" , "" , '%{xnames}');
+-- %{metadata};
 
 select * from defaultDB.partialmetadatatbl;

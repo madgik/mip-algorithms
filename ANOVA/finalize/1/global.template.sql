@@ -1,17 +1,17 @@
-requirevars 'defaultDB' 'type' 'input_global_tbl' 'outputformat';
+requirevars 'defaultDB' 'type' 'outputformat';
 attach database '%{defaultDB}' as defaultDB;
 
 --var 'input_global_tbl' 'defaultDB.metadatatbl';
 ----------
 
-var 'metadata' from select jgroup(code,enumerations) from (select distinct code ,enumerations from %{input_global_tbl});
+var 'metadata' from select jgroup(code,enumerations) from (select code ,enumerations from defaultDB.metadatatbl);
 
-drop table if exists sumofsquares;
-create table sumofsquares as
+drop table if exists defaultDB.sumofsquares;
+create table defaultDB.sumofsquares as
 select sumofsquares(no,formula,sst,ssregs,sse,%{type}) from defaultDB.globalAnovatbl;
 
-var 'a' from select max(no) from sumofsquares;
-insert into sumofsquares
+var 'a' from select max(no) from defaultDB.sumofsquares;
+insert into defaultDB.sumofsquares
 select %{a}+1, "residuals", sse
 from defaultDB.globalAnovatbl,(select max(no) as maxno from defaultDB.globalAnovatbl)
 where no==maxno;
@@ -23,7 +23,7 @@ create table defaultDB.globalresult (`model variables` text, `sum of squares` re
 
 insert into defaultDB.globalresult
 select modelvariables, sumofsquares, df, meansquare, f, p, etasquared, partetasquared, omegasquared
-                from (select anovastatistics(no, modelvariables, sumofsquares, '%{metadata}',%{N},%{SST} ) from sumofsquares);
+                from (select anovastatistics(no, modelvariables, sumofsquares, '%{metadata}',%{N},%{SST} ) from defaultDB.sumofsquares);
 
 update defaultDB.globalresult
 set `f`= null,`p`= null,`eta squared`= null,`part eta squared`= null, `omega squared`= null where `model variables` =  'residuals';
