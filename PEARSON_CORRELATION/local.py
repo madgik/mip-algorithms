@@ -1,3 +1,6 @@
+from __future__ import division
+from __future__ import print_function
+
 import sys
 import sqlite3
 from os import path
@@ -11,7 +14,24 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/utils/')
 from pearsonc_lib import PearsonCorrelationLocalDT
 
 
-def pearsonc_local(local_in):
+def pearsonr_local(local_in):
+    """Local step in Pearson correlation coefficient. Statistics are computed in each local database and then they
+    are sent to the master node to be aggregated accordingly.
+    The computed statistics are: `nn` number of observations, `sx` and `sy` sums of linear terms \sum_i x_i and
+    \sum_i y_i respectively, `sxx`, `sxy` and `syy` sums of quadratic terms \sum_i x_i x_i, \sum_i x_i y_i and
+    \sum_i y_i y_i respectively, where x and y are vectors of the pair of variables under consideration, pulled from
+    matrices X and Y respectively.
+
+    Parameters
+    ----------
+    local_in : numpy.array, numpy.array, list, list
+        Tuple holding matrices X and Y as numpy arrays and lists of variable names schema_X and schema_Y
+
+    Returns
+    -------
+    local_out: PearsonCorrelationLocalDT
+       Object holding the computed statistics as well as schema_X, schema_Y do be transferred to the master node.
+    """
     # Unpack data
     X, Y, schema_X, schema_Y = local_in
     n_obs, n_cols = len(X), len(X[0])
@@ -30,11 +50,11 @@ def pearsonc_local(local_in):
     sxy = np.empty(n_cols, dtype=np.float)
     syy = np.empty(n_cols, dtype=np.float)
 
+    # Create mask
     mask = [True in np.isnan(X[row, :]) or True in np.isnan(Y[row, :]) for row in range(n_obs)]
     for i in xrange(n_cols):
         # Create masked arrays
         x, y = X[:, i], Y[:, i]
-        # mask = [np.isnan(xi) or np.isnan(yi) for xi, yi in zip(x, y)] Deprecated: mask is computed indep for each pair
         xm = ma.masked_array(x, mask=mask)
         ym = ma.masked_array(y, mask=mask)
         # Compute local statistics
@@ -69,6 +89,7 @@ def main():
                 .replace(' ', '')
                 .split(',')
     )
+    # Populate schemata, treating cases Y=empty and Y=not empty accordingly (R function `cor` is imitated)
     schema_X, schema_Y = [], []
     if args_Y == ['']:
         for i in range(len(args_X)):
@@ -76,13 +97,12 @@ def main():
                 schema_X.append(args_X[i])
                 schema_Y.append(args_X[j])
     else:
-        assert len(args_X) == len(args_Y), 'Number of variables in X should match number of variables in Y.'
         for i in range(len(args_X)):
             for j in range(len(args_Y)):
                 schema_X.append(args_X[i])
                 schema_Y.append(args_Y[j])
 
-    # Read data and split between X and Y matrices
+    # Read data and split between X and Y matrices according to schemata
     conn = sqlite3.connect(fname_loc_db)
     cur = conn.cursor()
     cur.execute(query)
@@ -90,7 +110,7 @@ def main():
     try:
         data = np.array(cur.fetchall(), dtype=np.float64)
     except ValueError:
-        print 'Values in X and Y must be numbers or blanks'
+        print('Values in X and Y must be numbers or blanks')
     idx_X = [schema.index(v) for v in schema_X if v in schema]
     idx_Y = [schema.index(v) for v in schema_Y if v in schema]
     X = data[:, idx_X]
@@ -98,7 +118,7 @@ def main():
     local_in = X, Y, schema_X, schema_Y
 
     # Run algorithm local step
-    local_out = pearsonc_local(local_in=local_in)
+    local_out = pearsonr_local(local_in=local_in)
 
     # Return the output data (should be the last command)
     local_out.transfer()

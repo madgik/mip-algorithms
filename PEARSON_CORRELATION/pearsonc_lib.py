@@ -11,7 +11,6 @@ from algorithm_utils import TransferData
 
 # Set the data class that will transfer the data between local-global
 class PearsonCorrelationLocalDT(TransferData):
-
     def __init__(self, args):
         if len(args) != 8:
             raise ValueError('Illegal number of arguments.')
