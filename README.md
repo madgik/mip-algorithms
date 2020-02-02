@@ -2,7 +2,7 @@
 <h1 id="medical-informatics-platform">Medical Informatics Platform</h1>
 <h1 id="data-mining-algorithms-algorithm-developer-s-manual">Data Mining Algorithms - Algorithm developer&#39;s manual</h1>
 <p>This is the repository containing all data mining algorithms for the <a href="https://www.humanbrainproject.eu/mip">Medical Informatics Platform</a> 
-of <a href="https://www.humanbrainproject.eu/">Human Brain Project</a>, that are executed on <a href="https://www.exareme.org">Exareme</a>.</p>
+of <a href="https://www.humanbrainproject.eu/">Human Brain Project</a>, that are executed on <a href="https://madgik.github.io/exareme/">Exareme</a>.</p>
 <h2 id="types-of-algorithm-workflows-currently-supported">Types of algorithm workflows currently supported</h2>
 <ul>
 <li><code>local</code> execution of an SQL script on master node only.</li>
